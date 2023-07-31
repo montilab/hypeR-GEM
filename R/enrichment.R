@@ -5,8 +5,10 @@
 #' @param method enrichment method
 #' @param weights the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
 #' @param background background parameter of hypergeometric test
-#'
-#' @return
+
+#' @importFrom stats phyper p.adjust
+
+#' @return a list of type of statistical test and data
 #' @export
 enrichment <- function(hypeR_GEM_obj,
                        genesets,
@@ -57,7 +59,10 @@ enrichment <- function(hypeR_GEM_obj,
 #' @param unweighted_signature  a character vector of signature
 #' @param genesets a list of genesets
 #' @param background background parameter of hypergeometric test
-#'
+
+#' @importFrom stats phyper p.adjust
+#' @importFrom magrittr %>%
+
 #' @return a list
 #' @keywords internal
 .hyper_enrichment <- function(unweighted_signature,
@@ -104,7 +109,10 @@ enrichment <- function(hypeR_GEM_obj,
 #' @param weighted_signature named vector, name = gene symbol, value = weight and should be between 0 and 1
 #' @param genesets a list of genesets
 #' @param background background parameter of hypergeometric test
-#'
+
+#' @importFrom stats phyper p.adjust
+#' @importFrom magrittr %>%
+
 #' @return a list
 #' @keywords internal
 .weighted_hyper_enrichment <- function(weighted_signature,

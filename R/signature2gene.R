@@ -6,8 +6,15 @@
 #' @param reference_key the column name in the reference table which represents the standardized names (e.g. "refmet_name")
 #' @param ensemble_id if the genes in GEM_table$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE
 #' @param background the background of the hypergeometric test of each mapped gene
-
 #' @return a list containing two element: "mapped_metabolite_signatures" and "gene_tables" for each signature
+
+
+#' @importFrom magrittr %>% is_greater_than
+#' @importFrom dplyr filter select mutate left_join rename distinct pull
+#' @importFrom Matrix Matrix
+#' @importFrom tibble rownames_to_column column_to_rownames
+#' @importFrom gprofiler2 gconvert
+
 
 #' @export
 signature2gene <- function(signatures,
@@ -25,12 +32,13 @@ signature2gene <- function(signatures,
   # Default arguments
   species <- match.arg(species)
 
-  ## load tables
+  # load tables
   if(species == "Human"){GEM_tables <- hypeR.GEM::Human_GEM_tables}
   if(species == "Mouse"){GEM_tables <- hypeR.GEM::Mouse_GEM_tables}
   if(species == "Rat"){GEM_tables <- hypeR.GEM::Rat_GEM_tables}
   if(species == "Zebrafish"){GEM_tables <- hypeR.GEM::Zebrafish_GEM_tables}
   if(species == "Worm"){GEM_tables <- hypeR.GEM::Worm_GEM_tables}
+
 
   ## user-defined GEM table
   if(species == "Other" & is.null(tables)) stop("GEM tables must be provided as a list for an unspecified species!")
@@ -39,6 +47,8 @@ signature2gene <- function(signatures,
     if(!(reference_key %in% colnames(GEM_tables[['meta_df']]))) stop("reference key does not in GEM's metabolite dataframe column names!\n")
     GEM_tables <- tables
   }
+
+
 
   ## transform from sparse matrix to data frame
   GEM_tables[['r2m']] <- as.data.frame(as(GEM_tables[['r2m']], "matrix"))
@@ -99,11 +109,15 @@ signature2gene <- function(signatures,
               gene_tables = gene_tables))
 }
 
+
 #' Title Extract the standardized names from the signature data frames
 #'
 #' @param signature_df signature data frame
 #' @param reference_key the key which is used to map the signature and metabolites in the GEM
-#'
+
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter pull
+
 #' @return a character vector contains standardized names of signatures
 #' @keywords internal
 .extract_standardized_name <- function(signature_df, reference_key="refmet_name"){
@@ -115,12 +129,16 @@ signature2gene <- function(signatures,
   return(names)
 }
 
+
 #' Title Subset the GEM metabolite data frame
 #'
 #' @param signature a character vector contains standardized names of signatures
 #' @param GEM_meta_df the GEM metabolite data frame
 #' @param reference_key the key which is used to map the signature and metabolites in the GEM
-#'
+
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter
+
 #' @return a subset of the GEM metabolite data frame
 #' @keywords internal
 .extract_sig_meta <- function(signature,
@@ -137,7 +155,10 @@ signature2gene <- function(signatures,
 #' @param mapped_metabolite_signature one element in "mapped_metabolite_signatures"
 #' @param GEM_table
 #' @param reference_key the key which is used to map the signature and metabolites in the GEM
-#'
+
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter select
+
 #' @return a updated 'mapped_metabolite_signature' with "gene_association" column
 #' @keywords internal
 .gene_association <- function(mapped_metabolite_signature,
@@ -159,8 +180,12 @@ signature2gene <- function(signatures,
 #' @param GEM_tables
 #' @param key
 #' @param background
-#'
-#' @return
+
+#' @importFrom magrittr %>% is_greater_than
+#' @importFrom dplyr filter select mutate left_join rename distinct pull
+#' @importFrom stats phyper p.adjust
+
+#' @return a data frame
 #' @keywords internal
 .meta2gene <- function(signature,
                        GEM_tables,

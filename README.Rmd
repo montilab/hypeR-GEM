@@ -1,0 +1,90 @@
+---
+output: rmarkdown::github_document
+---
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(message=FALSE, comment="#>")
+devtools::load_all(".")
+```
+
+# hypeR.GEM
+
+## Installation
+
+Install the development version of the package from Github. <span style="color:#0278ae">**[Recommended]**</span>
+
+``` r
+devtools::install_github("montilab/hypeR-GEM")
+```
+
+## Usage
+
+```{r, eval=FALSE}
+library(hypeR.GEM)
+#library(tidyverse)
+library(hypeR)
+```
+
+
+```{r}
+data(EL_signature)
+
+str(EL_signature)
+```
+
+
+```{r}
+hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
+                                           species = "Human",
+                                          ensemble_id = TRUE,
+                                          reference_key = 'refmet_name')
+str(hypeR_GEM_obj)
+```
+
+
+```{r}
+kegg <- hypeR::msigdb_gsets(species="Homo sapiens", category="C2", subcategory = "CP:KEGG", clean = TRUE)
+print(kegg)
+```
+
+
+## Hypergeometric test {.tabset}
+
+### KEGG (unweighted) {.tabset}
+```{r}
+max_fdr <- 0.01
+kegg_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                         genesets = kegg$genesets,
+                                         method='unweighted',
+                                         weights = 'one_minus_p_value',
+                                         background=3068)
+
+hypeR.GEM::enrichment_plot(kegg_unweighted,
+                           top=40,
+                           abrv=50,
+                           size_by="significance",
+                           fdr_cutoff= max_fdr,
+                           val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+```
+
+### KEGG (weighted) {.tabset}
+```{r}
+max_fdr <- 0.01
+kegg_weighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                         genesets = kegg$genesets,
+                                         method='weighted',
+                                         weights = 'one_minus_p_value',
+                                         background=3068)
+
+hypeR.GEM::enrichment_plot(kegg_weighted,
+                           top=40,
+                           abrv=50,
+                           size_by="significance",
+                           fdr_cutoff= max_fdr,
+                           val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+```

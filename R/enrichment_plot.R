@@ -54,7 +54,12 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
 #' @param fdr_cutoff
 #' @param val
 #' @param title
-#'
+
+#' @importFrom purrr when
+#' @importFrom dplyr filter
+#' @importFrom scales log10_trans
+#' @importFrom ggplot2 ggplot aes geom_point labs scale_color_continuous scale_y_continuous guide_colorbar coord_flip geom_hline guides theme element_text element_blank
+
 #' @return A ggplot object
 #' @keywords internal
 .dots_plot <- function(hyp_enrichment_data,
@@ -94,11 +99,11 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
   df <- df[order(-df[,val]),]
 
   # Abbreviate labels
-  label.abrv <- substr(df$label, 1, abrv)
-  if (any(duplicated(label.abrv))) {
+  label_abrv <- substr(df$label, 1, abrv)
+  if (any(duplicated(label_abrv))) {
     stop("Non-unique labels after abbreviating")
   } else {
-    df$label.abrv <- factor(label.abrv, levels=label.abrv)
+    df$label.abrv <- factor(label_abrv, levels=label_abrv)
   }
 
   if (val == "pval") {
@@ -108,7 +113,7 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
     color.label <- "FDR"
   }
 
-  p <- ggplot(df, aes(x=label.abrv, y=significance, color=significance, size=size)) +
+  p <- ggplot(df, aes(x=label_abrv, y=significance, color=significance, size=size)) +
     geom_point() +
     labs(title=title, y=color.label, color=color.label) +
     scale_color_continuous(low="#E53935", high="#114357", guide=guide_colorbar(reverse=TRUE)) +
@@ -141,7 +146,13 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
 #' @param fdr_cutoff
 #' @param val
 #' @param title
-#'
+
+#' @importFrom reshape2 melt
+#' @importFrom magrittr %>% set_colnames
+#' @importFrom dplyr filter select
+#' @importFrom scales log10_trans
+#' @importFrom ggplot2 ggplot aes geom_point labs scale_color_continuous scale_size_continuous guides theme element_text element_blank
+#' @importFrom ggforce trans_reverser
 
 #' @keywords internal
 .multi_dots_plot <- function(multihyp_data,
@@ -156,6 +167,8 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
   # Default arguments
   val <- match.arg(val)
   size_by <- match.arg(size_by)
+
+
 
   # Count significant genesets across signatures
   multihyp_dfs <- lapply(multihyp_data, function(hyp_obj) {
@@ -194,11 +207,11 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
     tibble::column_to_rownames(var='label')
 
   # Abbreviate labels
-  label.abrv <- substr(rownames(df), 1, abrv)
-  if (any(duplicated(label.abrv))) {
+  label_abrv <- substr(rownames(df), 1, abrv)
+  if (any(duplicated(label_abrv))) {
     stop("Non-unique labels after abbreviating")
   } else {
-    rownames(df) <- factor(label.abrv, levels=label.abrv)
+    rownames(df) <- factor(label_abrv, levels=label_abrv)
   }
 
   if (val == "pval") {

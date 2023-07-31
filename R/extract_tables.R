@@ -3,6 +3,11 @@
 #' @param con a connection or the path of the GEM
 #' @return a list of tables
 
+#'@importFrom R.matlab readMAT
+#'@importFrom magrittr %>%
+#'@importFrom Matrix Matrix summary
+#'@importFrom dplyr arrange filter select pull
+
 #' @examples
 #' con = file.path("data/Recon3D.mat")
 #' tables = extract_tables(con)

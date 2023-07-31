@@ -2,7 +2,7 @@ Package: hypeR.GEM
 Type: Package
 Title: A R Package For Connecting Metabolic Signatures to Enzyme-coding Genes
 Version: 0.0.0.0
-Author@R: c(person(given="Ziwei", family="Huang", email="ziwhuang@bu.edu",
+Author: c(person(given="Ziwei", family="Huang", email="ziwhuang@bu.edu",
              role=c("aut", "cre")),
              person(given="Stefano", family="Monti", email="smonti@bu.edu",
              role=c("aut")))
@@ -14,3 +14,4 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
+RoxygenNote: 7.2.1
