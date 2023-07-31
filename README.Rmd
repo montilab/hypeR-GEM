@@ -14,7 +14,6 @@ devtools::load_all(".")
 
 ```{r, eval=FALSE}
 library(hypeR.GEM)
-library(hypeR)
 ```
 
 
@@ -25,17 +24,25 @@ str(EL_signature)
 ```
 
 
+## Map metabolite signtures to associated genes
+
+- `signatures` must be a named list
+- `species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other")` 
+- `ensemble_id`: for current version, if `species != 'Human`, use `ensemble_id = FALSE`
+- `reference_key = 'refmet_name` by default
+- `background` is used to compute gene-specific p-values, if `background = NULL`, then background = # of metabolites associated with non-exchange reactions
 ```{r}
 hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
                                            species = "Human",
-                                          ensemble_id = TRUE,
-                                          reference_key = 'refmet_name')
-str(hypeR_GEM_obj)
+                                           ensemble_id = TRUE,
+                                           reference_key = 'refmet_name',
+                                           background = NULL)
 ```
 
 
 ```{r}
-kegg <- hypeR::msigdb_gsets(species="Homo sapiens", category="C2", subcategory = "CP:KEGG", clean = TRUE)
+library(hypeR)
+kegg <- msigdb_gsets(species="Homo sapiens", category="C2", subcategory = "CP:KEGG", clean = TRUE)
 print(kegg)
 ```
 
@@ -50,7 +57,9 @@ kegg_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          method='unweighted',
                                          weights = 'one_minus_p_value',
                                          background=3068)
+```
 
+```{r}
 hypeR.GEM::enrichment_plot(kegg_unweighted,
                            top=40,
                            abrv=50,
@@ -61,6 +70,8 @@ hypeR.GEM::enrichment_plot(kegg_unweighted,
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
 
+
+
 ### KEGG (weighted) {.tabset}
 ```{r}
 max_fdr <- 0.01
@@ -69,7 +80,10 @@ kegg_weighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          method='weighted',
                                          weights = 'one_minus_p_value',
                                          background=3068)
+```
 
+
+```{r}
 hypeR.GEM::enrichment_plot(kegg_weighted,
                            top=40,
                            abrv=50,
@@ -79,3 +93,4 @@ hypeR.GEM::enrichment_plot(kegg_weighted,
   ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
+
