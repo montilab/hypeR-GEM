@@ -3,20 +3,10 @@
 
 # hypeR.GEM
 
-## Installation
-
-Install the development version of the package from Github. <span
-style="color:#0278ae">**\[Recommended\]**</span>
-
-``` r
-devtools::install_github("montilab/hypeR-GEM")
-```
-
 ## Usage
 
 ``` r
 library(hypeR.GEM)
-#library(tidyverse)
 library(hypeR)
 ```
 
