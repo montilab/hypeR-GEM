@@ -15,3 +15,29 @@ LazyData: true
 Depends: 
     R (>= 2.10)
 RoxygenNote: 7.2.1
+Imports:
+    Matrix,
+    R.matlab,
+    ggplot2,
+    ggforce,
+    tibble,
+    magrittr,
+    dplyr,
+    purrr,
+    stats,
+    stringr,
+    scales,
+    rlang,
+    httr,
+    reshape2
+    
+Suggests: 
+    tidyverse,
+    devtools,
+    rmarkdown,
+    knitr,
+    testthat (>= 3.1.6),
+    igraph,
+    visNetwork
+    
+  
