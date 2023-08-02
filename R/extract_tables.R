@@ -3,7 +3,7 @@
 #' @param con a connection or the path of the GEM
 #' @return a list of tables
 
-#'@importFrom R.matlab readMAT
+#'@importFrom R.matlab readMat
 #'@importFrom magrittr %>%
 #'@importFrom Matrix Matrix summary
 #'@importFrom dplyr arrange filter select pull
