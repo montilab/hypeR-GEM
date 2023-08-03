@@ -12,6 +12,7 @@
 #' @export
 enrichment <- function(hypeR_GEM_obj,
                        genesets,
+                       genesets_name = 'unknown',
                        method=c('unweighted','weighted','kstest'),
                        weights = 'one_minus_p_value',
                        background=1234567){
@@ -24,11 +25,12 @@ enrichment <- function(hypeR_GEM_obj,
     if(length(hypeR_GEM_obj$gene_tables)==1){
       hyp_GEM_enrichment <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]]$symbol,
                                               genesets = genesets,
+                                              genesets_name = genesets_name,
                                               background = background)
     }else{
       hyp_GEM_enrichment <- lapply(hypeR_GEM_obj$gene_tables,
                                    function(x){return (x$symbol)}) %>%
-        lapply(., .hyper_enrichment, genesets = genesets, background = background)
+        lapply(., .hyper_enrichment, genesets = genesets, genesets_name = genesets_name, background = background)
     }
   }
 
@@ -40,13 +42,13 @@ enrichment <- function(hypeR_GEM_obj,
       hyp_GEM_enrichment <- hypeR_GEM_obj$gene_tables[[1]] %>%
         dplyr::select(symbol,!!as.name(weights)) %>%
         tibble::deframe() %>%
-        .weighted_hyper_enrichment(., genesets = genesets, background = background)
+        .weighted_hyper_enrichment(., genesets = genesets, genesets_name = genesets_name, background = background)
     }else{
       hyp_GEM_enrichment <- lapply(hypeR_GEM_obj$gene_tables,
                                    function(x){x <- x %>%
                                      dplyr::select(symbol,!!as.name(weights)) %>%
                                      tibble::deframe()}) %>%
-        lapply(., .weighted_hyper_enrichment, genesets = genesets, background = background)
+        lapply(., .weighted_hyper_enrichment, genesets = genesets, genesets_name = genesets_name, background = background)
     }
   }
 
@@ -67,6 +69,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @keywords internal
 .hyper_enrichment <- function(unweighted_signature,
                               genesets,
+                              genesets_name='unknown',
                               background=1234567){
 
   if (!is(genesets, "list")) stop("Expected genesets to be a list of genesets\n")
@@ -94,12 +97,16 @@ enrichment <- function(hypeR_GEM_obj,
                      fdr=signif(stats::p.adjust(pvals, method="fdr"), 2),
                      signature=length(signature),
                      geneset=n_genesets,
-                     overlap= hits,
+                     overlap=hits,
+                     weighted_overlap = hits,
                      background=background,
                      hits=sapply(genesets, function(x, y) paste(intersect(x, y), collapse=';'), signature_found),
                      stringsAsFactors=FALSE)
 
-  return(list(info="Hypergeometric test",
+  return(list(info=list(Test = "Hypergeometric test",
+                        Signature_size = length(signature),
+                        Genesets = genesets_name,
+                        Background = background),
               data=data))
 }
 
@@ -117,6 +124,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @keywords internal
 .weighted_hyper_enrichment <- function(weighted_signature,
                                       genesets,
+                                      genesets_name='unknown',
                                       background=1234567){
 
   if (!is(weighted_signature, "vector")) stop("Expected signature to be a vector of symbols\n")
@@ -156,12 +164,15 @@ enrichment <- function(hypeR_GEM_obj,
                      fdr=signif(stats::p.adjust(pvals, method="fdr"), 2),
                      signature=length(signature),
                      geneset=n_genesets,
-                     weighted_overlap= weighted_hits,
+                     overlap=sapply(genesets, function(x, y) length(intersect(x, y)), signature_found),
+                     weighted_overlap=weighted_hits,
                      background=background,
                      hits=sapply(genesets, function(x, y) paste(intersect(x, y), collapse=';'), signature_found),
                      stringsAsFactors=FALSE)
 
-
-  return(list(info="Weighted hypergeometric test",
-              data=data))
+  return(list(info=list(Test = "Weighted hypergeometric test",
+                        Signature_size = length(signature),
+                        Genesets = genesets_name,
+                        Background = background),
+              data = data))
 }

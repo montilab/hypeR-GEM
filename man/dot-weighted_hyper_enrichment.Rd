@@ -4,7 +4,12 @@
 \alias{.weighted_hyper_enrichment}
 \title{Title Weighted hypergeometric test}
 \usage{
-.weighted_hyper_enrichment(weighted_signature, genesets, background = 1234567)
+.weighted_hyper_enrichment(
+  weighted_signature,
+  genesets,
+  genesets_name = "unknown",
+  background = 1234567
+)
 }
 \arguments{
 \item{weighted_signature}{named vector, name = gene symbol, value = weight and should be between 0 and 1}

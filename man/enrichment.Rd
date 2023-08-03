@@ -7,6 +7,7 @@
 enrichment(
   hypeR_GEM_obj,
   genesets,
+  genesets_name = "unknown",
   method = c("unweighted", "weighted", "kstest"),
   weights = "one_minus_p_value",
   background = 1234567

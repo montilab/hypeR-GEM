@@ -29,8 +29,9 @@ Imports:
     scales,
     rlang,
     httr,
-    reshape2
-    
+    reshape2,
+    htmltools,
+    reactable
 Suggests: 
     tidyverse,
     devtools,

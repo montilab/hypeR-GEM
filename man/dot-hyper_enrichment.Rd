@@ -4,7 +4,12 @@
 \alias{.hyper_enrichment}
 \title{Title Hypergeometric test}
 \usage{
-.hyper_enrichment(unweighted_signature, genesets, background = 1234567)
+.hyper_enrichment(
+  unweighted_signature,
+  genesets,
+  genesets_name = "unknown",
+  background = 1234567
+)
 }
 \arguments{
 \item{unweighted_signature}{a character vector of signature}

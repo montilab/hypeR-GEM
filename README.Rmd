@@ -10,6 +10,15 @@ devtools::load_all(".")
 
 # hypeR.GEM
 
+## Installation
+
+Install the development version of the package from Github.
+
+``` r
+devtools::install_github("montilab/hypeR")
+```
+
+
 ## Usage
 
 ```{r, eval=FALSE}
@@ -17,6 +26,7 @@ library(hypeR.GEM)
 ```
 
 
+## Load signatures
 ```{r}
 data(EL_signature)
 
@@ -52,15 +62,18 @@ print(kegg)
 ### KEGG (unweighted) {.tabset}
 ```{r}
 max_fdr <- 0.01
-kegg_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+hypeR_GEM_enrichments_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          genesets = kegg$genesets,
+                                         genesets_name = "KEGG",
                                          method='unweighted',
                                          weights = 'one_minus_p_value',
                                          background=3068)
 ```
 
+
+#### Plot
 ```{r}
-hypeR.GEM::enrichment_plot(kegg_unweighted,
+hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_unweighted,
                            top=40,
                            abrv=50,
                            size_by="significance",
@@ -70,21 +83,26 @@ hypeR.GEM::enrichment_plot(kegg_unweighted,
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
 
+#### Reactable
+```{r}
+hypeR.GEM::rctbls(hypeR_GEM_enrichments_unweighted, fdr_cutoff=0.05)
+```
 
 
 ### KEGG (weighted) {.tabset}
 ```{r}
 max_fdr <- 0.01
-kegg_weighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+hypeR_GEM_enrichments_weighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          genesets = kegg$genesets,
+                                         genesets_name = "KEGG",
                                          method='weighted',
                                          weights = 'one_minus_p_value',
                                          background=3068)
 ```
 
-
+#### Plot
 ```{r}
-hypeR.GEM::enrichment_plot(kegg_weighted,
+hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_weighted,
                            top=40,
                            abrv=50,
                            size_by="significance",
@@ -93,4 +111,11 @@ hypeR.GEM::enrichment_plot(kegg_weighted,
   ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
+
+#### Reactable
+```{r}
+hypeR.GEM::rctbls(hypeR_GEM_enrichments_weighted, fdr_cutoff=0.05)
+```
+
+
 
