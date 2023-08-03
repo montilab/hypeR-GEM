@@ -10,15 +10,6 @@ devtools::load_all(".")
 
 # hypeR.GEM
 
-## Installation
-
-Install the development version of the package from Github.
-
-``` r
-devtools::install_github("montilab/hypeR")
-```
-
-
 ## Usage
 
 ```{r, eval=FALSE}
