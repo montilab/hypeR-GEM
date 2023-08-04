@@ -35,7 +35,7 @@ rctbls <- function(hypeR_GEM_enrichments,
                                   gsets = colDef(name="Genesets"),
                                   bg = colDef(name="Background")),
                    details = function(index) {
-                     df <- rctbl(hypeR_GEM_enrichments[[index]], type="inner", fdr_cutoff=fdr_cutoff)
+                     df <- .rctbl(hypeR_GEM_enrichments[[index]], type="inner", fdr_cutoff=fdr_cutoff)
                    },
                    wrap = FALSE,
                    class = "rctbl-outer-tbl",
@@ -59,8 +59,8 @@ rctbls <- function(hypeR_GEM_enrichments,
 #' @importFrom dplyr select
 
 #' @return a reactable
-#' @export
-rctbl <- function(hypeR_GEM_enrichment,
+#' @keyword internal
+.rctbl <- function(hypeR_GEM_enrichment,
                   type=c("inner", "outer"),
                   fdr_cutoff = 0.05){
 
@@ -70,7 +70,7 @@ rctbl <- function(hypeR_GEM_enrichment,
   class.header <- .format_str("rctbl-{1}-header", type)
 
   df <- hypeR_GEM_enrichment$data %>%
-    dplyr::select(c("label", "pval", "fdr", "geneset", "overlap", "weighted_overlap", "hits"))
+    dplyr::select(c("label", "pval", "fdr", "geneset", "overlap", "weighted_overlap", "gene_hits", "metabolite_hits"))
 
 
   tbl <- reactable(df,
@@ -85,7 +85,8 @@ rctbl <- function(hypeR_GEM_enrichment,
                                 geneset = colDef(name="Geneset Size"),
                                 overlap = colDef(name="Overlap"),
                                 weighted_overlap = colDef(name="Weighted overlap"),
-                                hits    = colDef(name="Hits")),
+                                gene_hits    = colDef(name="Gene Hits"),
+                                metabolite_hist = colDef(name="Metabolite Hits")),
                    class=class.tbl)
 
   dat <- htmltools::div(class=class.obj, tbl)

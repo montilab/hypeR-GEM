@@ -14,7 +14,7 @@ enrichment <- function(hypeR_GEM_obj,
                        genesets,
                        genesets_name = 'unknown',
                        method=c('unweighted','weighted','kstest'),
-                       weights = 'one_minus_p_value',
+                       weights = 'one_minus_fdr',
                        background=1234567){
 
   # Default arguments
@@ -23,14 +23,16 @@ enrichment <- function(hypeR_GEM_obj,
   ## multi_hyp_GEM
   if(method == "unweighted"){
     if(length(hypeR_GEM_obj$gene_tables)==1){
-      hyp_GEM_enrichment <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]]$symbol,
+      hyp_GEM_enrichment <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                               genesets = genesets,
                                               genesets_name = genesets_name,
                                               background = background)
     }else{
       hyp_GEM_enrichment <- lapply(hypeR_GEM_obj$gene_tables,
-                                   function(x){return (x$symbol)}) %>%
-        lapply(., .hyper_enrichment, genesets = genesets, genesets_name = genesets_name, background = background)
+                                   .hyper_enrichment,
+                                   genesets = genesets,
+                                   genesets_name = genesets_name,
+                                   background = background)
     }
   }
 
@@ -39,16 +41,18 @@ enrichment <- function(hypeR_GEM_obj,
   ## multi_hyp_GEM
   if(method == "weighted"){
     if(length(hypeR_GEM_obj$gene_tables)==1){
-      hyp_GEM_enrichment <- hypeR_GEM_obj$gene_tables[[1]] %>%
-        dplyr::select(symbol,!!as.name(weights)) %>%
-        tibble::deframe() %>%
-        .weighted_hyper_enrichment(., genesets = genesets, genesets_name = genesets_name, background = background)
+      hyp_GEM_enrichment <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
+                                                       genesets = genesets,
+                                                       genesets_name = genesets_name,
+                                                       weights = weights,
+                                                       background = background)
     }else{
       hyp_GEM_enrichment <- lapply(hypeR_GEM_obj$gene_tables,
-                                   function(x){x <- x %>%
-                                     dplyr::select(symbol,!!as.name(weights)) %>%
-                                     tibble::deframe()}) %>%
-        lapply(., .weighted_hyper_enrichment, genesets = genesets, genesets_name = genesets_name, background = background)
+                                   .weighted_hyper_enrichment,
+                                   genesets = genesets,
+                                   genesets_name = genesets_name,
+                                   weights = weights,
+                                   background = background)
     }
   }
 
@@ -67,14 +71,14 @@ enrichment <- function(hypeR_GEM_obj,
 
 #' @return a list
 #' @keywords internal
-.hyper_enrichment <- function(unweighted_signature,
+.hyper_enrichment <- function(gene_table,
                               genesets,
                               genesets_name='unknown',
                               background=1234567){
 
   if (!is(genesets, "list")) stop("Expected genesets to be a list of genesets\n")
 
-  signature <- unique(unweighted_signature)
+  signature <- unique(gene_table$symbol)
   genesets <- lapply(genesets, unique)
 
   ## parameters
@@ -83,6 +87,17 @@ enrichment <- function(hypeR_GEM_obj,
   drawn <- length(signature)
   n_genesets <- sapply(genesets, length)
   left <- background-n_genesets
+
+  ## Associated metabolites
+  hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
+  metabolite_hits <- lapply(hitted_genes, function(x){gene_table %>%
+      dplyr::filter(symbol %in% x) %>%
+      dplyr::pull(associated_metabolites)}) %>%
+    lapply(., strsplit, ";") %>%
+    lapply(., unlist) %>%
+    lapply(., unique) %>%
+    lapply(., paste, collapse=";") %>%
+    unlist(.)
 
   # Hypergeometric test
   pvals <- suppressWarnings(stats::phyper(q=hits-1,
@@ -100,7 +115,8 @@ enrichment <- function(hypeR_GEM_obj,
                      overlap=hits,
                      weighted_overlap = hits,
                      background=background,
-                     hits=sapply(genesets, function(x, y) paste(intersect(x, y), collapse=';'), signature_found),
+                     gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
+                     metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE)
 
   return(list(info=list(Test = "Hypergeometric test",
@@ -122,17 +138,21 @@ enrichment <- function(hypeR_GEM_obj,
 
 #' @return a list
 #' @keywords internal
-.weighted_hyper_enrichment <- function(weighted_signature,
-                                      genesets,
-                                      genesets_name='unknown',
-                                      background=1234567){
+.weighted_hyper_enrichment <- function(gene_table,
+                                       genesets,
+                                       genesets_name='unknown',
+                                       weights = 'one_minus_fdr',
+                                       background=1234567){
 
-  if (!is(weighted_signature, "vector")) stop("Expected signature to be a vector of symbols\n")
+
   if (!is(genesets, "list")) stop("Expected genesets to be a list of genesets\n")
+  if(!(weights %in% colnames(gene_table))) stop("Gene weights must be specified in a colnmae of gene_table\n")
+
+  weighted_signature <- gene_table %>%
+    dplyr::select(symbol,!!as.name(weights)) %>%
+    tibble::deframe()
 
   if(max(weighted_signature) > 1 | min(weighted_signature) < 0) stop("All weights should be between 0 and 1\n")
-
-  if(is.null(names(weighted_signature))) stop("Expected signature to be a named vector\n")
 
   ## parameters
   signature <- unique(names(weighted_signature))
@@ -158,6 +178,17 @@ enrichment <- function(hypeR_GEM_obj,
                                           n=weighted_left,
                                           k=weighted_drawn,
                                           lower.tail=FALSE))
+  ## Associated metabolites
+  hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
+  metabolite_hits <- lapply(hitted_genes, function(x){gene_table %>%
+      dplyr::filter(symbol %in% x) %>%
+      dplyr::pull(associated_metabolites)}) %>%
+    lapply(., strsplit, ";") %>%
+    lapply(., unlist) %>%
+    lapply(., unique) %>%
+    lapply(., paste, collapse=";") %>%
+    unlist(.)
+
   # Format data
   data <- data.frame(label=names(genesets),
                      pval=signif(pvals, 2),
@@ -167,7 +198,8 @@ enrichment <- function(hypeR_GEM_obj,
                      overlap=sapply(genesets, function(x, y) length(intersect(x, y)), signature_found),
                      weighted_overlap=weighted_hits,
                      background=background,
-                     hits=sapply(genesets, function(x, y) paste(intersect(x, y), collapse=';'), signature_found),
+                     gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
+                     metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE)
 
   return(list(info=list(Test = "Weighted hypergeometric test",

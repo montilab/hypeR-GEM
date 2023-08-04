@@ -1,6 +1,7 @@
 ---
 output: rmarkdown::github_document
 ---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r echo=FALSE, message=FALSE}
@@ -9,6 +10,15 @@ devtools::load_all(".")
 ```
 
 # hypeR.GEM
+
+## (1) Installation
+
+- Using `devtools` package
+
+```r
+library(devtools)
+devtools::install_github("montilab/hypeR-GEM")
+```
 
 ## Usage
 
@@ -41,6 +51,7 @@ hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
 ```
 
 
+
 ```{r}
 library(hypeR)
 kegg <- msigdb_gsets(species="Homo sapiens", category="C2", subcategory = "CP:KEGG", clean = TRUE)
@@ -57,7 +68,6 @@ hypeR_GEM_enrichments_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          genesets = kegg$genesets,
                                          genesets_name = "KEGG",
                                          method='unweighted',
-                                         weights = 'one_minus_p_value',
                                          background=3068)
 ```
 
@@ -80,6 +90,10 @@ hypeR.GEM::rctbls(hypeR_GEM_enrichments_unweighted, fdr_cutoff=0.05)
 ```
 
 
+
+
+
+
 ### KEGG (weighted) {.tabset}
 ```{r}
 max_fdr <- 0.01
@@ -87,8 +101,10 @@ hypeR_GEM_enrichments_weighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          genesets = kegg$genesets,
                                          genesets_name = "KEGG",
                                          method='weighted',
-                                         weights = 'one_minus_p_value',
+                                         weights = 'one_minus_fdr',
                                          background=3068)
+
+hypeR_GEM_enrichments_weighted$EL_up$data
 ```
 
 #### Plot
