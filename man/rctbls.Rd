@@ -4,10 +4,12 @@
 \alias{rctbls}
 \title{Title Reactable table for hypeR_GEM_enrichment object}
 \usage{
-rctbls(hypeR_GEM_enrichments)
+rctbls(hypeR_GEM_enrichments, fdr_cutoff = 0.05)
 }
 \arguments{
-\item{hypeR_GEM_enrichments}{A hypeR_GEM_enrichments from multiple signatures}
+\item{hypeR_GEM_enrichments}{A hypeR_GEM_enrichments from single/multiple signatures, output of "hypeR.GEM::enrichment()"}
+
+\item{fdr_cutoff}{fdr threshold for geneset enrichment}
 }
 \value{
 a nested reactable

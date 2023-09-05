@@ -6,7 +6,6 @@
 #' @param weights the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
 #' @param background background parameter of hypergeometric test
 
-#' @importFrom stats phyper p.adjust
 
 #' @return a list of type of statistical test and data
 #' @export
@@ -17,18 +16,30 @@ enrichment <- function(hypeR_GEM_obj,
                        weights = 'one_minus_fdr',
                        background=1234567){
 
+  ## check
+  if(!is.list(hypeR_GEM_obj)) stop("hypeR_GEM_obj must be a list object!\n")
+  if(!is.list(genesets)) stop("genesets must be a list object!\n")
+  if(!(any(names(hypeR_GEM_obj) %in% c("mapped_metabolite_signatures", "gene_tables")))) stop("element names in 'hypeR_GEM_obj' must be contain 'mapped_metabolite_signatures' and 'gene_tables'")
+
+  weights_in_mapped_gene_tables <- all(lapply(hypeR_GEM_obj$gene_tables,colnames) %>%
+        lapply(., function(x){return(weights %in% x)}) %>%
+        unlist(.))
+
+  if(!all(weights_in_mapped_gene_tables)) stop("'weights' must be one of the column in all element of hypeR_GEM_obj$gene_tables")
+
   # Default arguments
   method <- match.arg(method)
 
-  ## multi_hyp_GEM
+  ## unweighted hypergeometric
   if(method == "unweighted"){
+    ## single or multiple signatures
     if(length(hypeR_GEM_obj$gene_tables)==1){
-      hyp_GEM_enrichment <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
+      hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                               genesets = genesets,
                                               genesets_name = genesets_name,
                                               background = background)
     }else{
-      hyp_GEM_enrichment <- lapply(hypeR_GEM_obj$gene_tables,
+      hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
                                    .hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
@@ -38,16 +49,17 @@ enrichment <- function(hypeR_GEM_obj,
 
 
 
-  ## multi_hyp_GEM
+  ## weighted hypergeometric
   if(method == "weighted"){
+    ## single or multiple signatures
     if(length(hypeR_GEM_obj$gene_tables)==1){
-      hyp_GEM_enrichment <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
+      hypeR_GEM_enrichments <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                                        genesets = genesets,
                                                        genesets_name = genesets_name,
                                                        weights = weights,
                                                        background = background)
     }else{
-      hyp_GEM_enrichment <- lapply(hypeR_GEM_obj$gene_tables,
+      hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
                                    .weighted_hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
@@ -56,7 +68,7 @@ enrichment <- function(hypeR_GEM_obj,
     }
   }
 
-  return(hyp_GEM_enrichment)
+  return(hypeR_GEM_enrichments)
 }
 
 

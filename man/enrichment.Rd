@@ -9,7 +9,7 @@ enrichment(
   genesets,
   genesets_name = "unknown",
   method = c("unweighted", "weighted", "kstest"),
-  weights = "one_minus_p_value",
+  weights = "one_minus_fdr",
   background = 1234567
 )
 }

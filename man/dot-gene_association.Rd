@@ -6,12 +6,14 @@
 \usage{
 .gene_association(
   mapped_metabolite_signature,
-  GEM_tables,
+  m2g,
   reference_key = "refmet_name"
 )
 }
 \arguments{
 \item{mapped_metabolite_signature}{one element in "mapped_metabolite_signatures"}
+
+\item{m2g}{association list}
 
 \item{reference_key}{the key which is used to map the signature and metabolites in the GEM}
 }

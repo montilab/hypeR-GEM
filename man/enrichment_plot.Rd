@@ -5,7 +5,7 @@
 \title{Title Enrichment analysis visualization}
 \usage{
 enrichment_plot(
-  hypeR_GEM_enrichment,
+  hypeR_GEM_enrichments,
   top = 20,
   abrv = 50,
   size_by = c("genesets", "significance", "none"),
@@ -16,9 +16,21 @@ enrichment_plot(
 )
 }
 \arguments{
-\item{hypeR_GEM_enrichment}{an hypeR_GEM object, the output of "signature2gene" function}
+\item{top}{Limit number of genesets shown}
 
-\item{title}{}
+\item{abrv}{Abbreviation length of geneset labels}
+
+\item{size_by}{Size dots by e.g. c("genesets", "significance", "none")}
+
+\item{pval_cutoff}{Filter results to be less than pval cutoff}
+
+\item{fdr_cutoff}{Filter results to be less than fdr cutoff}
+
+\item{val}{Choose significance value e.g. c("fdr", "pval")}
+
+\item{title}{Plot title}
+
+\item{hypeR_GEM_enrichment}{A hypeR_GEM_enrichments from single/multiple signatures, the output of "hypeR.GEM::enrichment()"}
 }
 \value{
 a ggplot object

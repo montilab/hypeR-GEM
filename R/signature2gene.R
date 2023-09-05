@@ -2,10 +2,12 @@
 #'
 #' @param signatures a list of metabolic signatures, each element is a data frame which has to contain a column with the same name as "reference_key"
 #' @param species the species of GEM model, if species == 'Other', a user-define GEM_table must be provided
-#' @param table species == 'Other', a user-define GEM_table must be provided
+#' @param tables species == 'Other', a user-define GEM_table must be provided
+#' @param merge merged metabolites in different compartment, for example, MAM001_c, MAM001_e, ... -> MAM001
 #' @param reference_key the column name in the reference table which represents the standardized names (e.g. "refmet_name")
-#' @param ensemble_id if the genes in GEM_table$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE
-#' @param background the background of the hypergeometric test of each mapped gene
+#' @param ensemble_id if the genes in GEM_tables$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE
+#' @param promiscuous_threshold gene association threshold of promiscuous metabolite
+#' @param background the background of the gene-specific hypergeometric test, default = NULL = number of merged metabolites
 #' @return a list containing two element: "mapped_metabolite_signatures" and "gene_tables" for each signature
 
 
@@ -15,12 +17,13 @@
 #' @importFrom tibble rownames_to_column column_to_rownames
 #' @importFrom gprofiler2 gconvert
 
-
 #' @export
 signature2gene <- function(signatures,
                            species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other"),
                            tables = NULL,
+                           merge = TRUE,
                            reference_key="refmet_name",
+                           promiscuous_threshold = NULL,
                            ensemble_id = TRUE,
                            background = NULL){
 
@@ -48,29 +51,60 @@ signature2gene <- function(signatures,
     GEM_tables <- tables
   }
 
+  ## if compartments are merged
+  if(merge){
+    meta_df <- GEM_tables$meta_df_merged
+    m2g <- GEM_tables$m2g_merged
+    g2m <- GEM_tables$g2m_merged
+    g2r <- GEM_tables$g2r
+  }else{
+    meta_df <- GEM_tables$meta_df
+    m2g <- GEM_tables$m2g
+    g2m <- GEM_tables$g2m
+    g2r <- GEM_tables$g2r
+  }
 
 
-  ## transform from sparse matrix to data frame
-  GEM_tables[['r2m']] <- as.data.frame(as(GEM_tables[['r2m']], "matrix"))
-  GEM_tables[['g2r']] <- as.data.frame(as(GEM_tables[['g2r']], "matrix"))
-  GEM_tables[['m2g']] <- as.data.frame(as(GEM_tables[['m2g']], "matrix"))
 
   ## map metabolic signatures to metabolites in the GEM via "reference_key"
   mapped_metabolite_signatures <- lapply(signatures, .extract_standardized_name, reference_key) %>%
-    lapply(., .extract_sig_meta, GEM_tables[['meta_df']], reference_key) %>%
-    lapply(., .gene_association, GEM_tables, reference_key)
+    lapply(., .extract_sig_meta, meta_df, reference_key) %>%
+    lapply(., .gene_association, m2g, reference_key) %>%
+    lapply(., function(x){x %>%
+        dplyr::distinct(!!as.name(reference_key), .keep_all = TRUE)})
+
+  ## remove promiscuous metabolites
+  if(!is.null(promiscuous_threshold)){
+    promiscuous_met <- lapply(mapped_metabolite_signatures, function(x){
+      x %>%
+        dplyr::filter(gene_association > promiscuous_threshold ) %>%
+        dplyr::select(!!as.name(reference_key), gene_association)
+    }) %>%
+      do.call(rbind, .) %>%
+      magrittr::set_rownames(., NULL) %>%
+      dplyr::distinct()
+
+    mapped_metabolite_signatures <- lapply(mapped_metabolite_signatures,function(x){
+      x %>%
+        dplyr::filter(!(!!as.name(reference_key) %in%  promiscuous_met[[reference_key]]))
+    })
+  }
+
+
 
   ## map metabolic signatures to ranked genes
-  ### Non-exchange metabolites
+  ### default background = # of unique metabolites in GEM
   if(is.null(background)){
-    background <- GEM_tables[['meta_df']] %>%
-      dplyr::filter(!(compartment=='e')) %>%
+    background <- GEM_tables[['meta_df_merged']] %>%
       nrow(.)
   }
 
   gene_tables <- lapply(mapped_metabolite_signatures,
                         .meta2gene,
-                        GEM_tables=GEM_tables,
+                        meta_df = meta_df,
+                        m2g=m2g,
+                        g2r=g2r,
+                        g2m=g2m,
                         background=background,
                         reference_key=reference_key)
 
@@ -105,8 +139,14 @@ signature2gene <- function(signatures,
     gene_tables <- lapply(gene_tables, function(x){x %>% tibble::rownames_to_column(var='symbol')})
   }
 
-  return(list(mapped_metabolite_signatures = mapped_metabolite_signatures,
-              gene_tables = gene_tables))
+  if(!is.null(promiscuous_threshold)){
+    return(list(promiscuous_met = promiscuous_met,
+                mapped_metabolite_signatures = mapped_metabolite_signatures,
+                gene_tables = gene_tables))
+  }else{
+    return(list(mapped_metabolite_signatures = mapped_metabolite_signatures,
+                gene_tables = gene_tables))
+  }
 }
 
 
@@ -153,65 +193,57 @@ signature2gene <- function(signatures,
 #' Title Gene association of each signature
 #'
 #' @param mapped_metabolite_signature one element in "mapped_metabolite_signatures"
-#' @param GEM_table
+#' @param m2g association list
 #' @param reference_key the key which is used to map the signature and metabolites in the GEM
 
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter select
+#' @importFrom dplyr mutate select
 
 #' @return a updated 'mapped_metabolite_signature' with "gene_association" column
 #' @keywords internal
 .gene_association <- function(mapped_metabolite_signature,
-                              GEM_tables,
-                              reference_key='refmet_name'){
-  mapped_metabolite_signature$gene_association <- GEM_tables[['m2g']] %>%
-    dplyr::filter(rownames(.) %in% mapped_metabolite_signature$name) %>%
-    apply(., 1, sum)
+                             m2g,
+                             reference_key = "refmet_name"){
 
   mapped_metabolite_signature <- mapped_metabolite_signature %>%
-    dplyr::select(name, fullname, !!as.name(reference_key), gene_association, everything())
-
-  return(mapped_metabolite_signature)
+    dplyr::mutate(gene_association  = lengths(m2g[mapped_metabolite_signature$name])) %>%
+    dplyr::select(name, fullname, !!as.name(reference_key),  gene_association, everything())
 }
 
 #' Title Map metabolic signature to ranked genes
 #'
-#' @param signature
-#' @param GEM_tables
-#' @param key
-#' @param background
+#' @param signature metabolite signature
+#' @param m2g association list
+#' @param g2r association list
+#' @param g2m association list
+#' @param background background for gene-specific hypergeometric test
+#' @param reference_key the key which is used to map the signature and metabolites in the GEM
 
-#' @importFrom magrittr %>% is_greater_than
-#' @importFrom dplyr filter select mutate left_join rename distinct pull
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter select pull
 #' @importFrom stats phyper p.adjust
 
 #' @return a data frame
 #' @keywords internal
 .meta2gene <- function(signature,
-                       GEM_tables,
+                       meta_df,
+                       m2g,
+                       g2r,
+                       g2m,
                        background,
                        reference_key='refmet_name'){
 
   ## map metabolite signatures to genes
-  mapped_genes <- GEM_tables[['m2g']] %>%
-    dplyr::filter(rownames(.) %in% signature[["name"]]) %>%
-    apply(.,2,sum) %>%
-    magrittr::is_greater_than(0) %>%
-    names(.)[.]
+  mapped_genes <- m2g[signature$name] %>%
+    unlist(.) %>%
+    unique(.)
 
   ## compute statistics
-  associated_reactions <- GEM_tables[['g2r']] %>%
-    dplyr::filter(rownames(.) %in% mapped_genes) %>%
-    apply(., 1, sum)
+  associated_reactions <- lengths(g2r[mapped_genes])
 
-  total_association <- GEM_tables[['m2g']] %>%
-    dplyr::select(all_of(mapped_genes)) %>%
-    apply(., 2, sum)
+  total_association <- lengths(g2m[mapped_genes])
 
-  signature_association <- GEM_tables[['m2g']] %>%
-    dplyr::select(all_of(mapped_genes)) %>%
-    dplyr::filter(rownames(.) %in% signature[["name"]]) %>%
-    apply(., 2, sum)
+  signature_association <- lengths(lapply(g2m[mapped_genes], function(x,y){return(intersect(x,y))}, signature$name))
 
   ## organize statistics in a data frame
   gene_df <- data.frame(associated_reactions = associated_reactions,
@@ -229,14 +261,10 @@ signature2gene <- function(signatures,
                   one_minus_fdr = 1-fdr)
 
   ## associated metabolites in signature of each gene
-  gene_df$associated_metabolites <- GEM_tables[['m2g']] %>%
-    dplyr::select(all_of(mapped_genes)) %>%
-    dplyr::filter(rownames(.) %in% signature[["name"]]) %>%
-    lapply(., function(x,y){return(row.names(y)[which(x >0)])}, .) %>%
-    lapply(.,  function(x){GEM_tables[['meta_df']] %>%
+  gene_df$associated_metabolites <- lapply(g2m[mapped_genes], function(x,y){return(intersect(x,y))}, signature$name) %>%
+    lapply(., function(x){meta_df %>%
         dplyr::filter(name %in% x) %>%
         dplyr::pull(!!as.name(reference_key))}) %>%
-    lapply(., unique) %>%
     lapply(., function(x){return(paste(x,collapse = ";"))}) %>%
     unlist(.)
 

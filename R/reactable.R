@@ -1,22 +1,33 @@
-
 #' Title Reactable table for hypeR_GEM_enrichment object
 #'
-#' @param hypeR_GEM_enrichments A hypeR_GEM_enrichments from multiple signatures
+#' @param hypeR_GEM_enrichments A hypeR_GEM_enrichments from single/multiple signatures, output of "hypeR.GEM::enrichment()"
+#' @param fdr_cutoff fdr threshold for geneset enrichment
 
 #' @importFrom reactable reactable colDef
 #' @importFrom htmltools div
 
 #' @return a nested reactable
 #' @export
-rctbls <- function(
-    hypeR_GEM_enrichments,
-    fdr_cutoff = 0.05) 
-{
+rctbls <- function(hypeR_GEM_enrichments,
+                    fdr_cutoff = 0.05) {
+
+  ## check
+  if(!is.list(hypeR_GEM_enrichments)) stop("hypeR_GEM_enrichments must be a list object!\n")
+  element_name_check <- lapply(hypeR_GEM_enrichments_unweighted,names) %>%
+    lapply(., function(x){return(x == c("info", "data"))}) %>%
+    lapply(.,all) %>%
+    unlist(.)
+
+  stopifnot( all(element_name_check))
+
+  ## filter out non-enriched geneset
   hypeR_GEM_enrichments <- lapply(hypeR_GEM_enrichments, function(x) {
     x$data <- x$data |>
       dplyr::filter(fdr < fdr_cutoff)
     return(x)
   })
+
+
   outer_df <- data.frame(
     signature = names(hypeR_GEM_enrichments),
     size = sapply(hypeR_GEM_enrichments, function(x) {
@@ -66,12 +77,12 @@ rctbls <- function(
 #' @importFrom dplyr select
 
 #' @return a reactable
-#' @keyword internal
+#' @keywords internal
 .rctbl <- function(
     hypeR_GEM_enrichment,
     type = c("inner", "outer"),
     fdr_cutoff = 0.05
-) 
+)
 {
   type <- match.arg(type)
   class.obj <- .format_str("rctbl-{1}-obj", type)
@@ -79,9 +90,9 @@ rctbls <- function(
   class.header <- .format_str("rctbl-{1}-header", type)
 
   df <- hypeR_GEM_enrichment$data |>
-    dplyr::select(c("label", "pval", "fdr", "geneset", "overlap", 
+    dplyr::select(c("label", "pval", "fdr", "geneset", "overlap",
                     "weighted_overlap", "gene_hits", "metabolite_hits"))
-  
+
   tbl <- reactable(df,
     rownames = FALSE,
     resizable = TRUE,

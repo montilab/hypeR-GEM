@@ -7,15 +7,11 @@
 extract_tables(con)
 }
 \arguments{
-\item{con}{a connection or the path of the GEM}
+\item{con}{a connection or the path of the GEM, which should be in .mat format}
 }
 \value{
 a list of tables
 }
 \description{
 Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format
-}
-\examples{
-con = file.path("data/Recon3D.mat")
-tables = extract_tables(con)
 }

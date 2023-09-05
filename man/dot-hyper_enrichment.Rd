@@ -5,18 +5,18 @@
 \title{Title Hypergeometric test}
 \usage{
 .hyper_enrichment(
-  unweighted_signature,
+  gene_table,
   genesets,
   genesets_name = "unknown",
   background = 1234567
 )
 }
 \arguments{
-\item{unweighted_signature}{a character vector of signature}
-
 \item{genesets}{a list of genesets}
 
 \item{background}{background parameter of hypergeometric test}
+
+\item{unweighted_signature}{a character vector of signature}
 }
 \value{
 a list

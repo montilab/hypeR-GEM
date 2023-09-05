@@ -8,7 +8,9 @@ signature2gene(
   signatures,
   species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other"),
   tables = NULL,
+  merge = TRUE,
   reference_key = "refmet_name",
+  promiscuous_threshold = NULL,
   ensemble_id = TRUE,
   background = NULL
 )
@@ -18,13 +20,17 @@ signature2gene(
 
 \item{species}{the species of GEM model, if species == 'Other', a user-define GEM_table must be provided}
 
+\item{tables}{species == 'Other', a user-define GEM_table must be provided}
+
+\item{merge}{merged metabolites in different compartment, for example, MAM001_c, MAM001_e, ... -> MAM001}
+
 \item{reference_key}{the column name in the reference table which represents the standardized names (e.g. "refmet_name")}
 
-\item{ensemble_id}{if the genes in GEM_table$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE}
+\item{promiscuous_threshold}{gene association threshold of promiscuous metabolite}
 
-\item{background}{the background of the hypergeometric test of each mapped gene}
+\item{ensemble_id}{if the genes in GEM_tables$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE}
 
-\item{table}{species == 'Other', a user-define GEM_table must be provided}
+\item{background}{the background of the gene-specific hypergeometric test, default = NULL = number of merged metabolites}
 }
 \value{
 a list containing two element: "mapped_metabolite_signatures" and "gene_tables" for each signature

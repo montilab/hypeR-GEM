@@ -14,10 +14,11 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports:
     Matrix,
     R.matlab,
+    gprofiler2,
     ggplot2,
     ggforce,
     tibble,
@@ -31,14 +32,12 @@ Imports:
     httr,
     reshape2,
     htmltools,
-    reactable
+    reactable,
+    igraph,
+    visNetwork
 Suggests: 
     tidyverse,
     devtools,
     rmarkdown,
     knitr,
-    testthat (>= 3.1.6),
-    igraph,
-    visNetwork
-    
-  
+    testthat (>= 3.1.6)

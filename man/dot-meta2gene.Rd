@@ -4,7 +4,28 @@
 \alias{.meta2gene}
 \title{Title Map metabolic signature to ranked genes}
 \usage{
-.meta2gene(signature, GEM_tables, background, reference_key = "refmet_name")
+.meta2gene(
+  signature,
+  meta_df,
+  m2g,
+  g2r,
+  g2m,
+  background,
+  reference_key = "refmet_name"
+)
+}
+\arguments{
+\item{signature}{metabolite signature}
+
+\item{m2g}{association list}
+
+\item{g2r}{association list}
+
+\item{g2m}{association list}
+
+\item{background}{background for gene-specific hypergeometric test}
+
+\item{reference_key}{the key which is used to map the signature and metabolites in the GEM}
 }
 \value{
 a data frame

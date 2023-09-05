@@ -1,6 +1,6 @@
 #' Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format
 #'
-#' @param con a connection or the path of the GEM
+#' @param con a connection or the path of the GEM, which should be in .mat format
 #' @return a list of tables
 
 #'@importFrom R.matlab readMat
@@ -8,9 +8,6 @@
 #'@importFrom Matrix Matrix summary
 #'@importFrom dplyr arrange filter select pull
 
-#' @examples
-#' con = file.path("data/Recon3D.mat")
-#' tables = extract_tables(con)
 
 #' @export
 extract_tables <- function(con){
@@ -20,19 +17,19 @@ extract_tables <- function(con){
   data <- GEM[[names(GEM)]][,,1]
 
   ## create basic data frames of metabolites, reactions, and genes
-  compos <- sapply(data$comps[,1],unlist)
+  #compos <- sapply(data$comps[,1],unlist)
+  #compartment <- compos[sapply(data$metComps[,1],unlist)]
   meta_df <- data.frame(name = sapply(data$mets[,1],unlist),
-                        fullname = sapply(data$metNames[,1],unlist),
-                        compartment = compos[sapply(data$metComps[,1],unlist)])
+                        fullname = sapply(data$metNames[,1],unlist))
 
   reaction_df <- data.frame(name = sapply(data$rxns[,1],unlist))
 
   gene_df <- data.frame(name = unlist(sapply(data$genes,unlist)))
 
   ## map metabolites to reactions, row = reactions, column = metabolites
-  r2m <- matrix(0,nrow=nrow(reaction_df),
-                ncol=nrow(meta_df),
-                dimnames = list(reaction_df$name,meta_df$name))
+  r2m_matrix <- matrix(0,nrow=nrow(reaction_df),
+                       ncol=nrow(meta_df),
+                       dimnames = list(reaction_df$name,meta_df$name))
 
   ### pull out the S matrix, Matrix::summary() converts S@i, S@j from 0-based to 1-based
   S <- as(as(as(data$S, "dMatrix"), "generalMatrix"), "TsparseMatrix") %>%
@@ -40,43 +37,99 @@ extract_tables <- function(con){
     as.data.frame(.) %>%
     dplyr::arrange(i)
 
-  for(m in 1:ncol(r2m)){
+  for(m in 1:ncol(r2m_matrix)){
     reactions <- S %>%
       dplyr::filter(i == m) %>%
       dplyr::pull(j)
 
-    r2m[reactions, m] <- r2m[reactions,m] + 1
+    r2m_matrix[reactions, m] <- r2m_matrix[reactions,m] + 1
   }
-  r2m <- as.data.frame(r2m)
-  #r2m <- Matrix::Matrix(r2m, sparse = TRUE)
 
-  ## map reactions to genes, row = genes, columns = reactions
+  ## association list, name of each element = metabolite, each element = reactions associated with this metabolite
+  m2r <- as.data.frame(r2m_matrix) %>%
+    lapply(., function(x,y){return(row.names(y)[which(x >0)])}, .)
+
+  ## association list, name of each element = reaction, each element = metabolites associated with this reaction
+  r2m <- r2m_matrix %>%
+    t() %>%
+    as.data.frame() %>%
+    lapply(., function(x,y){return(row.names(y)[which(x >0)])}, .)
+
+  ## merged metabolites in "r2m"
+  r2m_merged <- lapply(r2m, function(x){x <- x %>%
+    substr(., 1, nchar(.)-1) %>%
+    unique(.)})
+
+  ## merged metabolites in "m2r"
+  unique_met <- unique(substr(names(m2r), 1, nchar(names(m2r))-1))
+  m2r_merged <- list()
+  for(i in 1:length(unique_met)){
+    met <- unique_met[i]
+    m2r_merged[[met]] <- m2r[grepl(met, names(m2r))] %>%
+      unlist(.) %>%
+      unique(.)
+  }
+
+  ## map reactions to genes, row = reactions, columns = genes
   data$rxnGeneMat@Dimnames <-  list(reaction_df$name, gene_df$name)
-  g2r <- as(data$rxnGeneMat,"matrix") %>%
+  r2g_matrix <- as(data$rxnGeneMat,"matrix")
+
+  ## association list, name of each element = reaction, each element = genes associated with this reaction
+  g2r <- as.data.frame(r2g_matrix) %>%
+    lapply(., function(x,y){return(row.names(y)[which(x >0)])}, .)
+
+  ## association list, name of each element = gene ensemble ID, each element = reactions associated with this gene
+  r2g <- r2g_matrix %>%
     t(.) %>%
-    as.data.frame(.)
+    as.data.frame(.) %>%
+    lapply(., function(x,y){return(row.names(y)[which(x >0)])}, .)
 
-  ## map genes to metabolites, row = metabolites, column = genes
-  m2g <- matrix(0,nrow=nrow(meta_df),
-                ncol=nrow(gene_df),
-                dimnames = list(meta_df$name,gene_df$name))
-
-  m2g_list <- lapply(r2m, function(x){return(which(x!=0, arr.ind = FALSE))}) %>%
-    lapply(., .intermediate, g2r)
-
-  for(m in 1:length(m2g_list)){
-    genes <- m2g_list[[m]]
-    m2g[m, genes] <- m2g[m, genes] + 1
+  ## association list name of each element = unmerged metabolite, each element = genes associated with this metabolite
+  m2g <- list()
+  for(i in 1:length(m2r)){
+    m2g[[names(m2r)[i]]] <- r2g[m2r[[i]]] %>%
+      unlist(.) %>%
+      unique(.)
   }
-  #m2g <- Matrix::Matrix(m2g, sparse = TRUE)
+
+  ## association list name of each element = merged metabolite, each element = genes associated with this metabolite
+  m2g_merged <- list()
+  for(i in 1:length(m2r_merged)){
+    m2g_merged[[names(m2r_merged)[i]]] <- r2g[m2r_merged[[i]]] %>%
+      unlist(.) %>%
+      unique(.)
+  }
+
+  ## association list name of each element = gene, each element = unmerged metabolites associated with this genes
+  g2m <- list()
+  for(i in 1:length(g2r)){
+    g2m[[names(g2r)[i]]] <- r2m[g2r[[i]]] %>%
+      unlist(.) %>%
+      unique(.)
+  }
+
+  ## association list name of each element = gene, each element = merged metabolites associated with this genes
+  g2m_merged <- list()
+  for(i in 1:length(g2r)){
+    g2m_merged[[names(g2r)[i]]] <- r2m_merged[g2r[[i]]] %>%
+      unlist(.) %>%
+      unique(.)
+  }
 
   return(list(meta_df = meta_df,
+              meta_df_merged = NULL,
               reaction_df = reaction_df,
               gene_df = gene_df,
-              r2m = Matrix::Matrix(as(r2m,"matrix"), sparse = TRUE),
-              g2r = Matrix::Matrix(as(g2r,"matrix"), sparse = TRUE),
-              m2g = Matrix::Matrix(m2g, sparse = TRUE)))
-
+              m2r = m2r,
+              m2r_merged =  m2r_merged,
+              r2m = r2m,
+              r2m_merged = r2m_merged,
+              r2g = r2g,
+              g2r = g2r,
+              m2g = m2g,
+              m2g_merged = m2g_merged,
+              g2m = g2m,
+              g2m_merged = g2m_merged))
 }
 
 ## intermediate step of mapping metabolites -> reactions, reactions -> genes, and finally, metabolites -> genes

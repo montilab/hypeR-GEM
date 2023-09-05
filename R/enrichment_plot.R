@@ -1,17 +1,17 @@
 #' Title Enrichment analysis visualization
 #'
-#' @param hypeR_GEM_enrichment an hypeR_GEM object, the output of "signature2gene" function
-#' @param top
-#' @param abrv
-#' @param size_by
-#' @param pval_cutoff
-#' @param fdr_cutoff
-#' @param val
-#' @param title
+#' @param hypeR_GEM_enrichment A hypeR_GEM_enrichments from single/multiple signatures, the output of "hypeR.GEM::enrichment()"
+#' @param top Limit number of genesets shown
+#' @param abrv Abbreviation length of geneset labels
+#' @param size_by Size dots by e.g. c("genesets", "significance", "none")
+#' @param pval_cutoff Filter results to be less than pval cutoff
+#' @param fdr_cutoff Filter results to be less than fdr cutoff
+#' @param val Choose significance value e.g. c("fdr", "pval")
+#' @param title Plot title
 #'
 #' @return a ggplot object
 #' @export
-enrichment_plot <- function(hypeR_GEM_enrichment,
+enrichment_plot <- function(hypeR_GEM_enrichments,
          top=20,
          abrv=50,
          size_by=c("genesets", "significance", "none"),
@@ -24,15 +24,15 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
   size_by <- match.arg(size_by)
   val = match.arg(val)
 
-  if(c('info') %in% names(hypeR_GEM_enrichment) & c('data') %in% names(hypeR_GEM_enrichment)){
-    p <- .dots_plot(hypeR_GEM_enrichment$data,
+  if(c('info') %in% names(hypeR_GEM_enrichments) & c('data') %in% names(hypeR_GEM_enrichments)){
+    p <- .dots_plot(hypeR_GEM_enrichments$data,
                    top=40,
                    abrv=50,
                    size_by=size_by,
                    fdr_cutoff=max_fdr,
                    val=val)
   }else{
-    p <- .multi_dots_plot(hypeR_GEM_enrichment,
+    p <- .multi_dots_plot(hypeR_GEM_enrichments,
                     top=40,
                     abrv=50,
                     size_by=size_by,
@@ -46,14 +46,14 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
 
 #' Title Create a dot plot
 #'
-#' @param hyp_enrichment_data
-#' @param top
-#' @param abrv
-#' @param size_by
-#' @param pval_cutoff
-#' @param fdr_cutoff
-#' @param val
-#' @param title
+#' @param hyp_enrichment_data data in hypeR_GEM_enrichments
+#' @param top Limit number of genesets shown
+#' @param abrv Limit number of genesets shown
+#' @param size_by Size dots by e.g. c("genesets", "significance", "none")
+#' @param pval_cutoff Filter results to be less than pval cutoff
+#' @param fdr_cutoff Filter results to be less than fdr cutoff
+#' @param val Choose significance value e.g. c("fdr", "pval")
+#' @param title Plot title
 
 #' @importFrom purrr when
 #' @importFrom dplyr filter
@@ -138,14 +138,14 @@ enrichment_plot <- function(hypeR_GEM_enrichment,
 
 #' Title Create a multi dots plot
 #'
-#' @param multihyp_data
-#' @param top
-#' @param abrv
-#' @param size_by
-#' @param pval_cutoff
-#' @param fdr_cutoff
-#' @param val
-#' @param title
+#' @param multihyp_data data in hypeR_GEM_enrichments
+#' @param top Limit number of genesets shown
+#' @param abrv Abbreviation length of genesetlabels
+#' @param size_by Size dots by e.g. c("genesets", "significance", "none")
+#' @param pval_cutoff Filter results to be less than pval cutoff
+#' @param fdr_cutoff Filter results to be less than fdr cutoff
+#' @param val Choose significance value e.g. c("fdr", "pval")
+#' @param title title Plot title
 
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>% set_colnames

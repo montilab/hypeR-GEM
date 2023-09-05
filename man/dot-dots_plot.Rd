@@ -15,6 +15,23 @@
   title = ""
 )
 }
+\arguments{
+\item{hyp_enrichment_data}{data in hypeR_GEM_enrichments}
+
+\item{top}{Limit number of genesets shown}
+
+\item{abrv}{Limit number of genesets shown}
+
+\item{size_by}{Size dots by e.g. c("genesets", "significance", "none")}
+
+\item{pval_cutoff}{Filter results to be less than pval cutoff}
+
+\item{fdr_cutoff}{Filter results to be less than fdr cutoff}
+
+\item{val}{Choose significance value e.g. c("fdr", "pval")}
+
+\item{title}{Plot title}
+}
 \value{
 A ggplot object
 }
