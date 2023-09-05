@@ -96,8 +96,10 @@ hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_unweighted,
 ```
 
 #### Reactable
+
+Not quite sure why the reactable is not displayed normally in the .md file, but the function should work 
 ```{r}
-hypeR.GEM::rctbls(hypeR_GEM_enrichments_unweighted, fdr_cutoff=0.05)
+#hypeR.GEM::rctbls(hypeR_GEM_enrichments_unweighted, fdr_cutoff=0.05)
 ```
 
 
@@ -127,7 +129,7 @@ hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_weighted,
 
 #### Reactable
 ```{r}
-hypeR.GEM::rctbls(hypeR_GEM_enrichments_weighted, fdr_cutoff=0.05)
+#hypeR.GEM::rctbls(hypeR_GEM_enrichments_weighted, fdr_cutoff=0.05)
 ```
 
 
