@@ -19,3 +19,11 @@
   }
   return(string)
 }
+#' @keywords internal
+.check_hypeR_GEM_obj <- function(hypeR_GEM_obj) {
+  return(
+    is(hypeR_GEM_obj, "list") && all(
+      purrr::map_vec(hypeR_GEM_obj, \(sig) all(names(sig) == c("info", "data")))
+    )
+  )
+}

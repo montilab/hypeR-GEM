@@ -1,6 +1,6 @@
 #' Title Reactable table for hypeR_GEM_enrichment object
 #'
-#' @param hypeR_GEM_enrichments A hypeR_GEM_enrichments from single/multiple signatures, output of "hypeR.GEM::enrichment()"
+#' @param hypeR_GEM_obj A list of enrichment results from single/multiple signatures, output of "hypeR.GEM::enrichment()"
 #' @param fdr_cutoff fdr threshold for geneset enrichment
 
 #' @importFrom reactable reactable colDef
@@ -9,26 +9,33 @@
 #' @return a nested reactable
 #' @export
 rctbls <- function(
-    hypeR_GEM_enrichments,
+    hypeR_GEM_obj,
     fdr_cutoff = 0.05
 ) {
   ## input checks
-  stopifnot( is(hypeR_GEM_enrichments,"list") )
-  stopifnot( all(purrr::map_vec(hypeR_GEM_enrichments, \(sig) all(names(sig)==c("info", "data")))) )
+  stopifnot( .check_hypeR_GEM_obj(hypeR_GEM_obj) )
 
   ## filter out non-enriched geneset
-  hypeR_GEM_enrichments <- hypeR_GEM_enrichments |>
+  hypeR_GEM_obj <- hypeR_GEM_obj |>
     purrr::map(\(ls) {
       ls$data <- ls$data |> dplyr::filter(fdr < fdr_cutoff)
       return(ls)
     })
   ## create outer reactable
   outer_df <- data.frame(
-    signature = names(hypeR_GEM_enrichments),
-    size = purrr::map_vec(hypeR_GEM_enrichments, \(x) x$info$Signature_size, .ptype = integer(1)),
-    enriched = purrr::map_vec(hypeR_GEM_enrichments, \(x) nrow(x$data), .ptype = integer(1)),
-    gsets = purrr::map_vec(hypeR_GEM_enrichments, \(x) x$info$Genesets, .ptype = character(1)),
-    bg = purrr::map_vec(hypeR_GEM_enrichments, \(x) x$info$Background, .ptype = integer(1))
+    signature = names(hypeR_GEM_obj),
+    size = purrr::map_vec(
+      hypeR_GEM_obj, \(x) x$info$Signature_size, .ptype = integer(1)
+    ),
+    enriched = purrr::map_vec(
+      hypeR_GEM_obj, \(x) nrow(x$data), .ptype = integer(1)
+    ),
+    gsets = purrr::map_vec(
+      hypeR_GEM_obj, \(x) x$info$Genesets, .ptype = character(1)
+    ),
+    bg = purrr::map_vec(
+      hypeR_GEM_obj, \(x) x$info$Background, .ptype = integer(1)
+    )
   )
   ## inner reactable
   tbl <- reactable(outer_df,
@@ -45,7 +52,7 @@ rctbls <- function(
       bg = colDef(name = "Background")
     ),
     details = function(index) {
-      df <- .rctbl(hypeR_GEM_enrichments[[index]], type = "inner", fdr_cutoff = fdr_cutoff)
+      df <- .rctbl(hypeR_GEM_obj[[index]], type = "inner", fdr_cutoff = fdr_cutoff)
     },
     wrap = FALSE,
     class = "rctbl-outer-tbl",
