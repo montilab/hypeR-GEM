@@ -8,17 +8,19 @@
 
 #' @return a nested reactable
 #' @export
-rctbls <- function(hypeR_GEM_enrichments,
-                    fdr_cutoff = 0.05) {
-
+rctbls <- function(
+    hypeR_GEM_enrichments,
+    fdr_cutoff = 0.05
+) {
   ## check
-  if(!is.list(hypeR_GEM_enrichments)) stop("hypeR_GEM_enrichments must be a list object!\n")
-  element_name_check <- lapply(hypeR_GEM_enrichments_unweighted,names) %>%
-    lapply(., function(x){return(x == c("info", "data"))}) %>%
-    lapply(.,all) %>%
+  if (!is.list(hypeR_GEM_enrichments)) stop("hypeR_GEM_enrichments must be a list object!\n")
+  element_name_check <- lapply(hypeR_GEM_enrichments, names) |>
+    lapply(., function(x) {
+      return(x == c("info", "data"))
+    }) |>
+    lapply(., all) |>
     unlist(.)
-
-  stopifnot( all(element_name_check))
+  stopifnot(all(element_name_check))
 
   ## filter out non-enriched geneset
   hypeR_GEM_enrichments <- lapply(hypeR_GEM_enrichments, function(x) {
@@ -26,8 +28,6 @@ rctbls <- function(hypeR_GEM_enrichments,
       dplyr::filter(fdr < fdr_cutoff)
     return(x)
   })
-
-
   outer_df <- data.frame(
     signature = names(hypeR_GEM_enrichments),
     size = sapply(hypeR_GEM_enrichments, function(x) {
@@ -66,7 +66,6 @@ rctbls <- function(hypeR_GEM_enrichments,
   dat <- htmltools::div(class = "rctbl-outer-obj", tbl)
   return(dat)
 }
-
 #' Title Reactable table for hypeR_GEM_enrichment object
 #'
 #' @param hypeR_GEM_enrichment A hypeR_GEM_enrichment from a single signature
