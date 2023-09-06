@@ -12,37 +12,25 @@ rctbls <- function(
     hypeR_GEM_enrichments,
     fdr_cutoff = 0.05
 ) {
-  ## check
-  if (!is.list(hypeR_GEM_enrichments)) stop("hypeR_GEM_enrichments must be a list object!\n")
-  element_name_check <- lapply(hypeR_GEM_enrichments, names) |>
-    lapply(., function(x) {
-      return(x == c("info", "data"))
-    }) |>
-    lapply(., all) |>
-    unlist(.)
-  stopifnot(all(element_name_check))
+  ## input checks
+  stopifnot( is(hypeR_GEM_enrichments,"list") )
+  stopifnot( all(purrr::map_vec(hypeR_GEM_enrichments, \(sig) all(names(sig)==c("info", "data")))) )
 
   ## filter out non-enriched geneset
-  hypeR_GEM_enrichments <- lapply(hypeR_GEM_enrichments, function(x) {
-    x$data <- x$data |>
-      dplyr::filter(fdr < fdr_cutoff)
-    return(x)
-  })
+  hypeR_GEM_enrichments <- hypeR_GEM_enrichments |>
+    purrr::map(\(ls) {
+      ls$data <- ls$data |> dplyr::filter(fdr < fdr_cutoff)
+      return(ls)
+    })
+  ## create outer reactable
   outer_df <- data.frame(
     signature = names(hypeR_GEM_enrichments),
-    size = sapply(hypeR_GEM_enrichments, function(x) {
-      x$info[["Signature_size"]]
-    }),
-    enriched = sapply(hypeR_GEM_enrichments, function(x) {
-      nrow(x$data)
-    }),
-    gsets = sapply(hypeR_GEM_enrichments, function(x) {
-      x$info[["Genesets"]]
-    }),
-    bg = sapply(hypeR_GEM_enrichments, function(x) {
-      x$info[["Background"]]
-    })
+    size = purrr::map_vec(hypeR_GEM_enrichments, \(x) x$info$Signature_size, .ptype = integer(1)),
+    enriched = purrr::map_vec(hypeR_GEM_enrichments, \(x) nrow(x$data), .ptype = integer(1)),
+    gsets = purrr::map_vec(hypeR_GEM_enrichments, \(x) x$info$Genesets, .ptype = character(1)),
+    bg = purrr::map_vec(hypeR_GEM_enrichments, \(x) x$info$Background, .ptype = integer(1))
   )
+  ## inner reactable
   tbl <- reactable(outer_df,
     showPageSizeOptions = FALSE,
     onClick = "expand",
