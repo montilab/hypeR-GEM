@@ -28,7 +28,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
       top = top,
       abrv = abrv,
       size_by = size_by,
-      fdr_cutoff = max_fdr,
+      fdr_cutoff = fdr_cutoff,
       val = val
     )
   } else {
@@ -36,7 +36,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
       top = top,
       abrv = abrv,
       size_by = size_by,
-      fdr_cutoff = max_fdr,
+      fdr_cutoff = fdr_cutoff,
       val = val
     )
   }
