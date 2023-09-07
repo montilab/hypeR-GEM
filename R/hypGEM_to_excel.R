@@ -1,35 +1,36 @@
+#' hypGEM_to_excel
+#'
+#' writes the enrichment results out to an Excel workbook
 #'
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #'
 #' @export
 hypGEM_to_excel <- function(
-    hypeR_GEM_obj,
+    hypGEM_obj,
     file_path,
     cols = NULL,
     fdr_cutoff = 1.0,
+    do_sort = FALSE,
     versioning = TRUE) {
   ## input checks
-  stopifnot(.check_hypeR_GEM_obj(hypeR_GEM_obj))
+  stopifnot(.check_hypeR_GEM_obj(hypGEM_obj))
   stopifnot(fdr_cutoff > 0 && fdr_cutoff <= 1.0)
 
   ## Generate excel file
   wb <- openxlsx::createWorkbook()
 
+  ## filter result tables
+  if ( !is.null(cols) || fdr_cutoff < 1.0 )
+    hypGEM_obj <- hypGEM_filter(hypGEM_obj, fdr_cutoff = fdr_cutoff, cols = cols, do_sort = do_sort)
+
   ## A new sheet for each dataframe
-  for ( nm in names(hypeR_GEM_obj) ) {
+  for ( nm in names(hypGEM_obj) ) {
     sheet <- openxlsx::addWorksheet(wb, sheetName = nm)
 
     ## Extract hypGEM dataframe
-    df <- hypeR_GEM_obj[[nm]]$data
+    df <- hypGEM_obj[[nm]]$data
 
-    if (is.null(cols)) {
-      cols <- seq_len(ncol(df))
-    }
-    df_flt <- df |>
-      dplyr::select({{ cols }}) |>
-      dplyr::filter(fdr <= fdr_cutoff)
-
-    openxlsx::writeData(wb, sheet = nm, x = df_flt, colNames = TRUE, rowNames = FALSE)
+    openxlsx::writeData(wb, sheet = nm, x = df, colNames = TRUE, rowNames = FALSE)
   }
   # if ( versioning ) {
   #  x <- mapply(function(x) x$info, multihyp_obj$data)
@@ -38,3 +39,46 @@ hypGEM_to_excel <- function(
   # }
   suppressMessages(openxlsx::saveWorkbook(wb, file = file_path, overwrite = TRUE))
 }
+#' hypGEM_filter
+#'
+#' Filter the enrichment results by fdr value, and optionally sub-selects result columns
+#'
+#' @export
+hypGEM_filter <- function(
+    hypGEM_obj,
+    cols = NULL,
+    fdr_cutoff = 1.0,
+    do_sort = FALSE)
+{
+  ## input checks
+  stopifnot(.check_hypeR_GEM_obj(hypGEM_obj))
+  stopifnot(fdr_cutoff > 0 && fdr_cutoff <= 1.0)
+  stopifnot( is.null(cols) || all(cols %in% hypGEM_obj[[1]]$data))
+
+  ## nothing to do here
+  if ( is.null(cols) && fdr_cutoff == 1 && !do_sort )
+    return(hypGEM_obj)
+
+  ## if no columns specified, select all
+  if (is.null(cols)) {
+    cols <- seq_len(ncol(hypGEM_obj[[1]]$data))
+  }
+  ## filter by fdr and by columns, and sort by fdr if required
+  obj_flt <- hypGEM_obj |>
+    purrr::map( \(ls) {
+      ls$data <- ls$data |>
+        dplyr::select({{ cols }}) |>
+        dplyr::filter(fdr <= fdr_cutoff)
+      if (do_sort)
+        ls$data <- ls$data |> dplyr::arrange(pval)
+      return(ls)
+    })
+  return(obj_flt)
+}
+
+
+
+
+
+
+
