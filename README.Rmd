@@ -33,6 +33,7 @@ library(hypeR.GEM)
 data(EL_signature)
 
 str(EL_signature)
+
 ```
 
 
@@ -51,13 +52,13 @@ str(EL_signature)
 hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
                                            species = "Human",
                                            merge = TRUE,
-                                           promiscuous_threshold = 50,
+                                           promiscuous_threshold = 30,
                                            ensemble_id = TRUE,
                                            reference_key = 'refmet_name',
                                            background = NULL)
 
 
-hypeR_GEM_obj$promiscuous_met
+unique(hypeR_GEM_obj$gene_tables$EL_down$signature_size)
 ```
 
 
@@ -78,15 +79,18 @@ hypeR_GEM_enrichments_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                          genesets = kegg$genesets,
                                          genesets_name = "KEGG",
                                          method='unweighted',
+                                         metabolite_hits_filter_threshold = 0,
                                          background=3068)
 
-hypeR_GEM_enrichments_unweighted$EL_down$info
+hypeR_GEM_enrichments_unweighted$EL_down$data
+
+round(0.166, 3)
 ```
 
 #### Plot
 ```{r}
 hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_unweighted,
-                           top=40,
+                           top=50,
                            abrv=50,
                            size_by="significance",
                            fdr_cutoff= max_fdr,

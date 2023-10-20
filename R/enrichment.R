@@ -4,6 +4,7 @@
 #' @param genesets a list of genesets
 #' @param method enrichment method
 #' @param weights the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
+#' @param metetabolite_hits_filter_threshold filter out enriched pathways that are driven by a small number/ratio of metabolites, if 0 <= threshold < 1, we filter by ratio, else, we filter by number
 #' @param background background parameter of hypergeometric test
 
 
@@ -14,12 +15,14 @@ enrichment <- function(hypeR_GEM_obj,
                        genesets_name = 'unknown',
                        method=c('unweighted','weighted','kstest'),
                        weights = 'one_minus_fdr',
+                       metabolite_hits_filter_threshold = 0,
                        background=1234567){
 
   ## check
   if(!is.list(hypeR_GEM_obj)) stop("hypeR_GEM_obj must be a list object!\n")
   if(!is.list(genesets)) stop("genesets must be a list object!\n")
   if(!(any(names(hypeR_GEM_obj) %in% c("mapped_metabolite_signatures", "gene_tables")))) stop("element names in 'hypeR_GEM_obj' must be contain 'mapped_metabolite_signatures' and 'gene_tables'")
+  if(metabolite_hits_filter_threshold < 0) stop("'metabolite_hits_filter_threshold' must be non-negative")
 
   weights_in_mapped_gene_tables <- all(lapply(hypeR_GEM_obj$gene_tables,colnames) %>%
         lapply(., function(x){return(weights %in% x)}) %>%
@@ -30,6 +33,7 @@ enrichment <- function(hypeR_GEM_obj,
   # Default arguments
   method <- match.arg(method)
 
+
   ## unweighted hypergeometric
   if(method == "unweighted"){
     ## single or multiple signatures
@@ -37,12 +41,14 @@ enrichment <- function(hypeR_GEM_obj,
       hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                               genesets = genesets,
                                               genesets_name = genesets_name,
+                                              filter_threshold =  metabolite_hits_filter_threshold,
                                               background = background)
     }else{
       hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
                                    .hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
+                                   filter_threshold =  metabolite_hits_filter_threshold,
                                    background = background)
     }
   }
@@ -56,6 +62,7 @@ enrichment <- function(hypeR_GEM_obj,
       hypeR_GEM_enrichments <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                                        genesets = genesets,
                                                        genesets_name = genesets_name,
+                                                       filter_threshold = filter_threshold,
                                                        weights = weights,
                                                        background = background)
     }else{
@@ -63,6 +70,7 @@ enrichment <- function(hypeR_GEM_obj,
                                    .weighted_hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
+                                   filter_threshold = filter_threshold,
                                    weights = weights,
                                    background = background)
     }
@@ -80,11 +88,14 @@ enrichment <- function(hypeR_GEM_obj,
 
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
+#' @importFrom stringr str_count
+#' @importFrom dplyr filter mutate
 
 #' @return a list
 #' @keywords internal
 .hyper_enrichment <- function(gene_table,
                               genesets,
+                              filter_threshold,
                               genesets_name='unknown',
                               background=1234567){
 
@@ -99,6 +110,10 @@ enrichment <- function(hypeR_GEM_obj,
   drawn <- length(signature)
   n_genesets <- sapply(genesets, length)
   left <- background-n_genesets
+
+  ## record metabolite signature size
+  metabolite_signature_size <- unique(gene_table$signature_size)
+
 
   ## Associated metabolites
   hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
@@ -129,7 +144,20 @@ enrichment <- function(hypeR_GEM_obj,
                      background=background,
                      gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
                      metabolite_hits = metabolite_hits,
-                     stringsAsFactors=FALSE)
+                     stringsAsFactors=FALSE) %>%
+    dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
+
+  ## soft filter
+  if(0 <= filter_threshold & filter_threshold < 1){
+    data <- data %>%
+      dplyr::filter(ratio_met_hits >= filter_threshold)
+  }
+  ## hard filter
+  if(filter_threshold >= 1){
+    data <- data %>%
+      dplyr::filter(num_met_hits >= filter_threshold)
+  }
 
   return(list(info=list(Test = "Hypergeometric test",
                         Signature_size = length(signature),
@@ -147,11 +175,14 @@ enrichment <- function(hypeR_GEM_obj,
 
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
+#' @importFrom stringr str_count
+#' @importFrom dplyr filter mutate
 
 #' @return a list
 #' @keywords internal
 .weighted_hyper_enrichment <- function(gene_table,
                                        genesets,
+                                       filter_threshold,
                                        genesets_name='unknown',
                                        weights = 'one_minus_fdr',
                                        background=1234567){
@@ -171,6 +202,8 @@ enrichment <- function(hypeR_GEM_obj,
   genesets <- lapply(genesets,unique)
   signature_found <- signature[signature %in% unique(unlist(genesets))]
 
+  ## record metabolite signature size
+  metabolite_signature_size <- unique(gene_table$signature_size)
 
   ## weighted hits(overlaps)
   weighted_hits <- lapply(genesets, function(x, y) intersect(x, y), signature_found) %>%
@@ -212,7 +245,20 @@ enrichment <- function(hypeR_GEM_obj,
                      background=background,
                      gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
                      metabolite_hits = metabolite_hits,
-                     stringsAsFactors=FALSE)
+                     stringsAsFactors=FALSE) %>%
+    dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
+
+  ## soft filter
+  if(0 <= filter_threshold & filter_threshold < 1){
+    data <- data %>%
+      dplyr::filter(ratio_met_hits >= filter_threshold)
+  }
+  ## hard filter
+  if(filter_threshold >= 1){
+    data <- data %>%
+      dplyr::filter(num_met_hits >= filter_threshold)
+  }
 
   return(list(info=list(Test = "Weighted hypergeometric test",
                         Signature_size = length(signature),
