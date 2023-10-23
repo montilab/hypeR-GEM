@@ -112,7 +112,7 @@ enrichment <- function(hypeR_GEM_obj,
   left <- background-n_genesets
 
   ## record metabolite signature size
-  #metabolite_signature_size <- unique(gene_table$signature_size)
+  metabolite_signature_size <- unique(gene_table$signature_size)
 
 
   ## Associated metabolites
@@ -146,7 +146,7 @@ enrichment <- function(hypeR_GEM_obj,
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
     dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(num_met_hits/signature, 3))
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
   if(0 < filter_threshold & filter_threshold < 1){
@@ -202,6 +202,10 @@ enrichment <- function(hypeR_GEM_obj,
   genesets <- lapply(genesets,unique)
   signature_found <- signature[signature %in% unique(unlist(genesets))]
 
+  ## record metabolite signature size
+  metabolite_signature_size <- unique(gene_table$signature_size)
+
+
   ## weighted hits(overlaps)
   weighted_hits <- lapply(genesets, function(x, y) intersect(x, y), signature_found) %>%
     lapply(., function(x,y) y[x], weighted_signature) %>%
@@ -244,7 +248,7 @@ enrichment <- function(hypeR_GEM_obj,
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
     dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(num_met_hits/signature, 3))
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
   if(0 < filter_threshold & filter_threshold < 1){
