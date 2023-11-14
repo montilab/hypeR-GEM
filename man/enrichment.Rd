@@ -10,6 +10,7 @@ enrichment(
   genesets_name = "unknown",
   method = c("unweighted", "weighted", "kstest"),
   weights = "one_minus_fdr",
+  metabolite_hits_filter_threshold = 0,
   background = 1234567
 )
 }
@@ -23,6 +24,8 @@ enrichment(
 \item{weights}{the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene}
 
 \item{background}{background parameter of hypergeometric test}
+
+\item{metetabolite_hits_filter_threshold}{filter out enriched pathways that are driven by a small number/ratio of metabolites, if 0 < threshold < 1, we filter by ratio, else, we filter by number. If threshold = 0, no filter}
 }
 \value{
 a list of type of statistical test and data

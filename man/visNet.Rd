@@ -8,7 +8,9 @@ visNet(
   ig,
   metabolite_query = NULL,
   gene_query = NULL,
-  by = c("symbol", "name"),
+  metabolite_by = c("symbol", "refmet_name", "HMDB_ID", "name"),
+  gene_by = c("symbol", "ensemble_ID", "name"),
+  focus = c("all", "metabolite", "pathway"),
   edge_label = NULL,
   main = "A simple reaction-based network",
   metabolite_query_color = "#FF9999",
@@ -30,8 +32,6 @@ visNet(
 
 \item{gene_query}{a character vector contains enzyme-coding genes which are consistent with V(ig)$symbol or V(ig)$name}
 
-\item{by}{if the queries are given by V(ig)$symbol, then by = "symbol"; if the queries are given by V(ig)$name, then by = "name"}
-
 \item{edge_label}{An edge attribute in E(ig) that can be used to represent edge labels}
 
 \item{main}{the title of the network}
@@ -51,6 +51,8 @@ visNet(
 \item{igraph_layout}{the layout algorithm available in "igraph", see https://igraph.org/r/html/1.3.0/layout_.html}
 
 \item{layout_seed}{random seed of the network layout}
+
+\item{by}{if the queries are given by V(ig)$symbol, then by = "symbol"; if the queries are given by V(ig)$name, then by = "name"}
 }
 \value{
 a list of: ig = node-induced sub-graph, p = a visNetwork object

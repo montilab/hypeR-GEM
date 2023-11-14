@@ -28,6 +28,67 @@ library(hypeR.GEM)
 ```
 
 
+```{r}
+## pathway = Animal Organ Regeneration
+gene_query <- c("BAAT","HMOX1", "NNMT", "UGT1A1")
+
+met_query <- c("(10Z)-heptadecenoic acid", "1-methylnicotinamide", "bilirubin", "biliverdin")
+
+data("human_ig")
+
+ig <- human_ig
+df <- igraph::as_data_frame(ig, what = 'both')
+metabolite_by = "symbol"
+gene_by = "symbol"
+
+## query nodes from "ig"，duplicated "symbol" implies multiple compartments
+  query_df <- df$vertices %>%
+    magrittr::set_rownames(., 1:nrow(.)) %>%
+    tibble::rownames_to_column(var='vid') %>%
+    dplyr::mutate(vid = as.numeric(vid)) %>%
+    dplyr::filter(!is.na(!!as.name(metabolite_by)) & !is.na(!!as.name(gene_by))) %>%
+    dplyr::filter(!!as.name(metabolite_by) %in% metabolite_query | !!as.name(gene_by) %in% gene_query) 
+
+  ## obtain node Ids of gene_query，empty if gene_query = NULL
+  gene_query_vids <- query_df %>%
+    dplyr::filter(node_type == "gene") %>%
+    dplyr::pull(vid)
+
+  ## obtain node Ids of metabolite_query，empty if metabolite_query = NULL
+  metabolite_query_vids <- query_df %>%
+    dplyr::filter(node_type == "metabolite") %>%
+    dplyr::pull(vid)
+
+  ## gene_query and their neighbor, empty if gene_query = NULL
+  gene_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= gene_query_vids, mode='all'), as.numeric) %>%
+    unlist(.) %>%
+    unique(.)
+
+  ## metabolite_query and their neighbor，empty if metabolite_query = NULL
+  metabolite_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= metabolite_query_vids, mode='all'), as.numeric) %>%
+    unlist(.) %>%
+    unique(.)
+
+  ## specified visualization focus
+  if(focus == "all"){
+    all_vids <- unique(c(gene_neighbor_vids, metabolite_neighbor_vids))
+
+  }
+  if(focus == "metabolite"){
+    all_vids <-  unique(c(metabolite_neighbor_vids, gene_query_vids))
+  }
+  if(focus == "pathway"){
+    all_vids <- unique(c(gene_neighbor_vids, metabolite_query_vids))
+
+
+  }
+
+
+
+```
+
+
+
 ## Load signatures
 ```{r}
 data(EL_signature)
@@ -59,6 +120,8 @@ hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
 
 
 #unique(hypeR_GEM_obj$gene_tables$EL_down$signature_size)
+
+hypeR_GEM_obj$mapped_metabolite_signatures$EL_down
 ```
 
 
@@ -136,4 +199,20 @@ hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_weighted,
 ```
 
 
+```{r}
+ig <- hypeR.GEM::human_ig
+
+hypeR.GEM::Human_GEM_tables$meta_df_merged %>% 
+  dplyr::filter(fullname %in% "lithocholic acid sulfate")
+
+Human_GEM_tables$meta_df_merged$fullname[str_detect(Human_GEM_tables$meta_df_merged$fullname, "Lithocholic")]
+
+p <- hypeR.GEM::visNet(ig, 
+                  metabolite_query = c("bilirubin"),
+                  by = "symbol")
+
+
+
+p$p
+```
 

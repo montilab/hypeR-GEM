@@ -7,6 +7,7 @@
 .weighted_hyper_enrichment(
   gene_table,
   genesets,
+  filter_threshold,
   genesets_name = "unknown",
   weights = "one_minus_fdr",
   background = 1234567

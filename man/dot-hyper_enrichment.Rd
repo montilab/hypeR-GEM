@@ -7,6 +7,7 @@
 .hyper_enrichment(
   gene_table,
   genesets,
+  filter_threshold,
   genesets_name = "unknown",
   background = 1234567
 )

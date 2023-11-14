@@ -15,10 +15,10 @@
 #' @param igraph_layout the layout algorithm available in "igraph", see https://igraph.org/r/html/1.3.0/layout_.html
 #' @param layout_seed random seed of the network layout
 
-#'@importFrom magrittr %>%
+#'@importFrom magrittr %>% set_rownames
 #'@importFrom tibble rownames_to_column
-#'@importFrom dplyr filter rename pull
-#'@importFrom igraph as_data_frame neighborhood induced_subgraph
+#'@importFrom dplyr filter rename pull mutate case_when
+#'@importFrom igraph as_data_frame neighborhood induced_subgraph vertex_attr edge_attr
 #'@importFrom visNetwork visNetwork visNodes visEdges visGroups visOptions visLegend visInteraction visLayout visPhysics visIgraphLayout
 
 #' @return a list of: ig = node-induced sub-graph, p = a visNetwork object
@@ -26,7 +26,9 @@
 visNet <- function(ig,
                    metabolite_query = NULL,
                    gene_query = NULL,
-                   by = c("symbol","name"),
+                   metabolite_by = c("symbol","refmet_name", "HMDB_ID","name"),
+                   gene_by = c("symbol","ensemble_ID", "name"),
+                   focus = c("all","metabolite","pathway"),
                    edge_label = NULL,
                    main = "A simple reaction-based network",
                    metabolite_query_color = "#FF9999",
@@ -41,59 +43,101 @@ visNet <- function(ig,
                    layout_seed = 42){
 
   # Default arguments
-  by <- match.arg(by)
+  metabolite_by <- match.arg(metabolite_by)
+  gene_by <- match.arg(gene_by)
+  focus <- match.arg(focus)
+
+  ## check
+  if(!(class(ig)=="igraph")) stop(" 'ig' must be a igraph object!\n")
+  if(!(is.character(metabolite_query))) stop(" 'metabolite_query' must be a character vector!\n")
+  if(!(is.character(gene_query))) stop(" 'gene_query' must be a character vector!\n")
+  if(!is.null(edge_label)){ if(is.null(igraph::edge_attr(ig, edge_label))) stop(" 'edge_label' must be an edge attribute in ig!\n") }
 
   ## query  nodes from "ig"
   df <- igraph::as_data_frame(ig,what='both')
 
   ## query nodes from "ig"，duplicated "symbol" implies multiple compartments
   query_df <- df$vertices %>%
+    magrittr::set_rownames(., 1:nrow(.)) %>%
     tibble::rownames_to_column(var='vid') %>%
-    dplyr::filter(!is.na(!!as.name(by))) %>%
-    dplyr::filter(!!as.name(by) %in% metabolite_query | !!as.name(by) %in% gene_query)
+    dplyr::mutate(vid = as.numeric(vid)) %>%
+    dplyr::filter(!is.na(!!as.name(metabolite_by)) & !is.na(!!as.name(gene_by))) %>%
+    dplyr::filter(!!as.name(metabolite_by) %in% metabolite_query | !!as.name(gene_by) %in% gene_query)
 
-  ## obtain neighbors of gene_query
+  ## obtain node Ids of gene_query，empty if gene_query = NULL
   gene_query_vids <- query_df %>%
     dplyr::filter(node_type == "gene") %>%
     dplyr::pull(vid)
 
+  ## obtain node Ids of metabolite_query，empty if metabolite_query = NULL
   metabolite_query_vids <- query_df %>%
     dplyr::filter(node_type == "metabolite") %>%
     dplyr::pull(vid)
 
-  ## metabolites belong to"metabolite_query" and other metabolites
-  gene_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes=gene_query_vids, mode='all'), as.numeric) %>%
+  ## gene_query and their neighbor, empty if gene_query = NULL
+  gene_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= gene_query_vids, mode='all'), as.numeric) %>%
     unlist(.) %>%
     unique(.)
 
-  ## metabolite_query and their neighbor
-  metabolite_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes=metabolite_query_vids, mode='all'), as.numeric) %>%
+  ## metabolite_query and their neighbor，empty if metabolite_query = NULL
+  metabolite_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= metabolite_query_vids, mode='all'), as.numeric) %>%
     unlist(.) %>%
     unique(.)
 
-  all_neighbor_vids <- unique(c(gene_neighbor_vids, metabolite_neighbor_vids))
+  ## specified visualization focus
+  if(focus == "all"){
+    all_vids <- unique(c(gene_neighbor_vids, metabolite_neighbor_vids))
+
+  }
+  if(focus == "metabolite"){
+    all_vids <-  unique(c(metabolite_neighbor_vids, gene_query_vids))
+  }
+  if(focus == "pathway"){
+    all_vids <- unique(c(gene_neighbor_vids, metabolite_query_vids))
+
+
+  }
 
   ## Obtain the node-induced sub-graph
-  ig_sub <- igraph::induced_subgraph(ig, vids= all_neighbor_vids)
+  ig_sub <- igraph::induced_subgraph(ig, vids= all_vids)
 
   if(!is.null(vertex_attr(ig_sub, 'id'))){
-    nodes <- igraph::as_data_frame(ig_sub, what='vertices') %>%
+    nodes <- igraph::as_data_frame(ig_sub, what = 'vertices')
+    nodes[nodes$symbol %in% metabolite_query, 'node_type'] <- 'metabolite_query'
+    nodes[nodes$symbol %in% gene_query, 'node_type'] <- 'gene_query'
+
+    nodes <- nodes %>%
+      dplyr::mutate(compartment = case_when(
+        node_type %in% c("metabolite","metabolite_query") ~ stringr::str_sub(name, -1),
+        TRUE ~ "")) %>%
+      dplyr::mutate(symbol = case_when(
+        node_type %in% c("metabolite","metabolite_query") ~ paste(symbol, compartment, sep = "_"),
+        TRUE ~ symbol
+      )) %>%
       dplyr::rename(group = node_type,
                     label = symbol,
                     old_id = id) %>%
       dplyr::filter(!is.na(label)) %>%
       tibble::rownames_to_column(var='id')
 
-    nodes[nodes$label %in% metabolite_query, 'group'] <- 'metabolite_query'
-    nodes[nodes$label %in% gene_query, 'group'] <- 'gene_query'
   }else{
-    nodes <- igraph::as_data_frame(ig_sub, what='vertices') %>%
+    nodes <- igraph::as_data_frame(ig_sub, what = 'vertices')
+    nodes[nodes$symbol %in% metabolite_query, 'node_type'] <- 'metabolite_query'
+    nodes[nodes$symbol %in% gene_query, 'node_type'] <- 'gene_query'
+
+    nodes <- nodes %>%
+      dplyr::mutate(compartment = case_when(
+        node_type %in% c("metabolite","metabolite_query") ~ stringr::str_sub(name, -1),
+        TRUE ~ "")) %>%
+      dplyr::mutate(symbol = case_when(
+        node_type %in% c("metabolite","metabolite_query") ~ paste(symbol, compartment, sep = "_"),
+        TRUE ~ symbol
+      )) %>%
       dplyr::rename(group = node_type,
                     label = symbol) %>%
       dplyr::filter(!is.na(label)) %>%
       tibble::rownames_to_column(var='id')
-    nodes[nodes$label %in% metabolite_query, 'group'] <- 'metabolite_query'
-    nodes[nodes$label %in% gene_query, 'group'] <- 'gene_query'
+
   }
 
   ## create "edge" dataframe
@@ -122,6 +166,8 @@ visNet <- function(ig,
     visNetwork::visLayout(randomSeed = layout_seed)
 
   return(list(ig=ig_sub,
+              nodes = nodes,
+              edges = edges,
               p=p))
 
 }
