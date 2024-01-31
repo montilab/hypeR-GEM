@@ -7,13 +7,17 @@
 .hyper_enrichment(
   gene_table,
   genesets,
-  filter_threshold,
   genesets_name = "unknown",
+  filter_threshold,
   background = 1234567
 )
 }
 \arguments{
 \item{genesets}{a list of genesets}
+
+\item{genesets_name}{name of the geneset,e.g "KEGG"}
+
+\item{filter_threshold}{minimum number/ratio of metabolite that drives the enrichment}
 
 \item{background}{background parameter of hypergeometric test}
 

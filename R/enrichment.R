@@ -2,9 +2,10 @@
 #'
 #' @param hypeR_GEM_obj an hypeR_GEM object, the output of "signature2gene" function
 #' @param genesets a list of genesets
+#' @param genesets_name name of the geneset,e.g "KEGG"
 #' @param method enrichment method
 #' @param weights the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
-#' @param metetabolite_hits_filter_threshold filter out enriched pathways that are driven by a small number/ratio of metabolites, if 0 < threshold < 1, we filter by ratio, else, we filter by number. If threshold = 0, no filter
+#' @param min_metabolite minimum number/ratio of metabolite that drives the enrichment of a pathway, if 0 < threshold < 1, we filter by ratio, if threhold >= 1, we filter by number. If threshold = 0, no filter
 #' @param background background parameter of hypergeometric test
 
 
@@ -15,14 +16,14 @@ enrichment <- function(hypeR_GEM_obj,
                        genesets_name = 'unknown',
                        method=c('unweighted','weighted','kstest'),
                        weights = 'one_minus_fdr',
-                       metabolite_hits_filter_threshold = 0,
+                       min_metabolite = 0,
                        background=1234567){
 
   ## check
   if(!is.list(hypeR_GEM_obj)) stop("hypeR_GEM_obj must be a list object!\n")
   if(!is.list(genesets)) stop("genesets must be a list object!\n")
   if(!(any(names(hypeR_GEM_obj) %in% c("mapped_metabolite_signatures", "gene_tables")))) stop("element names in 'hypeR_GEM_obj' must be contain 'mapped_metabolite_signatures' and 'gene_tables'")
-  if(metabolite_hits_filter_threshold < 0) stop("'metabolite_hits_filter_threshold' must be non-negative")
+  if(min_metabolite < 0) stop("'min_metabolite' must be non-negative")
 
   weights_in_mapped_gene_tables <- all(lapply(hypeR_GEM_obj$gene_tables,colnames) %>%
         lapply(., function(x){return(weights %in% x)}) %>%
@@ -41,14 +42,14 @@ enrichment <- function(hypeR_GEM_obj,
       hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                               genesets = genesets,
                                               genesets_name = genesets_name,
-                                              filter_threshold =  metabolite_hits_filter_threshold,
+                                              filter_threshold =  min_metabolite,
                                               background = background)
     }else{
       hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
                                    .hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
-                                   filter_threshold =  metabolite_hits_filter_threshold,
+                                   filter_threshold =  min_metabolite,
                                    background = background)
     }
   }
@@ -62,7 +63,7 @@ enrichment <- function(hypeR_GEM_obj,
       hypeR_GEM_enrichments <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                                        genesets = genesets,
                                                        genesets_name = genesets_name,
-                                                       filter_threshold = metabolite_hits_filter_threshold,
+                                                       filter_threshold = min_metabolite,
                                                        weights = weights,
                                                        background = background)
     }else{
@@ -70,7 +71,7 @@ enrichment <- function(hypeR_GEM_obj,
                                    .weighted_hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
-                                   filter_threshold = metabolite_hits_filter_threshold,
+                                   filter_threshold = min_metabolite,
                                    weights = weights,
                                    background = background)
     }
@@ -84,6 +85,8 @@ enrichment <- function(hypeR_GEM_obj,
 #'
 #' @param unweighted_signature  a character vector of signature
 #' @param genesets a list of genesets
+#' @param genesets_name name of the geneset,e.g "KEGG"
+#' @param filter_threshold minimum number/ratio of metabolite that drives the enrichment
 #' @param background background parameter of hypergeometric test
 
 #' @importFrom stats phyper p.adjust
@@ -95,8 +98,8 @@ enrichment <- function(hypeR_GEM_obj,
 #' @keywords internal
 .hyper_enrichment <- function(gene_table,
                               genesets,
-                              filter_threshold,
                               genesets_name='unknown',
+                              filter_threshold,
                               background=1234567){
 
   if (!is(genesets, "list")) stop("Expected genesets to be a list of genesets\n")
@@ -171,6 +174,8 @@ enrichment <- function(hypeR_GEM_obj,
 #'
 #' @param weighted_signature named vector, name = gene symbol, value = weight and should be between 0 and 1
 #' @param genesets a list of genesets
+#' @param genesets_name name of the geneset,e.g "KEGG"
+#' @param filter_threshold minimum number/ratio of metabolite that drives the enrichment
 #' @param background background parameter of hypergeometric test
 
 #' @importFrom stats phyper p.adjust
@@ -182,8 +187,8 @@ enrichment <- function(hypeR_GEM_obj,
 #' @keywords internal
 .weighted_hyper_enrichment <- function(gene_table,
                                        genesets,
-                                       filter_threshold,
                                        genesets_name='unknown',
+                                       filter_threshold,
                                        weights = 'one_minus_fdr',
                                        background=1234567){
 

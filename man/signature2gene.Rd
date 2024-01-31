@@ -7,6 +7,7 @@
 signature2gene(
   signatures,
   species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other"),
+  directed = FALSE,
   tables = NULL,
   merge = TRUE,
   reference_key = "refmet_name",
@@ -19,6 +20,8 @@ signature2gene(
 \item{signatures}{a list of metabolic signatures, each element is a data frame which has to contain a column with the same name as "reference_key"}
 
 \item{species}{the species of GEM model, if species == 'Other', a user-define GEM_table must be provided}
+
+\item{directed}{logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only}
 
 \item{tables}{species == 'Other', a user-define GEM_table must be provided}
 

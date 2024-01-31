@@ -3,7 +3,9 @@
 #' @param ig the igraph object derived from a given GEM
 #' @param metabolite_query a character vector contains metabolites which are consistent with V(ig)$symbol or V(ig)$name, for metabolite, the "symbol" should be consistent with "fullname" column in hypeR_GEM_obj$mapped_metabolite_signatures
 #' @param gene_query a character vector contains enzyme-coding genes which are consistent with V(ig)$symbol or V(ig)$name
-#' @param by if the queries are given by V(ig)$symbol, then by = "symbol"; if the queries are given by V(ig)$name, then by = "name"
+#' @param metabolite_by type of symbols used by metabolite_query
+#' @param gene_by type of symbols used by gene_query
+#' @param focus focus of the subgraph query
 #' @param edge_label An edge attribute in E(ig) that can be used to represent edge labels
 #' @param main the title of the network
 #' @param metabolite_query_color the node color of "metabolite_query"
@@ -12,6 +14,8 @@
 #' @param associated_gene_color the node color of genes other than "gene_query"
 #' @param metabolite_shape the node shape of metabolites
 #' @param gene_shape the node shape of genes
+#' @param hover logical variable
+#' @param stabilization logical variable
 #' @param igraph_layout the layout algorithm available in "igraph", see https://igraph.org/r/html/1.3.0/layout_.html
 #' @param layout_seed random seed of the network layout
 

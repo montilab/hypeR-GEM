@@ -2,6 +2,7 @@
 #'
 #' @param signatures a list of metabolic signatures, each element is a data frame which has to contain a column with the same name as "reference_key"
 #' @param species the species of GEM model, if species == 'Other', a user-define GEM_table must be provided
+#' @param directed logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
 #' @param tables species == 'Other', a user-define GEM_table must be provided
 #' @param merge merged metabolites in different compartment, for example, MAM001_c, MAM001_e, ... -> MAM001
 #' @param reference_key the column name in the reference table which represents the standardized names (e.g. "refmet_name")
@@ -20,6 +21,7 @@
 #' @export
 signature2gene <- function(signatures,
                            species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other"),
+                           directed = FALSE,
                            tables = NULL,
                            merge = TRUE,
                            reference_key="refmet_name",
@@ -36,11 +38,21 @@ signature2gene <- function(signatures,
   species <- match.arg(species)
 
   # load tables
-  if(species == "Human"){GEM_tables <- hypeR.GEM::Human_GEM_tables}
-  if(species == "Mouse"){GEM_tables <- hypeR.GEM::Mouse_GEM_tables}
-  if(species == "Rat"){GEM_tables <- hypeR.GEM::Rat_GEM_tables}
-  if(species == "Zebrafish"){GEM_tables <- hypeR.GEM::Zebrafish_GEM_tables}
-  if(species == "Worm"){GEM_tables <- hypeR.GEM::Worm_GEM_tables}
+  if(species == "Human" & !directed){GEM_tables <- hypeR.GEM::Human_GEM_tables}
+  if(species == "Human" &  directed){GEM_tables <- hypeR.GEM::Human_GEM_tables_directed}
+
+  if(species == "Mouse" & !directed){GEM_tables <- hypeR.GEM::Mouse_GEM_tables}
+  if(species == "Mouse" &  directed){GEM_tables <- hypeR.GEM::Mouse_GEM_tables_directed}
+
+  if(species == "Rat" & !directed){GEM_tables <- hypeR.GEM::Rat_GEM_tables}
+  if(species == "Rat" &  directed){GEM_tables <- hypeR.GEM::Rat_GEM_tables_directed}
+
+
+  if(species == "Zebrafish" & !directed){GEM_tables <- hypeR.GEM::Zebrafish_GEM_tables}
+  if(species == "Zebrafish" & directed){GEM_tables <- hypeR.GEM::Zebrafish_GEM_tables_directed}
+
+  if(species == "Worm" & !directed){GEM_tables <- hypeR.GEM::Worm_GEM_tables}
+  if(species == "Worm" & directed){GEM_tables <- hypeR.GEM::Worm_GEM_tables_directed}
 
 
   ## user-defined GEM table

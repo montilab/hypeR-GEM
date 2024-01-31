@@ -4,10 +4,12 @@
 \alias{extract_tables}
 \title{Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format}
 \usage{
-extract_tables(con)
+extract_tables(con, directed = FALSE)
 }
 \arguments{
 \item{con}{a connection or the path of the GEM, which should be in .mat format}
+
+\item{directed}{logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only}
 }
 \value{
 a list of tables

@@ -13,7 +13,7 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6.0)
 RoxygenNote: 7.2.3
 Imports:
     Matrix,
@@ -29,8 +29,6 @@ Imports:
     stats,
     stringr,
     scales,
-    rlang,
-    httr,
     reshape2,
     htmltools,
     reactable,
@@ -41,4 +39,6 @@ Suggests:
     devtools,
     rmarkdown,
     knitr,
+    rlang,
+    httr,
     testthat (>= 3.1.6)

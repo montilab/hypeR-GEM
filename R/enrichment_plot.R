@@ -1,6 +1,6 @@
 #' Title Enrichment analysis visualization
 #'
-#' @param hypeR_GEM_enrichment A hypeR_GEM_enrichments from single/multiple signatures, the output of "hypeR.GEM::enrichment()"
+#' @param hypeR_GEM_enrichments A hypeR_GEM_enrichments from single/multiple signatures, the output of "hypeR.GEM::enrichment()"
 #' @param top Limit number of genesets shown
 #' @param abrv Abbreviation length of geneset labels
 #' @param size_by Size dots by e.g. c("genesets", "significance", "none")

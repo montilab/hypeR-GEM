@@ -111,6 +111,7 @@ str(EL_signature)
 
 ```{r}
 hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
+                                           directed = FALSE,
                                            species = "Human",
                                            merge = TRUE,
                                            promiscuous_threshold = 50,
@@ -121,7 +122,7 @@ hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
 
 #unique(hypeR_GEM_obj$gene_tables$EL_down$signature_size)
 
-hypeR_GEM_obj$mapped_metabolite_signatures$EL_down
+hypeR_GEM_obj$gene_tables
 ```
 
 
