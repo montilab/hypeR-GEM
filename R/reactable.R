@@ -90,6 +90,7 @@ rctbls <- function(
   tbl <- reactable(df,
     rownames = FALSE,
     resizable = TRUE,
+    searchable = TRUE,
     showPageSizeOptions = FALSE,
     compact = TRUE,
     defaultColDef = colDef(headerClass = class.header),
