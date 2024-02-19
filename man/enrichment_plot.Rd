@@ -16,6 +16,8 @@ enrichment_plot(
 )
 }
 \arguments{
+\item{hypeR_GEM_enrichments}{A hypeR_GEM_enrichments from single/multiple signatures, the output of "hypeR.GEM::enrichment()"}
+
 \item{top}{Limit number of genesets shown}
 
 \item{abrv}{Abbreviation length of geneset labels}
@@ -29,8 +31,6 @@ enrichment_plot(
 \item{val}{Choose significance value e.g. c("fdr", "pval")}
 
 \item{title}{Plot title}
-
-\item{hypeR_GEM_enrichment}{A hypeR_GEM_enrichments from single/multiple signatures, the output of "hypeR.GEM::enrichment()"}
 }
 \value{
 a ggplot object

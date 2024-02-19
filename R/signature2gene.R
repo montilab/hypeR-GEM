@@ -11,7 +11,7 @@
 #' @param background the background of the gene-specific hypergeometric test, default = NULL = number of merged metabolites
 #' @return a list containing two element: "mapped_metabolite_signatures" and "gene_tables" for each signature
 
-
+#' @import methods utils
 #' @importFrom magrittr %>% is_greater_than
 #' @importFrom dplyr filter select mutate left_join rename distinct pull
 #' @importFrom Matrix Matrix

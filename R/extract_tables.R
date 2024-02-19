@@ -4,10 +4,11 @@
 #' @param directed logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
 #' @return a list of tables
 
-#'@importFrom R.matlab readMat
-#'@importFrom magrittr %>%
-#'@importFrom Matrix Matrix summary
-#'@importFrom dplyr arrange filter select pull
+#' @import methods utils
+#' @importFrom R.matlab readMat
+#' @importFrom magrittr %>%
+#' @importFrom Matrix Matrix summary
+#' @importFrom dplyr arrange filter select pull
 
 
 #' @export

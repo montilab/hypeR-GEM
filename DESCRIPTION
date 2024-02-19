@@ -9,13 +9,15 @@ Author: c(person(given="Ziwei", family="Huang", email="ziwhuang@bu.edu",
 Maintainer: Ziwei Huang <ziwhuang@bu.edu>
 Description: A R Package For Connecting Metabolic Signatures to Enzyme-coding Genes
     via Genome-scale Metabolic Models(GEMs) and Performing Geneset Enrichment Analysis.
-License: What license is it under?
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 3.6.0)
 RoxygenNote: 7.2.3
 Imports:
+    methods,
+    utils,
     Matrix,
     R.matlab,
     gprofiler2,

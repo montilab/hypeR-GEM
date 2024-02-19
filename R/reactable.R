@@ -3,6 +3,7 @@
 #' @param hypeR_GEM_obj A list of enrichment results from single/multiple signatures, output of "hypeR.GEM::enrichment()"
 #' @param fdr_cutoff fdr threshold for geneset enrichment
 
+#' @import methods utils
 #' @importFrom reactable reactable colDef
 #' @importFrom htmltools div
 

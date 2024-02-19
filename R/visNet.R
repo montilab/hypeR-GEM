@@ -19,6 +19,7 @@
 #' @param igraph_layout the layout algorithm available in "igraph", see https://igraph.org/r/html/1.3.0/layout_.html
 #' @param layout_seed random seed of the network layout
 
+#'@import methods utils
 #'@importFrom magrittr %>% set_rownames
 #'@importFrom tibble rownames_to_column
 #'@importFrom dplyr filter rename pull mutate case_when
@@ -52,7 +53,7 @@ visNet <- function(ig,
   focus <- match.arg(focus)
 
   ## check
-  if(!(class(ig)=="igraph")) stop(" 'ig' must be a igraph object!\n")
+  if(!(is(ig, "igraph"))) stop(" 'ig' must be a igraph object!\n")
   if(!(is.character(metabolite_query))) stop(" 'metabolite_query' must be a character vector!\n")
   if(!(is.character(gene_query))) stop(" 'gene_query' must be a character vector!\n")
   if(!is.null(edge_label)){ if(is.null(igraph::edge_attr(ig, edge_label))) stop(" 'edge_label' must be an edge attribute in ig!\n") }
@@ -61,12 +62,16 @@ visNet <- function(ig,
   df <- igraph::as_data_frame(ig,what='both')
 
   ## query nodes from "ig"，duplicated "symbol" implies multiple compartments
-  query_df <- df$vertices %>%
-    magrittr::set_rownames(., 1:nrow(.)) %>%
-    tibble::rownames_to_column(var='vid') %>%
+  #row.names(df$vertices) <- 1:nrow(df$vertices)
+  query_df <- df$vertices
+  row.names(query_df) <- 1:nrow(query_df)  #magrittr::set_rownames(., 1:nrow(.)) %>%
+  query_df <- query_df %>%
+    dplyr::mutate(vid = row.names(query_df)) %>%
+    #tibble::rownames_to_column(var='vid') %>%
     dplyr::mutate(vid = as.numeric(vid)) %>%
     dplyr::filter(!is.na(!!as.name(metabolite_by)) & !is.na(!!as.name(gene_by))) %>%
     dplyr::filter(!!as.name(metabolite_by) %in% metabolite_query | !!as.name(gene_by) %in% gene_query)
+
 
   ## obtain node Ids of gene_query，empty if gene_query = NULL
   gene_query_vids <- query_df %>%
@@ -80,13 +85,13 @@ visNet <- function(ig,
 
   ## gene_query and their neighbor, empty if gene_query = NULL
   gene_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= gene_query_vids, mode='all'), as.numeric) %>%
-    unlist(.) %>%
-    unique(.)
+    unlist() %>%
+    unique()
 
   ## metabolite_query and their neighbor，empty if metabolite_query = NULL
   metabolite_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= metabolite_query_vids, mode='all'), as.numeric) %>%
-    unlist(.) %>%
-    unique(.)
+    unlist() %>%
+    unique()
 
   ## specified visualization focus
   if(focus == "all"){

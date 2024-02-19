@@ -8,7 +8,7 @@
   gene_table,
   genesets,
   genesets_name = "unknown",
-  filter_threshold,
+  min_metabolite,
   background = 1234567
 )
 }
@@ -17,7 +17,7 @@
 
 \item{genesets_name}{name of the geneset,e.g "KEGG"}
 
-\item{filter_threshold}{minimum number/ratio of metabolite that drives the enrichment}
+\item{min_metabolite}{minimum number/ratio of metabolite that drives the enrichment}
 
 \item{background}{background parameter of hypergeometric test}
 

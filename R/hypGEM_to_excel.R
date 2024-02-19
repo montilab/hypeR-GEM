@@ -2,6 +2,7 @@
 #'
 #' writes the enrichment results out to an Excel workbook
 #'
+#' @import methods utils
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #'
 #' @export

@@ -14,7 +14,7 @@
 enrichment <- function(hypeR_GEM_obj,
                        genesets,
                        genesets_name = 'unknown',
-                       method=c('unweighted','weighted','kstest'),
+                       method=c('unweighted','weighted'),
                        weights = 'one_minus_fdr',
                        min_metabolite = 0,
                        background=1234567){
@@ -42,14 +42,14 @@ enrichment <- function(hypeR_GEM_obj,
       hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                               genesets = genesets,
                                               genesets_name = genesets_name,
-                                              filter_threshold =  min_metabolite,
+                                              min_metabolite =  min_metabolite,
                                               background = background)
     }else{
       hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
                                    .hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
-                                   filter_threshold =  min_metabolite,
+                                   min_metabolite =  min_metabolite,
                                    background = background)
     }
   }
@@ -63,7 +63,7 @@ enrichment <- function(hypeR_GEM_obj,
       hypeR_GEM_enrichments <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
                                                        genesets = genesets,
                                                        genesets_name = genesets_name,
-                                                       filter_threshold = min_metabolite,
+                                                       min_metabolite= min_metabolite,
                                                        weights = weights,
                                                        background = background)
     }else{
@@ -71,7 +71,7 @@ enrichment <- function(hypeR_GEM_obj,
                                    .weighted_hyper_enrichment,
                                    genesets = genesets,
                                    genesets_name = genesets_name,
-                                   filter_threshold = min_metabolite,
+                                   min_metabolite = min_metabolite,
                                    weights = weights,
                                    background = background)
     }
@@ -86,9 +86,10 @@ enrichment <- function(hypeR_GEM_obj,
 #' @param unweighted_signature  a character vector of signature
 #' @param genesets a list of genesets
 #' @param genesets_name name of the geneset,e.g "KEGG"
-#' @param filter_threshold minimum number/ratio of metabolite that drives the enrichment
+#' @param min_metabolite minimum number/ratio of metabolite that drives the enrichment
 #' @param background background parameter of hypergeometric test
 
+#' @import methods utils
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_count
@@ -99,7 +100,7 @@ enrichment <- function(hypeR_GEM_obj,
 .hyper_enrichment <- function(gene_table,
                               genesets,
                               genesets_name='unknown',
-                              filter_threshold,
+                              min_metabolite,
                               background=1234567){
 
   if (!is(genesets, "list")) stop("Expected genesets to be a list of genesets\n")
@@ -152,21 +153,21 @@ enrichment <- function(hypeR_GEM_obj,
                   ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
-  if(0 < filter_threshold & filter_threshold < 1){
+  if(0 < min_metabolite & min_metabolite < 1){
     data <- data %>%
-      dplyr::filter(ratio_met_hits >= filter_threshold)
+      dplyr::filter(ratio_met_hits >= min_metabolite)
   }
   ## hard filter
-  if(filter_threshold >= 1){
+  if(min_metabolite >= 1){
     data <- data %>%
-      dplyr::filter(num_met_hits >= filter_threshold)
+      dplyr::filter(num_met_hits >= min_metabolite)
   }
 
   return(list(info=list(Test = "Hypergeometric test",
                         Signature_size = length(signature),
                         Genesets = genesets_name,
                         Background = background),
-              data=data))
+                        data=data))
 }
 
 
@@ -175,9 +176,10 @@ enrichment <- function(hypeR_GEM_obj,
 #' @param weighted_signature named vector, name = gene symbol, value = weight and should be between 0 and 1
 #' @param genesets a list of genesets
 #' @param genesets_name name of the geneset,e.g "KEGG"
-#' @param filter_threshold minimum number/ratio of metabolite that drives the enrichment
+#' @param min_metabolite minimum number/ratio of metabolite that drives the enrichment
 #' @param background background parameter of hypergeometric test
 
+#' @import methods utils
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_count
@@ -188,7 +190,7 @@ enrichment <- function(hypeR_GEM_obj,
 .weighted_hyper_enrichment <- function(gene_table,
                                        genesets,
                                        genesets_name='unknown',
-                                       filter_threshold,
+                                       min_metabolite,
                                        weights = 'one_minus_fdr',
                                        background=1234567){
 
@@ -256,14 +258,14 @@ enrichment <- function(hypeR_GEM_obj,
                   ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
-  if(0 < filter_threshold & filter_threshold < 1){
+  if(0 < min_metabolite & min_metabolite < 1){
     data <- data %>%
-      dplyr::filter(ratio_met_hits >= filter_threshold)
+      dplyr::filter(ratio_met_hits >= min_metabolite)
   }
   ## hard filter
-  if(filter_threshold >= 1){
+  if(min_metabolite >= 1){
     data <- data %>%
-      dplyr::filter(num_met_hits >= filter_threshold)
+      dplyr::filter(num_met_hits >= min_metabolite)
   }
 
   return(list(info=list(Test = "Weighted hypergeometric test",

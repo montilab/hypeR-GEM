@@ -53,6 +53,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
 #' @param val Choose significance value e.g. c("fdr", "pval")
 #' @param title Plot title
 
+#' @import methods utils
 #' @importFrom purrr when
 #' @importFrom dplyr filter
 #' @importFrom scales log10_trans
@@ -141,6 +142,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
 #' @param val Choose significance value e.g. c("fdr", "pval")
 #' @param title title Plot title
 
+#' @import methods utils
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>% set_colnames
 #' @importFrom dplyr filter select
