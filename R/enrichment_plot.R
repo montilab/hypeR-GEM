@@ -75,8 +75,8 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
 
   # Subset results
   df <- hyp_enrichment_data %>%
-    dplyr::filter(pval <= pval_cutoff) %>%
-    dplyr::filter(fdr <= fdr_cutoff) %>%
+    dplyr::filter(.data$pval <= pval_cutoff) %>%
+    dplyr::filter(.data$fdr <= fdr_cutoff) %>%
     purrr::when(!is.null(top) ~ head(., top), ~.)
 
   # Handle empty dataframes
@@ -109,7 +109,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   if (val == "fdr") {
     color.label <- "FDR"
   }
-  p <- ggplot(df, aes(x = label_abrv, y = significance, color = significance, size = size)) +
+  p <- ggplot(df, aes(x = .data$label_abrv, y = .data$significance, color = .data$significance, size = .data$size)) +
     geom_point() +
     labs(title = title, y = color.label, color = color.label) +
     scale_color_continuous(low = "#E53935", high = "#114357", guide = guide_colorbar(reverse = TRUE)) +

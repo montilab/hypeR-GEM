@@ -94,6 +94,8 @@
 #'
 #' A list containing metabolite signatures
 #'
+#' @docType data
+#'
 #' @format A list of dataframes
 #'
 "EL_signature"
