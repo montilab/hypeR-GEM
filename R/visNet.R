@@ -19,13 +19,14 @@
 #' @param igraph_layout the layout algorithm available in "igraph", see https://igraph.org/r/html/1.3.0/layout_.html
 #' @param layout_seed random seed of the network layout
 
-#'@import methods utils
-#'@importFrom magrittr %>% set_rownames
-#'@importFrom tibble rownames_to_column
-#'@importFrom dplyr filter rename pull mutate case_when
-#'@importFrom igraph as_data_frame neighborhood induced_subgraph vertex_attr edge_attr
-#'@importFrom visNetwork visNetwork visNodes visEdges visGroups visOptions visLegend visInteraction visLayout visPhysics visIgraphLayout
-
+#' @import methods utils
+#' @importFrom magrittr %>% set_rownames
+#' @importFrom tibble rownames_to_column
+#' @importFrom dplyr filter rename pull mutate case_when
+#' @importFrom igraph as_data_frame neighborhood induced_subgraph vertex_attr edge_attr
+#' @importFrom visNetwork visNetwork visNodes visEdges visGroups visOptions visLegend visInteraction visLayout visPhysics visIgraphLayout
+#' @importFrom rlang .data
+#'
 #' @return a list of: ig = node-induced sub-graph, p = a visNetwork object
 #' @export
 visNet <- function(ig,
@@ -59,29 +60,26 @@ visNet <- function(ig,
   if(!is.null(edge_label)){ if(is.null(igraph::edge_attr(ig, edge_label))) stop(" 'edge_label' must be an edge attribute in ig!\n") }
 
   ## query  nodes from "ig"
-  df <- igraph::as_data_frame(ig,what='both')
+  df <- igraph::as_data_frame(ig, what='both')
 
   ## query nodes from "ig"，duplicated "symbol" implies multiple compartments
-  #row.names(df$vertices) <- 1:nrow(df$vertices)
-  query_df <- df$vertices
-  row.names(query_df) <- 1:nrow(query_df)  #magrittr::set_rownames(., 1:nrow(.)) %>%
-  query_df <- query_df %>%
-    dplyr::mutate(vid = row.names(query_df)) %>%
-    #tibble::rownames_to_column(var='vid') %>%
-    dplyr::mutate(vid = as.numeric(vid)) %>%
-    dplyr::filter(!is.na(!!as.name(metabolite_by)) & !is.na(!!as.name(gene_by))) %>%
-    dplyr::filter(!!as.name(metabolite_by) %in% metabolite_query | !!as.name(gene_by) %in% gene_query)
+  query_df <- df$vertices %>%
+    magrittr::set_rownames(1:nrow(.data)) %>%
+    tibble::rownames_to_column(var='vid') %>%
+    dplyr::mutate(vid = as.numeric(.data$vid)) %>%
+    dplyr::filter(!is.na(!!as.name(.data$metabolite_by)) & !is.na(!!as.name(.data$gene_by))) %>%
+    dplyr::filter(!!as.name(.data$metabolite_by) %in% metabolite_query | !!as.name(.data$gene_by) %in% gene_query)
 
 
   ## obtain node Ids of gene_query，empty if gene_query = NULL
   gene_query_vids <- query_df %>%
-    dplyr::filter(node_type == "gene") %>%
-    dplyr::pull(vid)
+    dplyr::filter(.data$node_type == "gene") %>%
+    dplyr::pull(.data$vid)
 
   ## obtain node Ids of metabolite_query，empty if metabolite_query = NULL
   metabolite_query_vids <- query_df %>%
-    dplyr::filter(node_type == "metabolite") %>%
-    dplyr::pull(vid)
+    dplyr::filter(.data$node_type == "metabolite") %>%
+    dplyr::pull(.data$vid)
 
   ## gene_query and their neighbor, empty if gene_query = NULL
   gene_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= gene_query_vids, mode='all'), as.numeric) %>%
@@ -117,16 +115,16 @@ visNet <- function(ig,
 
     nodes <- nodes %>%
       dplyr::mutate(compartment = case_when(
-        node_type %in% c("metabolite","metabolite_query") ~ stringr::str_sub(name, -1),
+        .data$node_type %in% c("metabolite","metabolite_query") ~ stringr::str_sub(.data$name, -1),
         TRUE ~ "")) %>%
       dplyr::mutate(symbol = case_when(
-        node_type %in% c("metabolite","metabolite_query") ~ paste(symbol, compartment, sep = "_"),
+        .data$node_type %in% c("metabolite","metabolite_query") ~ paste(.data$symbol, .data$compartment, sep = "_"),
         TRUE ~ symbol
       )) %>%
-      dplyr::rename(group = node_type,
-                    label = symbol,
-                    old_id = id) %>%
-      dplyr::filter(!is.na(label)) %>%
+      dplyr::rename(group = .data$node_type,
+                    label = .data$symbol,
+                    old_id = .data$id) %>%
+      dplyr::filter(!is.na(.data$label)) %>%
       tibble::rownames_to_column(var='id')
 
   }else{
@@ -136,15 +134,15 @@ visNet <- function(ig,
 
     nodes <- nodes %>%
       dplyr::mutate(compartment = case_when(
-        node_type %in% c("metabolite","metabolite_query") ~ stringr::str_sub(name, -1),
+        .data$node_type %in% c("metabolite","metabolite_query") ~ stringr::str_sub(.data$name, -1),
         TRUE ~ "")) %>%
       dplyr::mutate(symbol = case_when(
-        node_type %in% c("metabolite","metabolite_query") ~ paste(symbol, compartment, sep = "_"),
-        TRUE ~ symbol
+        .data$node_type %in% c("metabolite","metabolite_query") ~ paste(.data$symbol, .data$compartment, sep = "_"),
+        TRUE ~ .data$symbol
       )) %>%
-      dplyr::rename(group = node_type,
-                    label = symbol) %>%
-      dplyr::filter(!is.na(label)) %>%
+      dplyr::rename(group = .data$node_type,
+                    label = .data$symbol) %>%
+      dplyr::filter(!is.na(.data$label)) %>%
       tibble::rownames_to_column(var='id')
 
   }
@@ -152,7 +150,7 @@ visNet <- function(ig,
   ## create "edge" dataframe
   if(!is.null(edge_label)){
     edges <- igraph::as_data_frame(ig_sub, what='edges') %>%
-      dplyr::rename(label = !!as.name(edge_label))
+      dplyr::rename(label = !!as.name(.data$edge_label))
   }else{
     edges <- igraph::as_data_frame(ig_sub, what='edges')
   }
