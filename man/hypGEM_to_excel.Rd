@@ -2,7 +2,7 @@
 % Please edit documentation in R/hypGEM_to_excel.R
 \name{hypGEM_to_excel}
 \alias{hypGEM_to_excel}
-\title{hypGEM_to_excel}
+\title{Writes the enrichment results out to an Excel workbook}
 \usage{
 hypGEM_to_excel(
   hypGEM_obj,
@@ -13,6 +13,22 @@ hypGEM_to_excel(
   versioning = TRUE
 )
 }
+\arguments{
+\item{hypGEM_obj}{A hypeR-GEM object from enrichment analysis}
+
+\item{file_path}{the path to save the output file}
+
+\item{cols}{columns}
+
+\item{fdr_cutoff}{fdr threshold}
+
+\item{do_sort}{logical parameter}
+
+\item{versioning}{logical parameter}
+}
+\value{
+a excel file
+}
 \description{
-writes the enrichment results out to an Excel workbook
+Writes the enrichment results out to an Excel workbook
 }

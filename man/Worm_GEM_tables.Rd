@@ -3,14 +3,22 @@
 \docType{data}
 \name{Worm_GEM_tables}
 \alias{Worm_GEM_tables}
-\title{Undirected mapping tables from Worm GEM}
+\title{Undirectional mapping tables of Worm GEM}
 \format{
-A nested list of dataframes and lists
+A list of data frames and lists
 }
 \usage{
-Worm_GEM_tables
+data(Worm_GEM_tables)
+}
+\value{
+A list object
 }
 \description{
 A list of tables of genes, metabolites, and reactions
+}
+\references{
+Wang, Hao, et al.
+"Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 }
 \keyword{datasets}

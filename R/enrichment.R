@@ -10,6 +10,8 @@
 
 
 #' @return a list of type of statistical test and data
+
+#' @importFrom rlang .data
 #' @export
 enrichment <- function(hypeR_GEM_obj,
                        genesets,
@@ -27,7 +29,7 @@ enrichment <- function(hypeR_GEM_obj,
 
   weights_in_mapped_gene_tables <- all(lapply(hypeR_GEM_obj$gene_tables,colnames) %>%
         lapply(., function(x){return(weights %in% x)}) %>%
-        unlist(.))
+        unlist())
 
   if(!all(weights_in_mapped_gene_tables)) stop("'weights' must be one of the column in all element of hypeR_GEM_obj$gene_tables")
 
@@ -94,6 +96,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_count
 #' @importFrom dplyr filter mutate
+#' @importFrom rlang .data
 
 #' @return a list
 #' @keywords internal
@@ -122,13 +125,13 @@ enrichment <- function(hypeR_GEM_obj,
   ## Associated metabolites
   hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
   metabolite_hits <- lapply(hitted_genes, function(x){gene_table %>%
-      dplyr::filter(symbol %in% x) %>%
-      dplyr::pull(associated_metabolites)}) %>%
+      dplyr::filter(.data$symbol %in% x) %>%
+      dplyr::pull(.data$associated_metabolites)}) %>%
     lapply(., strsplit, ";") %>%
     lapply(., unlist) %>%
     lapply(., unique) %>%
     lapply(., paste, collapse=";") %>%
-    unlist(.)
+    unlist()
 
   # Hypergeometric test
   pvals <- suppressWarnings(stats::phyper(q=hits-1,
@@ -149,18 +152,18 @@ enrichment <- function(hypeR_GEM_obj,
                      gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
-    dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
+    dplyr::mutate(num_met_hits = stringr::str_count(.data$metabolite_hits, ";") + 1,
+                  ratio_met_hits = round(.data$num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
   if(0 < min_metabolite & min_metabolite < 1){
     data <- data %>%
-      dplyr::filter(ratio_met_hits >= min_metabolite)
+      dplyr::filter(.data$ratio_met_hits >= min_metabolite)
   }
   ## hard filter
   if(min_metabolite >= 1){
     data <- data %>%
-      dplyr::filter(num_met_hits >= min_metabolite)
+      dplyr::filter(.data$num_met_hits >= min_metabolite)
   }
 
   return(list(info=list(Test = "Hypergeometric test",
@@ -184,6 +187,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_count
 #' @importFrom dplyr filter mutate
+#' @importFrom rlang .data
 
 #' @return a list
 #' @keywords internal
@@ -199,7 +203,7 @@ enrichment <- function(hypeR_GEM_obj,
   if(!(weights %in% colnames(gene_table))) stop("Gene weights must be specified in a colnmae of gene_table\n")
 
   weighted_signature <- gene_table %>%
-    dplyr::select(symbol,!!as.name(weights)) %>%
+    dplyr::select(.data$symbol,!!as.name(weights)) %>%
     tibble::deframe()
 
   if(max(weighted_signature) > 1 | min(weighted_signature) < 0) stop("All weights should be between 0 and 1\n")
@@ -217,7 +221,7 @@ enrichment <- function(hypeR_GEM_obj,
   weighted_hits <- lapply(genesets, function(x, y) intersect(x, y), signature_found) %>%
     lapply(., function(x,y) y[x], weighted_signature) %>%
     lapply(., sum) %>%
-    unlist(.) %>%
+    unlist() %>%
     round(.,0)
 
   ## For each geneset, all genes have a weight = 1
@@ -234,13 +238,13 @@ enrichment <- function(hypeR_GEM_obj,
   ## Associated metabolites
   hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
   metabolite_hits <- lapply(hitted_genes, function(x){gene_table %>%
-      dplyr::filter(symbol %in% x) %>%
-      dplyr::pull(associated_metabolites)}) %>%
+      dplyr::filter(.data$symbol %in% x) %>%
+      dplyr::pull(.data$associated_metabolites)}) %>%
     lapply(., strsplit, ";") %>%
     lapply(., unlist) %>%
     lapply(., unique) %>%
     lapply(., paste, collapse=";") %>%
-    unlist(.)
+    unlist()
 
   # Format data
   data <- data.frame(label=names(genesets),
@@ -254,18 +258,18 @@ enrichment <- function(hypeR_GEM_obj,
                      gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
-    dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
+    dplyr::mutate(num_met_hits = stringr::str_count(.data$metabolite_hits, ";") + 1,
+                  ratio_met_hits = round(.data$num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
   if(0 < min_metabolite & min_metabolite < 1){
     data <- data %>%
-      dplyr::filter(ratio_met_hits >= min_metabolite)
+      dplyr::filter(.data$ratio_met_hits >= min_metabolite)
   }
   ## hard filter
   if(min_metabolite >= 1){
     data <- data %>%
-      dplyr::filter(num_met_hits >= min_metabolite)
+      dplyr::filter(.data$num_met_hits >= min_metabolite)
   }
 
   return(list(info=list(Test = "Weighted hypergeometric test",

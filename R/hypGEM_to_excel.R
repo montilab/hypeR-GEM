@@ -1,6 +1,15 @@
-#' hypGEM_to_excel
+#' Writes the enrichment results out to an Excel workbook
 #'
-#' writes the enrichment results out to an Excel workbook
+
+#' @param hypGEM_obj A hypeR-GEM object from enrichment analysis
+#' @param file_path the path to save the output file
+#' @param cols columns
+#' @param fdr_cutoff fdr threshold
+#' @param do_sort logical parameter
+#' @param versioning logical parameter
+#'
+#' @return a excel file
+
 #'
 #' @import methods utils
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
@@ -40,9 +49,18 @@ hypGEM_to_excel <- function(
   # }
   suppressMessages(openxlsx::saveWorkbook(wb, file = file_path, overwrite = TRUE))
 }
-#' hypGEM_filter
-#'
+
 #' Filter the enrichment results by fdr value, and optionally sub-selects result columns
+#'
+#' @param hypGEM_obj A hypeR-GEM object from enrichment analysis
+#' @param cols columns
+#' @param fdr_cutoff fdr threshold
+#' @param do_sort logical parameter
+#'
+#' @return filtered data frame
+#'
+#' @importFrom rlang .data
+
 #'
 #' @export
 hypGEM_filter <- function(
@@ -69,17 +87,10 @@ hypGEM_filter <- function(
     purrr::map( \(ls) {
       ls$data <- ls$data |>
         dplyr::select({{ cols }}) |>
-        dplyr::filter(fdr <= fdr_cutoff)
+        dplyr::filter(.data$fdr <= fdr_cutoff)
       if (do_sort)
-        ls$data <- ls$data |> dplyr::arrange(pval)
+        ls$data <- ls$data |> dplyr::arrange(.data$pval)
       return(ls)
     })
   return(obj_flt)
 }
-
-
-
-
-
-
-

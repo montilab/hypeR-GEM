@@ -58,6 +58,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
 #' @importFrom dplyr filter
 #' @importFrom scales log10_trans
 #' @importFrom ggplot2 ggplot aes geom_point labs scale_color_continuous scale_y_continuous guide_colorbar coord_flip geom_hline guides theme element_text element_blank
+#' @importFrom rlang .data
 
 #' @return A ggplot object
 #' @keywords internal
@@ -149,6 +150,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
 #' @importFrom scales log10_trans
 #' @importFrom ggplot2 ggplot aes geom_point labs scale_color_continuous scale_size_continuous guides theme element_text element_blank
 #' @importFrom ggforce trans_reverser
+#' @importFrom rlang .data
 
 #' @keywords internal
 .multi_dots_plot <- function(multihyp_data,
@@ -166,9 +168,9 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   # Count significant genesets across signatures
   multihyp_dfs <- lapply(multihyp_data, function(hyp_obj) {
     hyp_obj$data %>%
-      dplyr::filter(pval <= pval_cutoff) %>%
-      dplyr::filter(fdr <= fdr_cutoff) %>%
-      dplyr::select(label)
+      dplyr::filter(.data$pval <= pval_cutoff) %>%
+      dplyr::filter(.data$fdr <= fdr_cutoff) %>%
+      dplyr::select(.data$label)
   })
   # Take top genesets
   labels <- names(sort(table(unlist(multihyp_dfs)), decreasing = TRUE))
@@ -194,8 +196,8 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
     hyp_obj$data[, c("label", "geneset")]
   }) %>%
     do.call(rbind, .) %>%
-    dplyr::distinct(label, .keep_all = TRUE) %>%
-    dplyr::filter(label %in% df$label) %>%
+    dplyr::distinct(.data$label, .keep_all = TRUE) %>%
+    dplyr::filter(.data$label %in% df$label) %>%
     dplyr::right_join(., df, by = "label") %>%
     tibble::column_to_rownames(var = "label")
 
@@ -217,7 +219,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   ## separate "geneset" column
   geneset_size <- df %>%
     tibble::rownames_to_column(var = "label") %>%
-    dplyr::select(label, geneset)
+    dplyr::select(.data$label, .data$geneset)
 
   df.melted <- reshape2::melt(as.matrix(df %>% select(-c("geneset"))))
   colnames(df.melted) <- c("label", "signature", "significance")
@@ -235,8 +237,8 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
     df.melted$size <- 1
   }
   p <- df.melted %>%
-    dplyr::filter(significance <= cutoff) %>%
-    ggplot(aes(x = signature, y = label, color = significance, size = size)) +
+    dplyr::filter(.data$significance <= cutoff) %>%
+    ggplot(aes(x = .data$signature, y = .data$label, color = .data$significance, size = .data$size)) +
     geom_point() +
     scale_color_continuous(low = "#114357", high = "#E53935", trans = ggforce::trans_reverser("log10")) +
     theme(

@@ -17,6 +17,7 @@
 #' @importFrom Matrix Matrix
 #' @importFrom tibble rownames_to_column column_to_rownames
 #' @importFrom gprofiler2 gconvert
+#' @importFrom rlang .data
 
 #' @export
 signature2gene <- function(signatures,
@@ -89,8 +90,8 @@ signature2gene <- function(signatures,
   if(!is.null(promiscuous_threshold)){
     promiscuous_met <- lapply(mapped_metabolite_signatures, function(x){
       x %>%
-        dplyr::filter(gene_association > promiscuous_threshold ) %>%
-        dplyr::select(!!as.name(reference_key), gene_association)
+        dplyr::filter(.data$gene_association > promiscuous_threshold ) %>%
+        dplyr::select(!!as.name(reference_key), .data$gene_association)
     }) %>%
       do.call(rbind, .) %>%
       magrittr::set_rownames(., NULL) %>%
@@ -108,7 +109,7 @@ signature2gene <- function(signatures,
   ### default background = # of unique metabolites in GEM
   if(is.null(background)){
     background <- GEM_tables[['meta_df_merged']] %>%
-      nrow(.)
+      nrow()
   }
 
   gene_tables <- lapply(mapped_metabolite_signatures,
@@ -132,7 +133,7 @@ signature2gene <- function(signatures,
       dplyr::filter(row.names(.) %in% gene_map[['input']]) %>%
       tibble::rownames_to_column(var='input') %>%
       dplyr::left_join(gene_map, by='input') %>%
-      dplyr::distinct(input,.keep_all = TRUE) %>%
+      dplyr::distinct(.data$input,.keep_all = TRUE) %>%
       dplyr::rename(symbol = name,
                     name = input) %>%
       dplyr::select(name,
@@ -247,8 +248,8 @@ signature2gene <- function(signatures,
 
   ## map metabolite signatures to genes
   mapped_genes <- m2g[signature$name] %>%
-    unlist(.) %>%
-    unique(.)
+    unlist() %>%
+    unique()
 
   ## compute statistics
   associated_reactions <- lengths(g2r[mapped_genes])
@@ -263,22 +264,22 @@ signature2gene <- function(signatures,
                         signature_association = signature_association,
                         signature_size = rep(nrow(signature), length(mapped_genes)),
                         background = rep(background, length(mapped_genes))) %>%
-    dplyr::mutate(p_value = suppressWarnings(stats::phyper(q=signature_association,
-                                                           m=signature_size,
-                                                           n=background - signature_size,
-                                                           k=total_association,
+    dplyr::mutate(p_value = suppressWarnings(stats::phyper(q=.data$signature_association,
+                                                           m=.data$signature_size,
+                                                           n=.data$background - .data$signature_size,
+                                                           k=.data$total_association,
                                                            lower.tail=FALSE)),
-                  fdr = stats::p.adjust(p_value, method="fdr"),
-                  one_minus_p_value = 1-p_value,
-                  one_minus_fdr = 1-fdr)
+                  fdr = stats::p.adjust(.data$p_value, method="fdr"),
+                  one_minus_p_value = 1-.data$p_value,
+                  one_minus_fdr = 1-.data$fdr)
 
   ## associated metabolites in signature of each gene
   gene_df$associated_metabolites <- lapply(g2m[mapped_genes], function(x,y){return(intersect(x,y))}, signature$name) %>%
     lapply(., function(x){meta_df %>%
-        dplyr::filter(name %in% x) %>%
+        dplyr::filter(.data$name %in% x) %>%
         dplyr::pull(!!as.name(reference_key))}) %>%
     lapply(., function(x){return(paste(x,collapse = ";"))}) %>%
-    unlist(.)
+    unlist()
 
   return(gene_df)
 }

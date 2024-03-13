@@ -2,9 +2,21 @@
 % Please edit documentation in R/hypGEM_to_excel.R
 \name{hypGEM_filter}
 \alias{hypGEM_filter}
-\title{hypGEM_filter}
+\title{Filter the enrichment results by fdr value, and optionally sub-selects result columns}
 \usage{
 hypGEM_filter(hypGEM_obj, cols = NULL, fdr_cutoff = 1, do_sort = FALSE)
+}
+\arguments{
+\item{hypGEM_obj}{A hypeR-GEM object from enrichment analysis}
+
+\item{cols}{columns}
+
+\item{fdr_cutoff}{fdr threshold}
+
+\item{do_sort}{logical parameter}
+}
+\value{
+filtered data frame
 }
 \description{
 Filter the enrichment results by fdr value, and optionally sub-selects result columns

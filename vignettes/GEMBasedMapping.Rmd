@@ -1,0 +1,29 @@
+---
+title: "Reaction-based mapping using Genome-scale Metabolic Models(GEMs)"
+output: rmarkdown::html_vignette
+author: "Ziwei Huang"
+date: "03/10/2024"
+vignette: >
+  %\VignetteIndexEntry{Reaction-based mapping using Genome-scale Metabolic Models(GEMs)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<font color = "#000000">
+
+```{r}
+devtools::load_all(".")
+```
+
+## Load metabolite signatures
+
+```{r}
+data(COVID_serum)
+```
+
+</font>
+--

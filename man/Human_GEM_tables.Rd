@@ -3,14 +3,22 @@
 \docType{data}
 \name{Human_GEM_tables}
 \alias{Human_GEM_tables}
-\title{Undirected mapping tables from Human GEM}
+\title{Undirectional mapping tables of Human GEM}
 \format{
-A nested list of dataframes and lists
+A list object of data frames and lists
 }
 \usage{
-Human_GEM_tables
+data(Human_GEM_tables)
+}
+\value{
+A list object
 }
 \description{
 A list of tables of genes, metabolites, and reactions
+}
+\references{
+Wang, Hao, et al.
+"Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 }
 \keyword{datasets}

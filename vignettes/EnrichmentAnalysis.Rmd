@@ -1,0 +1,29 @@
+---
+title: "Enrichment analysis"
+output: rmarkdown::html_vignette
+author: "Ziwei Huang"
+date: "03/10/2024"
+vignette: >
+  %\VignetteIndexEntry{Enrichment analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<font color = "#000000">
+
+```{r}
+devtools::load_all(".")
+```
+
+## Load genesets (e.g. REACTOME)
+
+```{r}
+data("Reactome")
+```
+
+</font>
+--

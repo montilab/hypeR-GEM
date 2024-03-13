@@ -6,6 +6,7 @@
 #' @import methods utils
 #' @importFrom reactable reactable colDef
 #' @importFrom htmltools div
+#' @importFrom rlang .data
 
 #' @return a nested reactable
 #' @export
@@ -19,7 +20,7 @@ rctbls <- function(
   ## filter out non-enriched geneset
   hypeR_GEM_obj <- hypeR_GEM_obj |>
     purrr::map(\(ls) {
-      ls$data <- ls$data |> dplyr::filter(fdr < fdr_cutoff)
+      ls$data <- ls$data |> dplyr::filter(.data$fdr < fdr_cutoff)
       return(ls)
     })
   ## create outer reactable
@@ -70,6 +71,7 @@ rctbls <- function(
 #' @importFrom reactable reactable colDef
 #' @importFrom htmltools div tagAppendChild
 #' @importFrom dplyr select
+#' @importFrom rlang .data
 
 #' @return a reactable
 #' @keywords internal

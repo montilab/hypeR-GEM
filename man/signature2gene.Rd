@@ -7,7 +7,7 @@
 signature2gene(
   signatures,
   species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other"),
-  directed = FALSE,
+  directional = FALSE,
   tables = NULL,
   merge = TRUE,
   reference_key = "refmet_name",
@@ -21,7 +21,7 @@ signature2gene(
 
 \item{species}{the species of GEM model, if species == 'Other', a user-define GEM_table must be provided}
 
-\item{directed}{logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only}
+\item{directional}{logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only}
 
 \item{tables}{species == 'Other', a user-define GEM_table must be provided}
 

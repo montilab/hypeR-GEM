@@ -3,14 +3,22 @@
 \docType{data}
 \name{Mouse_GEM_tables}
 \alias{Mouse_GEM_tables}
-\title{Undirected mapping tables from Mouse GEM}
+\title{Undirectional mapping tables of Mouse GEM}
 \format{
-A nested list of dataframes and lists
+A list object of data frames and lists
 }
 \usage{
-Mouse_GEM_tables
+data(Mouse_GEM_tables)
+}
+\value{
+A list object
 }
 \description{
 A list of tables of genes, metabolites, and reactions
+}
+\references{
+Wang, Hao, et al.
+"Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 }
 \keyword{datasets}
