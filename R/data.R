@@ -1,102 +1,260 @@
-#' Undirected mapping tables from Human GEM
+#' Undirectional mapping tables of Human GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
+#'
+#' @usage data(Human_GEM_tables)
+#'
+#' @format A list object of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 #'
 "Human_GEM_tables"
 
 
-#' Directed mapping tables from Human GEM
+#' Directional mapping tables of Human GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
 #'
-"Human_GEM_tables_directed"
+#' @usage data(Human_GEM_tables_di)
+#'
+#' @format A list object of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
+#'
+"Human_GEM_tables_di"
 
 
-#' Undirected mapping tables from Mouse GEM
+#' Undirectional mapping tables of Mouse GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
+#'
+#' @usage data(Mouse_GEM_tables)
+#'
+#' @format A list object of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 #'
 "Mouse_GEM_tables"
 
-#' Directed mapping tables from Mouse GEM
+
+#' Directional mapping tables of Mouse GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
 #'
-"Mouse_GEM_tables_directed"
+#' @usage data(Mouse_GEM_tables_di)
+#'
+#' @format A list object of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
+#'
+"Mouse_GEM_tables_di"
 
 
-#' Undirected mapping tables from Rat GEM
+
+#' Undirectional mapping tables of Rat GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
+#'
+#' @usage data(Rat_GEM_tables)
+#'
+#' @format A list of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 #'
 "Rat_GEM_tables"
 
-#' Directed mapping tables from Rat GEM
+
+#' Directional mapping tables of Rat GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
 #'
-"Rat_GEM_tables_directed"
+#' @usage data(Rat_GEM_tables_di)
+#'
+#' @format A list of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
+#'
+"Rat_GEM_tables_di"
 
 
-#' Undirected mapping tables from Zebrafish GEM
+#' Undirectional mapping tables of Zebrafish GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
+#'
+#' @usage data(Zebrafish_GEM_tables)
+#'
+#' @format A list of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 #'
 "Zebrafish_GEM_tables"
 
-#' Directed mapping tables from Zebrafish GEM
-#'
-#' A list of tables of genes, metabolites, and reactions
-#'
-#' @format A nested list of dataframes and lists
-#'
-"Zebrafish_GEM_tables_directed"
 
-#' Undirected mapping tables from Worm GEM
+#' Directional mapping tables of Zebrafish GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
+#'
+#' @usage data(Zebrafish_GEM_tables_di)
+#'
+#' @format A list of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
+#'
+"Zebrafish_GEM_tables_di"
+
+
+#' Undirectional mapping tables of Worm GEM
+#'
+#' A list of tables of genes, metabolites, and reactions
+#'
+#' @docType data
+#'
+#' @usage data(Worm_GEM_tables)
+#'
+#' @format A list of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 #'
 "Worm_GEM_tables"
 
-#' Directed mapping tables from Worm GEM
+
+#' Directional mapping tables of Worm GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
 #'
-#' @format A nested list of dataframes and lists
+#' @docType data
 #'
-"Worm_GEM_tables_directed"
+#' @usage data(Worm_GEM_tables_di)
+#'
+#' @format A list of data frames and lists
+#'
+#' @return A list object
+#'
+#' @references Wang, Hao, et al.
+#' "Genome-scale metabolic network reconstruction of model animals as a platform for translational research."
+#' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
+#'
+"Worm_GEM_tables_di"
 
-#' Networks from Human GEM
-#'
-#' A network obtaining from Human GE<
-#'
-#' @format A igraph object
-#'
-"human_ig"
 
-#' A template of metabolite signatures
+#' Network of Human GEM
+#'
+#' An igraph object consists of a directed network
+#'
+#' @docType data
+#'
+#' @usage data(Human_ig)
+#'
+#' @format An object of class \code{igraph} from \code{igraph} package
+#'
+#' @return An igraph object
+#'
+"Human_ig"
+
+
+#' Metabolite signatures of COVID obtained from Human serum
 #'
 #' A list containing metabolite signatures
 #'
 #' @docType data
 #'
-#' @format A list of dataframes
+#' @usage data(COVID_serum)
 #'
-"EL_signature"
+#' @format A list of data frames
+#'
+#' @return A list object
+#'
+#' @references Bi, Xiaojie, et al.
+#' "Proteomic and metabolomic profiling of urine uncovers immune responses in patients with COVID-19."
+#' Cell reports 38.3 (2022).
+#'
+"COVID_serum"
 
+
+#' Metabolite signatures of COVID obtained from Human urine
+#'
+#' A list containing metabolite signatures
+#'
+#' @docType data
+#'
+#' @usage data(COVID_urine)
+#'
+#' @format A list of data frames
+#'
+#' @return A list object
+#'
+#' @references Bi, Xiaojie, et al.
+#' "Proteomic and metabolomic profiling of urine uncovers immune responses in patients with COVID-19."
+#' Cell reports 38.3 (2022).
+#'
+"COVID_urine"
+
+#' Reactome genesets
+#'
+#' A hypeR object
+#'
+#' @docType data
+#'
+#' @usage data(Reactome)
+#'
+#' @format An object of class \code{hypeR} from \code{hypeR} package
+#'
+#' @return An hypeR object
+#'
+#' @references Federico, Anthony, and Stefano Monti.
+#' "hypeR: an R package for geneset enrichment workflows."
+#' Bioinformatics 36.4 (2020): 1307-1308.
+#'
+"Reactome"

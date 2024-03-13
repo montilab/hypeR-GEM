@@ -1,7 +1,7 @@
 #' Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format
 #'
 #' @param con a connection or the path of the GEM, which should be in .mat format
-#' @param directed logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
+#' @param directional logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
 #' @return a list of tables
 
 #' @import methods utils
@@ -13,7 +13,7 @@
 
 #' @export
 extract_tables <- function(con,
-                           directed=FALSE){
+                           directional=FALSE){
 
   ## load GEM and extract data
   GEM <- R.matlab::readMat(con=file.path(con))
@@ -40,7 +40,7 @@ extract_tables <- function(con,
     as.data.frame(.) %>%
     dplyr::arrange(i)
 
-  if(directed){
+  if(directional){
     ## Metabolite X maps to reactions where X is the product
     for(m in 1:ncol(r2m_matrix)){
       reactions <- S %>%

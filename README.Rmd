@@ -6,12 +6,20 @@ output: rmarkdown::github_document
 
 ```{r echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse = TRUE, comment="")
+
+# Load hypeR-GEM
+library(devtools)
 devtools::load_all(".")
 ```
 
 # hypeR.GEM
 
-## (1) Installation
+![Gitter](https://img.shields.io/gitter/room/montilab/hypeR-GEM)
+![GitHub issues](https://img.shields.io/github/issues/montilab/hypeR-GEM)
+![GitHub last commit](https://img.shields.io/github/last-commit/montilab/hypeR-GEM)
+
+
+# Installation
 
 - Using `devtools` package
 
@@ -20,97 +28,45 @@ library(devtools)
 devtools::install_github("montilab/hypeR-GEM")
 ```
 
-## Usage
+# Usage
+
+Here, we are using a dataset of coronavirus disease 2019 (COVID-19) metabolite signatures obtained from human urine samples.
+
+## (i) Load R packages
 
 ```{r, eval=FALSE}
 library(hypeR.GEM)
 ```
 
 
+## (ii) Load metabolite signatures
+
+The dataset is a list object containing two data frames:
+
+- up = up-regulated metabolites
+
+- dn = down-regulated metabolites
+
 ```{r}
-## pathway = Animal Organ Regeneration
-gene_query <- c("BAAT","HMOX1", "NNMT", "UGT1A1")
-
-met_query <- c("(10Z)-heptadecenoic acid", "1-methylnicotinamide", "bilirubin", "biliverdin")
-
-data("human_ig")
-
-ig <- human_ig
-df <- igraph::as_data_frame(ig, what = 'both')
-metabolite_by = "symbol"
-gene_by = "symbol"
-
-## query nodes from "ig"，duplicated "symbol" implies multiple compartments
-  query_df <- df$vertices %>%
-    magrittr::set_rownames(., 1:nrow(.)) %>%
-    tibble::rownames_to_column(var='vid') %>%
-    dplyr::mutate(vid = as.numeric(vid)) %>%
-    dplyr::filter(!is.na(!!as.name(metabolite_by)) & !is.na(!!as.name(gene_by))) %>%
-    dplyr::filter(!!as.name(metabolite_by) %in% metabolite_query | !!as.name(gene_by) %in% gene_query) 
-
-  ## obtain node Ids of gene_query，empty if gene_query = NULL
-  gene_query_vids <- query_df %>%
-    dplyr::filter(node_type == "gene") %>%
-    dplyr::pull(vid)
-
-  ## obtain node Ids of metabolite_query，empty if metabolite_query = NULL
-  metabolite_query_vids <- query_df %>%
-    dplyr::filter(node_type == "metabolite") %>%
-    dplyr::pull(vid)
-
-  ## gene_query and their neighbor, empty if gene_query = NULL
-  gene_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= gene_query_vids, mode='all'), as.numeric) %>%
-    unlist(.) %>%
-    unique(.)
-
-  ## metabolite_query and their neighbor，empty if metabolite_query = NULL
-  metabolite_neighbor_vids <- lapply(igraph::neighborhood(ig, order=1, nodes= metabolite_query_vids, mode='all'), as.numeric) %>%
-    unlist(.) %>%
-    unique(.)
-
-  ## specified visualization focus
-  if(focus == "all"){
-    all_vids <- unique(c(gene_neighbor_vids, metabolite_neighbor_vids))
-
-  }
-  if(focus == "metabolite"){
-    all_vids <-  unique(c(metabolite_neighbor_vids, gene_query_vids))
-  }
-  if(focus == "pathway"){
-    all_vids <- unique(c(gene_neighbor_vids, metabolite_query_vids))
-
-
-  }
-
-
-
+data(COVID_urine)
+str(COVID_urine)
 ```
 
+## (iii) hypeR-GEM mapping
 
-
-## Load signatures
-```{r}
-data(EL_signature)
-
-str(EL_signature)
-
-```
-
-
-## Map metabolite signtures to associated genes
-
-- `signatures` must be a named list
-- `species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other")` 
--  `merge`: merge metabolites from different department
-- `promiscuous_threshold`: gene association threshold of promiscuous metabolite
+- `signature`: Must be a named list, each element is a data frame which has to contain a column with the same name as "reference_key"
+- `species`: c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other")
+- `directional` logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
+-  `merge`: Merge metabolites from different department
+- `promiscuous_threshold`: Gene association threshold of promiscuous metabolites
 - `ensemble_id`: for current version, if `species != 'Human`, use `ensemble_id = FALSE`
 - `reference_key = 'refmet_name` by default
 - `background` is used to compute gene-specific p-values, if `background = NULL`, then background = # of metabolites associated with non-exchange reactions
 
-
 ```{r}
-hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
-                                           directed = FALSE,
+## Undirectional mapping
+hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+                                           directional = FALSE,
                                            species = "Human",
                                            merge = TRUE,
                                            promiscuous_threshold = 50,
@@ -118,72 +74,55 @@ hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = EL_signature,
                                            reference_key = 'refmet_name',
                                            background = NULL)
 
+##Directional mapping
+hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+                                           directional = TRUE,
+                                           species = "Human",
+                                           merge = TRUE,
+                                           promiscuous_threshold = 50,
+                                           ensemble_id = TRUE,
+                                           reference_key = 'refmet_name',
+                                           background = NULL)
+```
 
-#unique(hypeR_GEM_obj$gene_tables$EL_down$signature_size)
+## (iv) Enrichment analysis in the gene space
 
-hypeR_GEM_obj$gene_tables
+Here we use REACTOME genesets as an example
+
+```{r}
+data(Reactome)
 ```
 
 
+### Unweighted(regular) Hypergeometric test
+
+The background we use in this analysis equals to all protein(-coding) genes in the Human GEM model
 
 ```{r}
-library(hypeR)
-kegg <- msigdb_gsets(species="Homo sapiens", category="C2", subcategory = "CP:KEGG", clean = TRUE)
-print(kegg)
+max_fdr <- 0.05
+
+## Enrichment analysis from undirectional mapping
+enrichment <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                    genesets = Reactome$genesets,
+                                    genesets_name = "REACTOME",
+                                    method='unweighted',
+                                    min_metabolite = 2,
+                                    background=3068)
+
+## Enrichment analysis from undirectional mapping
+enrichment_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
+                                       genesets = Reactome$genesets,
+                                       genesets_name = "REACTOME",
+                                       method='unweighted',
+                                       min_metabolite = 2,
+                                       background=3068)
 ```
 
+#### Visualization of enrichment analysis {.tabset}
 
-## Hypergeometric test {.tabset}
-
-### KEGG (unweighted) {.tabset}
+##### Undirectional
 ```{r}
-max_fdr <- 0.01
-hypeR_GEM_enrichments_unweighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                         genesets = kegg$genesets,
-                                         genesets_name = "KEGG",
-                                         method='unweighted',
-                                         metabolite_hits_filter_threshold = 2,
-                                         background=3068)
-
-hypeR_GEM_enrichments_unweighted$EL_up$data
-```
-
-#### Plot
-```{r}
-hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_unweighted,
-                           top=50,
-                           abrv=50,
-                           size_by="significance",
-                           fdr_cutoff= max_fdr,
-                           val='fdr')+
-  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
-  ggplot2::theme(axis.text.y = element_text(size = 7))
-```
-
-#### Reactable
-
-Not quite sure why the reactable is not displayed normally in the .md file, but the function should work 
-```{r}
-#hypeR.GEM::rctbls(hypeR_GEM_enrichments_unweighted, fdr_cutoff=0.05)
-```
-
-
-
-### KEGG (weighted) {.tabset}
-```{r}
-max_fdr <- 0.01
-hypeR_GEM_enrichments_weighted <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                         genesets = kegg$genesets,
-                                         genesets_name = "KEGG",
-                                         method='weighted',
-                                         weights = 'one_minus_fdr',
-                                         metabolite_hits_filter_threshold = 2,
-                                         background=3068)
-```
-
-#### Plot
-```{r}
-hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_weighted,
+hypeR.GEM::enrichment_plot(enrichment,
                            top=40,
                            abrv=50,
                            size_by="significance",
@@ -193,26 +132,91 @@ hypeR.GEM::enrichment_plot(hypeR_GEM_enrichments_weighted,
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
 
-#### Reactable
+##### Directional
 ```{r}
-#hypeR.GEM::rctbls(hypeR_GEM_enrichments_weighted, fdr_cutoff=0.05)
+hypeR.GEM::enrichment_plot(enrichment_di,
+                           top=40,
+                           abrv=50,
+                           size_by="significance",
+                           fdr_cutoff= max_fdr,
+                           val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+```
+
+#### Reactable {.tabset}
+
+##### Undirectional
+```{r}
+hypeR.GEM::rctbls(enrichment, fdr_cutoff=max_fdr)
+```
+
+##### Directional
+```{r}
+hypeR.GEM::rctbls(enrichment_di, fdr_cutoff=max_fdr)
 ```
 
 
+### Weighted Hypergeometric test {.tabset}
+
+
 ```{r}
-ig <- hypeR.GEM::human_ig
+max_fdr <- 0.05
 
-hypeR.GEM::Human_GEM_tables$meta_df_merged %>% 
-  dplyr::filter(fullname %in% "lithocholic acid sulfate")
+## Enrichment analysis from undirectional mapping
+enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                        genesets = Reactome$genesets,
+                                        genesets_name = "REACTOME",
+                                        method='weighted',
+                                        weights = 'one_minus_fdr',
+                                        min_metabolite = 2,
+                                        background=3068)
 
-Human_GEM_tables$meta_df_merged$fullname[str_detect(Human_GEM_tables$meta_df_merged$fullname, "Lithocholic")]
-
-p <- hypeR.GEM::visNet(ig, 
-                  metabolite_query = c("bilirubin"),
-                  by = "symbol")
-
-
-
-p$p
+## Enrichment analysis from Directional mapping
+enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
+                                        genesets = Reactome$genesets,
+                                        genesets_name = "REACTOME",
+                                        method='weighted',
+                                        weights = 'one_minus_fdr',
+                                        min_metabolite = 2,
+                                        background=3068)
 ```
 
+
+#### Visualization of enrichment analysis {.tabset}
+
+##### Undirectional
+```{r}
+hypeR.GEM::enrichment_plot(enrichment_wt,
+                           top=40,
+                           abrv=50,
+                           size_by="significance",
+                           fdr_cutoff= max_fdr,
+                           val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+```
+
+##### Directional
+```{r}
+hypeR.GEM::enrichment_plot(enrichment_wt_di,
+                           top=40,
+                           abrv=50,
+                           size_by="significance",
+                           fdr_cutoff= max_fdr,
+                           val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+```
+
+#### Reactable {.tabset}
+
+##### Undirectional
+```{r}
+hypeR.GEM::rctbls(enrichment_wt, fdr_cutoff=max_fdr)
+```
+
+##### Directional
+```{r}
+hypeR.GEM::rctbls(enrichment_wt_di, fdr_cutoff=max_fdr)
+```
