@@ -144,17 +144,7 @@ hypeR.GEM::enrichment_plot(enrichment_di,
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
 
-#### Reactable {.tabset}
 
-##### Undirectional
-```{r}
-hypeR.GEM::rctbls(enrichment, fdr_cutoff=max_fdr)
-```
-
-##### Directional
-```{r}
-hypeR.GEM::rctbls(enrichment_di, fdr_cutoff=max_fdr)
-```
 
 
 ### Weighted Hypergeometric test {.tabset}
@@ -209,14 +199,3 @@ hypeR.GEM::enrichment_plot(enrichment_wt_di,
   ggplot2::theme(axis.text.y = element_text(size = 7))
 ```
 
-#### Reactable {.tabset}
-
-##### Undirectional
-```{r}
-hypeR.GEM::rctbls(enrichment_wt, fdr_cutoff=max_fdr)
-```
-
-##### Directional
-```{r}
-hypeR.GEM::rctbls(enrichment_wt_di, fdr_cutoff=max_fdr)
-```
