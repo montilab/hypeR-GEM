@@ -46,6 +46,7 @@
 #'
 #' @format A list object of data frames and lists
 #'
+#'
 #' @return A list object
 #'
 #' @references Wang, Hao, et al.
@@ -64,6 +65,7 @@
 #' @usage data(Mouse_GEM_tables_di)
 #'
 #' @format A list object of data frames and lists
+#'
 #'
 #' @return A list object
 #'

@@ -90,12 +90,15 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div class="section level1">
 <div class="page-header"><h1 id="hypergem">hypeR.GEM<a class="anchor" aria-label="anchor" href="#hypergem"></a>
 </h1></div>
-<div class="section level2">
-<h2 id="id_1-installation">(1) Installation<a class="anchor" aria-label="anchor" href="#id_1-installation"></a>
-</h2>
+<p><img src="https://img.shields.io/gitter/room/montilab/hypeR-GEM" alt="Gitter"><img src="https://img.shields.io/github/issues/montilab/hypeR-GEM" alt="GitHub issues"><img src="https://img.shields.io/github/last-commit/montilab/hypeR-GEM" alt="GitHub last commit"></p>
+</div>
+<div class="section level1">
+<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h1>
 <ul>
 <li>Using <code>devtools</code> package</li>
 </ul>
@@ -103,44 +106,54 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"montilab/hypeR-GEM"</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level1">
+<h1 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h1>
+<p>Here, we are using a dataset of coronavirus disease 2019 (COVID-19) metabolite signatures obtained from human urine samples.</p>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="i-load-r-packages">(i) Load R packages<a class="anchor" aria-label="anchor" href="#i-load-r-packages"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hypeR.GEM</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="load-signatures">Load signatures<a class="anchor" aria-label="anchor" href="#load-signatures"></a>
+<h2 id="ii-load-metabolite-signatures">(ii) Load metabolite signatures<a class="anchor" aria-label="anchor" href="#ii-load-metabolite-signatures"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">EL_signature</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">EL_signature</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co">#&gt; List of 2</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt;  $ EL_up  :'data.frame': 311 obs. of  5 variables:</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;   ..$ CHEMICAL_NAME: chr [1:311] "c-glycosyltryptophan" "vanillactate" "hydroxyasparagine**" "cysteine s-sulfate" ...</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;   ..$ refmet_name  : chr [1:311] "alpha-C-Mannosyltryptophan" "Vanillactic acid" "Hydroxyasparagine" "Cysteine-S-sulfate" ...</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;   ..$ cent.Estimate: num [1:311] 0.824 1.049 0.858 0.882 1.44 ...</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;   ..$ cent.p.value : num [1:311] 5.25e-14 3.92e-13 2.69e-12 3.77e-12 6.46e-12 ...</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;   ..$ cent.q.value : num [1:311] 5.52e-11 2.06e-10 9.42e-10 9.92e-10 1.36e-09 ...</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;  $ EL_down:'data.frame': 96 obs. of  5 variables:</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;   ..$ CHEMICAL_NAME: chr [1:96] "epiandrosterone sulfate" "dehydroepiandrosterone sulfate (dhea-s)" "androstenediol (3beta,17beta) monosulfate (1)" "x-11378" ...</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;   ..$ refmet_name  : chr [1:96] "Epiandrosterone" "Dehydroepiandrosterone sulfate" "4-Androsten-3beta,17beta-diol 17-sulfate" NA ...</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;   ..$ cent.Estimate: num [1:96] -1.9 -1.44 -1.64 -1.12 -1.75 ...</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;   ..$ cent.p.value : num [1:96] 7.73e-08 1.35e-07 1.95e-07 6.28e-07 1.07e-06 ...</span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;   ..$ cent.q.value : num [1:96] 1.77e-06 2.91e-06 3.51e-06 9.31e-06 1.40e-05 ...</span></span></code></pre></div>
+<p>The dataset is a list object containing two data frames:</p>
+<ul>
+<li><p>up = up-regulated metabolites</p></li>
+<li><p>dn = down-regulated metabolites</p></li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(COVID_urine)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(COVID_urine)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>List of <span class="dv">2</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> <span class="sc">$</span> up<span class="sc">:</span><span class="st">'data.frame'</span><span class="sc">:</span> <span class="dv">161</span> obs. of  <span class="dv">5</span> variables<span class="sc">:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> metabolite    <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">161</span>] <span class="st">"(S)-a-amino-omega-caprolactam"</span> <span class="st">"1,5-anhydroglucitol (1,5-AG)"</span> <span class="st">"1-methyladenine"</span> <span class="st">"1-methylguanine"</span> ...</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> refmet_name   <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">161</span>] <span class="st">"L-2-aminohexano-6-lactam"</span> <span class="st">"1,5-Anhydrosorbitol"</span> <span class="st">"1-Methyladenine"</span> <span class="st">"1-Methylguanine"</span> ...</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> estimate      <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">161</span>] <span class="st">"0.29434017200000001"</span> <span class="st">"2.5732795230000001"</span> <span class="st">"0.71437854700000003"</span> <span class="st">"1.168429911"</span> ...</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> P_value_adjust<span class="sc">:</span> num [<span class="dv">1</span><span class="sc">:</span><span class="dv">161</span>] <span class="fl">7.27e-03</span> <span class="fl">1.93e-11</span> <span class="fl">3.14e-02</span> <span class="fl">1.29e-02</span> <span class="fl">2.66e-02</span> ...</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> gene_type     <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">161</span>] <span class="st">"up"</span> <span class="st">"up"</span> <span class="st">"up"</span> <span class="st">"up"</span> ...</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> <span class="sc">$</span> dn<span class="sc">:</span><span class="st">'data.frame'</span><span class="sc">:</span> <span class="dv">206</span> obs. of  <span class="dv">5</span> variables<span class="sc">:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> metabolite    <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">206</span>] <span class="st">"1,2,3-benzenetriol sulfate (1)"</span> <span class="st">"1,3,7-trimethylurate"</span> <span class="st">"1,7-dimethylurate"</span> <span class="st">"1-methyl-5-imidazoleacetate"</span> ...</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> refmet_name   <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">206</span>] <span class="cn">NA</span> <span class="st">"1,3,7-Trimethyluric acid"</span> <span class="st">"1,7-Dimethyluric acid"</span> <span class="st">"1-Methyl-5-imidazoleacetic acid"</span> ...</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> estimate      <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">206</span>] <span class="st">"-2.9115951029999998"</span> <span class="st">"-3.7085696989999999"</span> <span class="st">"-3.6453960510000001"</span> <span class="st">"-1.2098657509999999"</span> ...</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> P_value_adjust<span class="sc">:</span> num [<span class="dv">1</span><span class="sc">:</span><span class="dv">206</span>] <span class="fl">0.0258</span> <span class="fl">0.049</span> <span class="fl">0.0387</span> <span class="fl">0.0483</span> <span class="fl">0.0369</span> ...</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  ..<span class="sc">$</span> gene_type     <span class="sc">:</span> chr [<span class="dv">1</span><span class="sc">:</span><span class="dv">206</span>] <span class="st">"dn"</span> <span class="st">"dn"</span> <span class="st">"dn"</span> <span class="st">"dn"</span> ...</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="map-metabolite-signtures-to-associated-genes">Map metabolite signtures to associated genes<a class="anchor" aria-label="anchor" href="#map-metabolite-signtures-to-associated-genes"></a>
+<h2 id="iii-hyper-gem-mapping">(iii) hypeR-GEM mapping<a class="anchor" aria-label="anchor" href="#iii-hyper-gem-mapping"></a>
 </h2>
 <ul>
 <li>
-<code>signatures</code> must be a named list</li>
-<li><code>species = c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other")</code></li>
+<code>signature</code>: Must be a named list, each element is a data frame which has to contain a column with the same name as “reference_key”</li>
 <li>
-<code>merge</code>: merge metabolites from different department</li>
+<code>species</code>: c(“Human”, “Mouse”, “Rat”, “Zebrafish”, “Worm”, “Other”)</li>
 <li>
-<code>promiscuous_threshold</code>: gene association threshold of promiscuous metabolite</li>
+<code>directional</code> logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only</li>
+<li>
+<code>merge</code>: Merge metabolites from different department</li>
+<li>
+<code>promiscuous_threshold</code>: Gene association threshold of promiscuous metabolites</li>
 <li>
 <code>ensemble_id</code>: for current version, if <code>species != 'Human</code>, use <code>ensemble_id = FALSE</code>
 </li>
@@ -149,8 +162,10 @@
 <li>
 <code>background</code> is used to compute gene-specific p-values, if <code>background = NULL</code>, then background = # of metabolites associated with non-exchange reactions</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hypeR_GEM_obj</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">EL_signature</span>,</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Undirectional mapping</span></span>
+<span><span class="va">hypeR_GEM_obj</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>,</span>
+<span>                                           directional <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                           species <span class="op">=</span> <span class="st">"Human"</span>,</span>
 <span>                                           merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
@@ -158,56 +173,128 @@
 <span>                                           reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
 <span>                                           background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="va">hypeR_GEM_obj</span><span class="op">$</span><span class="va">promiscuous_met</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt;        refmet_name gene_association</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; 1    Phenylalanine               57</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; 2          Proline               57</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; 3 Arachidonic acid               77</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; 4    Linoleic acid               62</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/hypeR" class="external-link">hypeR</a></span><span class="op">)</span></span>
-<span><span class="va">kegg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/hypeR/man/msigdb_gsets.html" class="external-link">msigdb_gsets</a></span><span class="op">(</span>species<span class="op">=</span><span class="st">"Homo sapiens"</span>, category<span class="op">=</span><span class="st">"C2"</span>, subcategory <span class="op">=</span> <span class="st">"CP:KEGG"</span>, clean <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">kegg</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#&gt; C2.CP:KEGG v7.5.1 </span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; Abc Transporters (44)</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; Acute Myeloid Leukemia (57)</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; Adherens Junction (73)</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; Adipocytokine Signaling Pathway (67)</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; Alanine Aspartate And Glutamate Metabolism (32)</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; Aldosterone Regulated Sodium Reabsorption (42)</span></span></code></pre></div>
+<span><span class="co">##Directional mapping</span></span>
+<span><span class="va">hypeR_GEM_obj_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>,</span>
+<span>                                           directional <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                           species <span class="op">=</span> <span class="st">"Human"</span>,</span>
+<span>                                           merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>                                           ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                           reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
+<span>                                           background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="hypergeometric-test">Hypergeometric test<a class="anchor" aria-label="anchor" href="#hypergeometric-test"></a>
+<h2 id="iv-enrichment-analysis-in-the-gene-space">(iv) Enrichment analysis in the gene space<a class="anchor" aria-label="anchor" href="#iv-enrichment-analysis-in-the-gene-space"></a>
 </h2>
+<p>Here we use REACTOME genesets as an example</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Reactome</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="kegg-unweighted">KEGG (unweighted)<a class="anchor" aria-label="anchor" href="#kegg-unweighted"></a>
+<h3 id="unweightedregular-hypergeometric-test">Unweighted(regular) Hypergeometric test<a class="anchor" aria-label="anchor" href="#unweightedregular-hypergeometric-test"></a>
+</h3>
+<p>The background we use in this analysis equals to all protein(-coding) genes in the Human GEM model</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">max_fdr</span> <span class="op">&lt;-</span> <span class="fl">0.05</span></span>
+<span></span>
+<span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
+<span><span class="va">enrichment</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
+<span>                                    genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                    genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
+<span>                                    method<span class="op">=</span><span class="st">'unweighted'</span>,</span>
+<span>                                    min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                                    background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
+<span><span class="va">enrichment_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj_di</span>,</span>
+<span>                                       genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                       genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
+<span>                                       method<span class="op">=</span><span class="st">'unweighted'</span>,</span>
+<span>                                       min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                                       background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4 tabset">
+<h4 class="tabset" id="visualization-of-enrichment-analysis">Visualization of enrichment analysis<a class="anchor" aria-label="anchor" href="#visualization-of-enrichment-analysis"></a>
+</h4>
+<div class="section level5">
+<h5 id="undirectional">Undirectional<a class="anchor" aria-label="anchor" href="#undirectional"></a>
+</h5>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment</span>,</span>
+<span>                           top<span class="op">=</span><span class="fl">40</span>,</span>
+<span>                           abrv<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                           size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
+<span>                           fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
+<span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="./reference/figures/unnamed-chunk-7-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-7</p>
+</div>
+</div>
+<div class="section level5">
+<h5 id="directional">Directional<a class="anchor" aria-label="anchor" href="#directional"></a>
+</h5>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment_di</span>,</span>
+<span>                           top<span class="op">=</span><span class="fl">40</span>,</span>
+<span>                           abrv<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                           size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
+<span>                           fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
+<span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="./reference/figures/unnamed-chunk-8-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-8</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section level3 tabset">
+<h3 class="tabset" id="weighted-hypergeometric-test">Weighted Hypergeometric test<a class="anchor" aria-label="anchor" href="#weighted-hypergeometric-test"></a>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">max_fdr</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
-<span><span class="va">hypeR_GEM_enrichments_unweighted</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
-<span>                                         genesets <span class="op">=</span> <span class="va">kegg</span><span class="op">$</span><span class="va">genesets</span>,</span>
-<span>                                         genesets_name <span class="op">=</span> <span class="st">"KEGG"</span>,</span>
-<span>                                         method<span class="op">=</span><span class="st">'unweighted'</span>,</span>
-<span>                                         background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">max_fdr</span> <span class="op">&lt;-</span> <span class="fl">0.05</span></span>
 <span></span>
-<span><span class="va">hypeR_GEM_enrichments_unweighted</span><span class="op">$</span><span class="va">EL_down</span><span class="op">$</span><span class="va">info</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co">#&gt; $Test</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; [1] "Hypergeometric test"</span></span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; $Signature_size</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; [1] 182</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; $Genesets</span></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; [1] "KEGG"</span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; $Background</span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; [1] 3068</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="plot">Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
+<span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
+<span><span class="va">enrichment_wt</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
+<span>                                        genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                        genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
+<span>                                        method<span class="op">=</span><span class="st">'weighted'</span>,</span>
+<span>                                        weights <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
+<span>                                        min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                                        background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Enrichment analysis from Directional mapping</span></span>
+<span><span class="va">enrichment_wt_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj_di</span>,</span>
+<span>                                        genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                        genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
+<span>                                        method<span class="op">=</span><span class="st">'weighted'</span>,</span>
+<span>                                        weights <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
+<span>                                        min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                                        background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4 tabset">
+<h4 class="tabset" id="visualization-of-enrichment-analysis-1">Visualization of enrichment analysis<a class="anchor" aria-label="anchor" href="#visualization-of-enrichment-analysis-1"></a>
 </h4>
+<div class="section level5">
+<h5 id="undirectional-1">Undirectional<a class="anchor" aria-label="anchor" href="#undirectional-1"></a>
+</h5>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment_wt</span>,</span>
+<span>                           top<span class="op">=</span><span class="fl">40</span>,</span>
+<span>                           abrv<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                           size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
+<span>                           fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
+<span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="./reference/figures/unnamed-chunk-10-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-10</p>
+</div>
+</div>
+<div class="section level5">
+<h5 id="directional-1">Directional<a class="anchor" aria-label="anchor" href="#directional-1"></a>
+</h5>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">hypeR_GEM_enrichments_unweighted</span>,</span>
+<code class="sourceCode R"><span><span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment_wt_di</span>,</span>
 <span>                           top<span class="op">=</span><span class="fl">40</span>,</span>
 <span>                           abrv<span class="op">=</span><span class="fl">50</span>,</span>
 <span>                           size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
@@ -215,50 +302,15 @@
 <span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="README_files/figure-gfm/unnamed-chunk-7-1.png"><!-- --></p>
-</div>
-<div class="section level4">
-<h4 id="reactable">Reactable<a class="anchor" aria-label="anchor" href="#reactable"></a>
-</h4>
-<p>Not quite sure why the reactable is not displayed normally in the .md file, but the function should work</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#hypeR.GEM::rctbls(hypeR_GEM_enrichments_unweighted, fdr_cutoff=0.05)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="kegg-weighted">KEGG (weighted)<a class="anchor" aria-label="anchor" href="#kegg-weighted"></a>
-</h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">max_fdr</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
-<span><span class="va">hypeR_GEM_enrichments_weighted</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
-<span>                                         genesets <span class="op">=</span> <span class="va">kegg</span><span class="op">$</span><span class="va">genesets</span>,</span>
-<span>                                         genesets_name <span class="op">=</span> <span class="st">"KEGG"</span>,</span>
-<span>                                         method<span class="op">=</span><span class="st">'weighted'</span>,</span>
-<span>                                         weights <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
-<span>                                         background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="plot-1">Plot<a class="anchor" aria-label="anchor" href="#plot-1"></a>
-</h4>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">hypeR_GEM_enrichments_weighted</span>,</span>
-<span>                           top<span class="op">=</span><span class="fl">40</span>,</span>
-<span>                           abrv<span class="op">=</span><span class="fl">50</span>,</span>
-<span>                           size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
-<span>                           fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
-<span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="README_files/figure-gfm/unnamed-chunk-10-1.png"><!-- --></p>
-</div>
-<div class="section level4">
-<h4 id="reactable-1">Reactable<a class="anchor" aria-label="anchor" href="#reactable-1"></a>
-</h4>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#hypeR.GEM::rctbls(hypeR_GEM_enrichments_weighted, fdr_cutoff=0.05)</span></span></code></pre></div>
+<div class="figure">
+<img src="./reference/figures/unnamed-chunk-11-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-11</p>
 </div>
 </div>
 </div>
 </div>
+</div>
+</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

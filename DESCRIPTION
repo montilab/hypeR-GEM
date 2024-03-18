@@ -11,7 +11,7 @@ Description: A R Package For Connecting Metabolic Signatures to Enzyme-coding Ge
     via Genome-scale Metabolic Models(GEMs) and Performing Geneset Enrichment Analysis.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 Depends: 
     R (>= 3.6.0)
 RoxygenNote: 7.3.1
@@ -44,3 +44,4 @@ Suggests:
     knitr,
     httr,
     testthat (>= 3.1.6)
+VignetteBuilder: knitr

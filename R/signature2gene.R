@@ -39,21 +39,21 @@ signature2gene <- function(signatures,
   species <- match.arg(species)
 
   # load tables
-  if(species == "Human" & !directional){GEM_tables <- hypeR.GEM::Human_GEM_tables}
-  if(species == "Human" &  directional){GEM_tables <- hypeR.GEM::Human_GEM_tables_di}
+  if(species == "Human" & !directional){data(Human_GEM_tables,envir = environment()); GEM_tables <- Human_GEM_tables; rm(Human_GEM_tables)}
+  if(species == "Human" &  directional){data(Human_GEM_tables_di,envir = environment()); GEM_tables <- Human_GEM_tables_di; rm(Human_GEM_tables_di)}
 
-  if(species == "Mouse" & !directional){GEM_tables <- hypeR.GEM::Mouse_GEM_tables}
-  if(species == "Mouse" &  directional){GEM_tables <- hypeR.GEM::Mouse_GEM_tables_di}
+  if(species == "Mouse" & !directional){data(Mouse_GEM_tables,envir = environment()); GEM_tables <- Mouse_GEM_tables; rm(Mouse_GEM_tables)}
+  if(species == "Mouse" &  directional){data(Mouse_GEM_tables_di,envir = environment()); GEM_tables <- Mouse_GEM_tables_di; rm(Mouse_GEM_tables_di)}
 
-  if(species == "Rat" & !directional){GEM_tables <- hypeR.GEM::Rat_GEM_tables}
-  if(species == "Rat" &  directional){GEM_tables <- hypeR.GEM::Rat_GEM_tables_di}
+  if(species == "Rat" & !directional){data(Rat_GEM_tables,envir = environment()); GEM_tables <- Rat_GEM_tables; rm(Rat_GEM_tables)}
+  if(species == "Rat" &  directional){data(Rat_GEM_tables_di,envir = environment()); GEM_tables <- Rat_GEM_tables_di; rm(Rat_GEM_tables_di)}
 
 
-  if(species == "Zebrafish" & !directional){GEM_tables <- hypeR.GEM::Zebrafish_GEM_tables}
-  if(species == "Zebrafish" & directional){GEM_tables <- hypeR.GEM::Zebrafish_GEM_tables_di}
+  if(species == "Zebrafish" & !directional){data(Zebrafish_GEM_tables,envir = environment()); GEM_tables <- Zebrafish_GEM_tables; rm(Zebrafish_GEM_tables)}
+  if(species == "Zebrafish" & directional){data(Zebrafish_GEM_tables_di,envir = environment()); GEM_tables <- Zebrafish_GEM_tables_di; rm(Zebrafish_GEM_tables_di)}
 
-  if(species == "Worm" & !directional){GEM_tables <- hypeR.GEM::Worm_GEM_tables}
-  if(species == "Worm" & directional){GEM_tables <- hypeR.GEM::Worm_GEM_tables_di}
+  if(species == "Worm" & !directional){data(Worm_GEM_tables,envir = environment()); GEM_tables <- Worm_GEM_tables; rm(Worm_GEM_tables)}
+  if(species == "Worm" & directional){data(Worm_GEM_tables_di,envir = environment()); GEM_tables <- Worm_GEM_tables_di; rm(Worm_GEM_tables_di)}
 
 
   ## user-defined GEM table
@@ -163,6 +163,8 @@ signature2gene <- function(signatures,
 }
 
 
+
+
 #' Title Extract the standardized names from the signature data frames
 #'
 #' @param signature_df signature data frame
@@ -220,7 +222,7 @@ signature2gene <- function(signatures,
 
   mapped_metabolite_signature <- mapped_metabolite_signature %>%
     dplyr::mutate(gene_association  = lengths(m2g[mapped_metabolite_signature$name])) %>%
-    dplyr::select(name, fullname, !!as.name(reference_key),  gene_association, everything())
+    dplyr::select(.data$name, .data$fullname, !!as.name(reference_key),  .data$gene_association, everything(.data))
 }
 
 #' Title Map metabolic signature to ranked genes
