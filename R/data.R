@@ -16,7 +16,6 @@
 #'
 "Human_GEM_tables"
 
-
 #' Directional mapping tables of Human GEM
 #'
 #' A list of tables of genes, metabolites, and reactions
@@ -34,6 +33,7 @@
 #' Proceedings of the National Academy of Sciences 118.30 (2021): e2102344118.
 #'
 "Human_GEM_tables_di"
+
 
 
 #' Undirectional mapping tables of Mouse GEM

@@ -1,4 +1,4 @@
-#' Title Map metabolic signatures to enzyme-coding genes
+#' Map metabolic signatures to enzyme-coding genes
 #'
 #' @param signatures a list of metabolic signatures, each element is a data frame which has to contain a column with the same name as "reference_key"
 #' @param species the species of GEM model, if species == 'Other', a user-define GEM_table must be provided
@@ -63,6 +63,7 @@ signature2gene <- function(signatures,
     if(!(reference_key %in% colnames(GEM_tables[['meta_df']]))) stop("reference key does not in GEM's metabolite dataframe column names!\n")
     GEM_tables <- tables
   }
+
 
   ## if compartments are merged
   if(merge){
@@ -163,6 +164,11 @@ signature2gene <- function(signatures,
 }
 
 
+.load_GEM_tables <- function(file){
+  GEM_tables <- file
+  rm(file)
+  return(GEM_tables)
+}
 
 
 #' Title Extract the standardized names from the signature data frames

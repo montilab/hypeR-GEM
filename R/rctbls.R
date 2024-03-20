@@ -1,4 +1,4 @@
-#' Title Reactable table for hypeR_GEM_enrichment object
+#' Reactable table for hypeR_GEM_enrichment object
 #'
 #' @param hypeR_GEM_obj A list of enrichment results from single/multiple signatures, output of "hypeR.GEM::enrichment()"
 #' @param fdr_cutoff fdr threshold for geneset enrichment

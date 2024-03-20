@@ -1,4 +1,4 @@
-#' Title Enrichment analysis
+#' Enrichment analysis
 #'
 #' @param hypeR_GEM_obj an hypeR_GEM object, the output of "signature2gene" function
 #' @param genesets a list of genesets

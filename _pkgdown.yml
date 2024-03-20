@@ -1,4 +1,4 @@
-url: https://github.com/montilab/CaDrA/
+url: https://github.com/montilab/hypeR-GEM/
 
 development:
   mode: auto
@@ -8,14 +8,11 @@ template:
     bootswatch: cosmo
 
 authors:
-  Reina Chau:
-    href: https://github.com/RC-88
+  Ziwei Huang:
+    href: https://github.com/Ziwei-Huang-BU
   Stefano Monti:
     href: https://github.com/tetomonti
-  Katia Bulekova:
-    href: https://github.com/katgit
-  Vinay Kartha:
-    href: https://github.com/vkartha
+
 
 news:
   one_page: false
@@ -24,49 +21,53 @@ reference:
 - title: Workflow Methods
   desc: ~
   contents:
-  - '`CaDrA`'
-  - '`candidate_search`'
-  - '`calc_rowscore`'
-  - '`topn_bclest`'
-  - '`prefilter_data`'
-  - '`generate_permutations`'
+  - '`extract_tables`'
+  - '`signature2gene`'
+  - '`enrichment`'
+  - '`hypGEM_to_excel`'
+  - '`hypGEM_filter`'
 
 - title: Plot Methods
   desc: ~
   contents:
-  - '`meta_plot`'
-  - '`topn_plot`'
-  - '`permutation_plot`'
+  - '`enrichment_plot`'
+  - '`rctbls`'
+  - '`visNet`'
+  - '`ggempty`'
 
 - title: Data Objects
   desc: ~
   contents:
-  - '`sim_FS`'
-  - '`sim_Scores`'
-  - '`topn_list`'
-  - '`perm_res`'
-  - '`CCLE_MUT_SCNA`'
-  - '`CTNBB1_reporter`'
-  - '`BRCA_GISTIC_MUT_SIG`'
-  - '`TAZYAP_BRCA_ACTIVITY`'
+  - '`Human_GEM_tables`'
+  - '`Human_GEM_tables_di`'
+  - '`Mouse_GEM_tables`'
+  - '`Mouse_GEM_tables_di`'
+  - '`Rat_GEM_tables`'
+  - '`Rat_GEM_tables_di`'
+  - '`Zebrafish_GEM_tables`'
+  - '`Zebrafish_GEM_tables_di`'
+  - '`Worm_GEM_tables`'
+  - '`Worm_GEM_tables_di`'
+  - '`COVID_serum`'
+  - '`COVID_urine`'
+  - '`Reactome`'
+  - '`Human_ig`'
 
 navbar:
-  title: "CaDrA"
+  title: "hypeR-GEM"
   left:
     - icon: fa-home
       href: index.html
     - text: "Documentation"
       menu:
-      - text: "Scoring Functions"
-        href: articles/scoring_functions.html
-      - text: "Permutation-Based Testing"
-        href: articles/permutation_based_testing.html
-      - text: "How to run CaDrA within a Docker Environment"
-        href: articles/docker.html
+      - text: "GEM-based Mapping"
+        href: articles/GEMBasedMapping.html
+      - text: "Enrichment Analysis"
+        href: articles/EnrichmentAnalysis.html
     - text: "Reference"
       href: reference/index.html
   right:
     - text: "Change Log"
       href: news/index.html
     - icon: fa-github
-      href: https://github.com/montilab/CaDrA
+      href: https://github.com/montilab/hypeR-GEM

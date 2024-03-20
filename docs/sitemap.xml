@@ -1,66 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/404.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/articles/EnrichmentAnalysis.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-dots_plot.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/articles/GEMBasedMapping.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-extract_sig_meta.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/articles/index.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-extract_standardized_name.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/authors.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-format_str.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/index.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-gene_association.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/COVID_serum.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-hyper_enrichment.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/COVID_urine.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-meta2gene.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Human_GEM_tables.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-multi_dots_plot.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Human_GEM_tables_di.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-rctbl.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Human_ig.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-weighted_hyper_enrichment.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Mouse_GEM_tables.html</loc>
   </url>
   <url>
-    <loc>/reference/enrichment.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Mouse_GEM_tables_di.html</loc>
   </url>
   <url>
-    <loc>/reference/enrichment_plot.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Rat_GEM_tables.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_tables.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Rat_GEM_tables_di.html</loc>
   </url>
   <url>
-    <loc>/reference/ggempty.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Reactome.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Worm_GEM_tables.html</loc>
   </url>
   <url>
-    <loc>/reference/rctbls.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Worm_GEM_tables_di.html</loc>
   </url>
   <url>
-    <loc>/reference/signature2gene.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Zebrafish_GEM_tables.html</loc>
   </url>
   <url>
-    <loc>/reference/visNet.html</loc>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/Zebrafish_GEM_tables_di.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-dots_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-extract_sig_meta.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-extract_standardized_name.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-format_str.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-gene_association.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-hyper_enrichment.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-meta2gene.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-multi_dots_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-rctbl.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/dot-weighted_hyper_enrichment.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/enrichment.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/enrichment_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/extract_tables.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/ggempty.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/hypGEM_filter.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/hypGEM_to_excel.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/rctbls.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/signature2gene.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/hypeR-GEM/reference/visNet.html</loc>
   </url>
 </urlset>

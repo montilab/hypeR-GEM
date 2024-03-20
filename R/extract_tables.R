@@ -1,4 +1,4 @@
-#' Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format
+#' Extract tables from a given genome scale metabolic model(GEM) of ".mat" format
 #'
 #' @param con a connection or the path of the GEM, which should be in .mat format
 #' @param directional logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
