@@ -10,6 +10,7 @@ Maintainer: Ziwei Huang <ziwhuang@bu.edu>
 Description: A R Package For Connecting Metabolic Signatures to Enzyme-coding Genes
     via Genome-scale Metabolic Models(GEMs) and Performing Geneset Enrichment Analysis.
 License: GPL-3 + file LICENSE
+URL: https://github.com/montilab/hypeR-GEM/
 Encoding: UTF-8
 LazyData: false
 Depends: 
