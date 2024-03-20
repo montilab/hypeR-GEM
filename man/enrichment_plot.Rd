@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichment_plot.R
 \name{enrichment_plot}
 \alias{enrichment_plot}
-\title{Title Enrichment analysis visualization}
+\title{Enrichment analysis visualization}
 \usage{
 enrichment_plot(
   hypeR_GEM_enrichments,
@@ -36,5 +36,5 @@ enrichment_plot(
 a ggplot object
 }
 \description{
-Title Enrichment analysis visualization
+Enrichment analysis visualization
 }

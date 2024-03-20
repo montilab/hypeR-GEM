@@ -2,7 +2,7 @@
 % Please edit documentation in R/signature2gene.R
 \name{signature2gene}
 \alias{signature2gene}
-\title{Title Map metabolic signatures to enzyme-coding genes}
+\title{Map metabolic signatures to enzyme-coding genes}
 \usage{
 signature2gene(
   signatures,
@@ -39,5 +39,5 @@ signature2gene(
 a list containing two element: "mapped_metabolite_signatures" and "gene_tables" for each signature
 }
 \description{
-Title Map metabolic signatures to enzyme-coding genes
+Map metabolic signatures to enzyme-coding genes
 }

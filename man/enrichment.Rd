@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichment.R
 \name{enrichment}
 \alias{enrichment}
-\title{Title Enrichment analysis}
+\title{Enrichment analysis}
 \usage{
 enrichment(
   hypeR_GEM_obj,
@@ -33,5 +33,5 @@ enrichment(
 a list of type of statistical test and data
 }
 \description{
-Title Enrichment analysis
+Enrichment analysis
 }

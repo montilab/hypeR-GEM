@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_tables.R
 \name{extract_tables}
 \alias{extract_tables}
-\title{Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format}
+\title{Extract tables from a given genome scale metabolic model(GEM) of ".mat" format}
 \usage{
 extract_tables(con, directional = FALSE)
 }
@@ -15,5 +15,5 @@ extract_tables(con, directional = FALSE)
 a list of tables
 }
 \description{
-Title extract tables from a given genome scale metabolic model(GEM) of ".mat" format
+Extract tables from a given genome scale metabolic model(GEM) of ".mat" format
 }
