@@ -19,10 +19,46 @@ knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all(".")
 ```
 
-## Load metabolite signatures
+## What are genome-scale metabolic models(GEMs)?
 
-```{r}
-data(COVID_serum)
+Genome-scale metabolic models(GEMs) are curated metabolic models collect all known metabolic information of a biological system(e.g. human cell). There are three essential components in a GEM:
+
+  -**metabolites**: all known metabolites of a biological system.
+  -**reactions**: all known reactions of a biological system.
+  -**protein(-coding) genes**
+
+including the , **protein(-coding) genes**, **reactions**, and **metabolites**.
+
+See [here](https://www.pnas.org/doi/abs/10.1073/pnas.2102344118) for more details.  
+
+
+Here is a schematic diagram of a GEM:
+
+The capital letters represent metabolites, and $r_i$ represents $i^{th}$ reaction. A prototypical reactions includes three parts:
+
+  - **reactants(substrates)**: one or more metabolites that are consumed (left-hand side)
+  - **products**:  one or more metabolites that are produced (right-hand side)
+  - **catalyst**： protein(-coding) genes that catalyze the reaction
+  
+
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/intro_GEM.png")
+```
+
+## Mapping workflow
+
+To map a metabolite to its associated protein(-coding) genes, we define three types of associations:
+
+  - **metabolite-reaction association**: A metabolite is associated with a reaction if:
+    - The metabolite is either the reactant or the product of the reaction (**undirectional**)
+    - The metabolite is is the product of the reaction (**directional**)
+  
+  - **reaction-protein(-coding) gene association**: A reaction is associated with protein(-coding) genes if these genes catalyze the reaction.
+  
+  - **metabolite-protein(-coding) gene association**: A metaboblite is associated with all protein(-coding) genes that catalyze the reactions associated with the metabolite.
+  
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/mapping.png")
 ```
 
 </font>
