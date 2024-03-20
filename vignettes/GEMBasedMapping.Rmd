@@ -61,5 +61,47 @@ To map a metabolite to its associated protein(-coding) genes, we define three ty
 knitr::include_graphics("figs/mapping.png")
 ```
 
+## Accounting for Gene “Promiscuity”
+
+Some genes in a GEM can be highly "promiscuous" (catalyzed too many reactions, and thus, associated with too many metabolites).  To take this into account, we compute gene-spefic p-values that indicate the mapping specificity.
+
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/gene_promiscuity.png")
+```
+
+
+## Example
+
+Here, we are using a dataset of coronavirus disease 2019 (COVID-19) metabolite signatures obtained from human urine samples (See [reference](https://www.sciencedirect.com/science/article/pii/S2211124721017836#da0010))
+
+### Load metabolite signature
+```{r}
+data(COVID_urine)
+```
+
+### hypeR-GEM mapping
+```{r}
+## Undirectional mapping
+hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+                                           directional = FALSE,
+                                           species = "Human",
+                                           merge = TRUE,
+                                           promiscuous_threshold = 500,
+                                           ensemble_id = TRUE,
+                                           reference_key = 'refmet_name',
+                                           background = NULL)
+
+##Directional mapping
+hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+                                            directional = TRUE,
+                                            species = "Human",
+                                            merge = TRUE,
+                                            promiscuous_threshold = 500,
+                                            ensemble_id = TRUE,
+                                            reference_key = 'refmet_name',
+                                            background = NULL)
+```
+
+
 </font>
 --
