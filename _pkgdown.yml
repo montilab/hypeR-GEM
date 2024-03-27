@@ -50,7 +50,7 @@ reference:
   - '`Worm_GEM_tables_di`'
   - '`COVID_serum`'
   - '`COVID_urine`'
-  - '`Reactome`'
+  - '`reactome`'
   - '`Human_ig`'
 
 navbar:
