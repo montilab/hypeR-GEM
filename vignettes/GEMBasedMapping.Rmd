@@ -63,7 +63,7 @@ knitr::include_graphics("figs/mapping.png")
 
 ## Accounting for Gene “Promiscuity”
 
-Some genes in a GEM can be highly "promiscuous" (catalyzed too many reactions, and thus, associated with too many metabolites).  To take this into account, we compute gene-spefic p-values that indicate the mapping specificity.
+Some genes in a GEM can be highly "promiscuous" (catalyzed too many reactions, and thus, associated with too many metabolites).  To take this into account, we compute gene-specific p-values that indicate the mapping specificity.
 
 ```{r echo=FALSE, out.height="80%", out.width="80%"}
 knitr::include_graphics("figs/gene_promiscuity.png")
@@ -79,7 +79,7 @@ Here, we are using a dataset of coronavirus disease 2019 (COVID-19) metabolite s
 data(COVID_urine)
 ```
 
-### hypeR-GEM mapping
+### hypeR-GEM mapping 
 ```{r}
 ## Undirectional mapping
 hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
@@ -101,6 +101,8 @@ hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
                                             reference_key = 'refmet_name',
                                             background = NULL)
 ```
+
+
 
 
 </font>

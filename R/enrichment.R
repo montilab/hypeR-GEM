@@ -12,6 +12,7 @@
 #' @return a list of type of statistical test and data
 
 #' @importFrom rlang .data
+#' @import methods utils
 #' @export
 enrichment <- function(hypeR_GEM_obj,
                        genesets,
@@ -125,8 +126,8 @@ enrichment <- function(hypeR_GEM_obj,
   ## Associated metabolites
   hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
   metabolite_hits <- lapply(hitted_genes, function(x){gene_table %>%
-      dplyr::filter(.data$symbol %in% x) %>%
-      dplyr::pull(.data$associated_metabolites)}) %>%
+      dplyr::filter(symbol %in% x) %>%
+      dplyr::pull(associated_metabolites)}) %>%
     lapply(., strsplit, ";") %>%
     lapply(., unlist) %>%
     lapply(., unique) %>%
@@ -152,18 +153,18 @@ enrichment <- function(hypeR_GEM_obj,
                      gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
-    dplyr::mutate(num_met_hits = stringr::str_count(.data$metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(.data$num_met_hits/metabolite_signature_size, 3))
+    dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
   if(0 < min_metabolite & min_metabolite < 1){
     data <- data %>%
-      dplyr::filter(.data$ratio_met_hits >= min_metabolite)
+      dplyr::filter(ratio_met_hits >= min_metabolite)
   }
   ## hard filter
   if(min_metabolite >= 1){
     data <- data %>%
-      dplyr::filter(.data$num_met_hits >= min_metabolite)
+      dplyr::filter(num_met_hits >= min_metabolite)
   }
 
   return(list(info=list(Test = "Hypergeometric test",
@@ -203,7 +204,7 @@ enrichment <- function(hypeR_GEM_obj,
   if(!(weights %in% colnames(gene_table))) stop("Gene weights must be specified in a colnmae of gene_table\n")
 
   weighted_signature <- gene_table %>%
-    dplyr::select(.data$symbol,!!as.name(weights)) %>%
+    dplyr::select(symbol,!!as.name(weights)) %>%
     tibble::deframe()
 
   if(max(weighted_signature) > 1 | min(weighted_signature) < 0) stop("All weights should be between 0 and 1\n")
@@ -238,8 +239,8 @@ enrichment <- function(hypeR_GEM_obj,
   ## Associated metabolites
   hitted_genes <- lapply(genesets, function(x, y){intersect(x, y)}, signature_found)
   metabolite_hits <- lapply(hitted_genes, function(x){gene_table %>%
-      dplyr::filter(.data$symbol %in% x) %>%
-      dplyr::pull(.data$associated_metabolites)}) %>%
+      dplyr::filter(symbol %in% x) %>%
+      dplyr::pull(associated_metabolites)}) %>%
     lapply(., strsplit, ";") %>%
     lapply(., unlist) %>%
     lapply(., unique) %>%
@@ -258,18 +259,18 @@ enrichment <- function(hypeR_GEM_obj,
                      gene_hits=unlist(lapply(hitted_genes, paste, collapse=";")),
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
-    dplyr::mutate(num_met_hits = stringr::str_count(.data$metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(.data$num_met_hits/metabolite_signature_size, 3))
+    dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
 
   ## soft filter
   if(0 < min_metabolite & min_metabolite < 1){
     data <- data %>%
-      dplyr::filter(.data$ratio_met_hits >= min_metabolite)
+      dplyr::filter(ratio_met_hits >= min_metabolite)
   }
   ## hard filter
   if(min_metabolite >= 1){
     data <- data %>%
-      dplyr::filter(.data$num_met_hits >= min_metabolite)
+      dplyr::filter(num_met_hits >= min_metabolite)
   }
 
   return(list(info=list(Test = "Weighted hypergeometric test",
