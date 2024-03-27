@@ -86,7 +86,7 @@ enrichment <- function(hypeR_GEM_obj,
 
 #' Title Hypergeometric test
 #'
-#' @param unweighted_signature  a character vector of signature
+#' @param gene_table the gene table from hypeR-GEM object
 #' @param genesets a list of genesets
 #' @param genesets_name name of the geneset,e.g "KEGG"
 #' @param min_metabolite minimum number/ratio of metabolite that drives the enrichment
@@ -175,9 +175,9 @@ enrichment <- function(hypeR_GEM_obj,
 }
 
 
-#' Title Weighted hypergeometric test
+#' Weighted hypergeometric test
 #'
-#' @param weighted_signature named vector, name = gene symbol, value = weight and should be between 0 and 1
+#' @param gene_table the gene table from hypeR-GEM object
 #' @param genesets a list of genesets
 #' @param genesets_name name of the geneset,e.g "KEGG"
 #' @param min_metabolite minimum number/ratio of metabolite that drives the enrichment

@@ -13,6 +13,8 @@
 )
 }
 \arguments{
+\item{gene_table}{the gene table from hypeR-GEM object}
+
 \item{genesets}{a list of genesets}
 
 \item{genesets_name}{name of the geneset,e.g "KEGG"}
@@ -20,8 +22,6 @@
 \item{min_metabolite}{minimum number/ratio of metabolite that drives the enrichment}
 
 \item{background}{background parameter of hypergeometric test}
-
-\item{unweighted_signature}{a character vector of signature}
 }
 \value{
 a list

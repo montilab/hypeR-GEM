@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichment.R
 \name{.weighted_hyper_enrichment}
 \alias{.weighted_hyper_enrichment}
-\title{Title Weighted hypergeometric test}
+\title{Weighted hypergeometric test}
 \usage{
 .weighted_hyper_enrichment(
   gene_table,
@@ -14,6 +14,8 @@
 )
 }
 \arguments{
+\item{gene_table}{the gene table from hypeR-GEM object}
+
 \item{genesets}{a list of genesets}
 
 \item{genesets_name}{name of the geneset,e.g "KEGG"}
@@ -21,13 +23,11 @@
 \item{min_metabolite}{minimum number/ratio of metabolite that drives the enrichment}
 
 \item{background}{background parameter of hypergeometric test}
-
-\item{weighted_signature}{named vector, name = gene symbol, value = weight and should be between 0 and 1}
 }
 \value{
 a list
 }
 \description{
-Title Weighted hypergeometric test
+Weighted hypergeometric test
 }
 \keyword{internal}

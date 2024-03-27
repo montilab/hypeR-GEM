@@ -22,7 +22,7 @@ devtools::load_all(".")
 ## Load genesets (e.g. REACTOME)
 
 ```{r}
-data("Reactome")
+data("reactome")
 ```
 
 </font>

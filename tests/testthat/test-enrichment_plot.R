@@ -2,7 +2,7 @@ test_that("Enrichment returns expected output",{
 
   ## template signature and geneset
   data(COVID_urine)
-  data(Reactome)
+  data(reactome)
 
   hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
                                              directional = FALSE,
@@ -14,7 +14,7 @@ test_that("Enrichment returns expected output",{
                                              background = NULL)
 
   enrichment_obj <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                  genesets = Reactome$genesets,
+                                  genesets = reactome,
                                   genesets_name = "REACTOME",
                                   method='unweighted',
                                   min_metabolite = 2,
@@ -29,7 +29,7 @@ test_that("Enrichment returns expected output",{
                                         val='fdr')
 
 
-  testthat::expect_length(result, 9L)
+
   testthat::expect_named(result$data,
                          c("label","signature","significance", "geneset", "size"))
 

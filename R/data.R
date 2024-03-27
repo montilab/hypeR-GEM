@@ -245,18 +245,18 @@
 
 #' Reactome genesets
 #'
-#' A hypeR object
+#' A a list object
 #'
 #' @docType data
 #'
-#' @usage data(Reactome)
+#' @usage data(reactome)
 #'
-#' @format An object of class \code{hypeR} from \code{hypeR} package
+#' @format a list object
 #'
-#' @return An hypeR object
+#' @return a list object
 #'
 #' @references Federico, Anthony, and Stefano Monti.
 #' "hypeR: an R package for geneset enrichment workflows."
 #' Bioinformatics 36.4 (2020): 1307-1308.
 #'
-"Reactome"
+"reactome"

@@ -104,7 +104,7 @@ max_fdr <- 0.05
 
 ## Enrichment analysis from undirectional mapping
 enrichment <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                    genesets = Reactome$genesets,
+                                    genesets = reactome,
                                     genesets_name = "REACTOME",
                                     method='unweighted',
                                     min_metabolite = 2,
@@ -113,7 +113,7 @@ enrichment <- hypeR.GEM::enrichment(hypeR_GEM_obj,
 
 ## Enrichment analysis from undirectional mapping
 enrichment_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
-                                       genesets = Reactome$genesets,
+                                       genesets = reactome,
                                        genesets_name = "REACTOME",
                                        method='unweighted',
                                        min_metabolite = 2,
@@ -158,7 +158,7 @@ max_fdr <- 0.05
 
 ## Enrichment analysis from undirectional mapping
 enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                        genesets = Reactome$genesets,
+                                        genesets = reactome,
                                         genesets_name = "REACTOME",
                                         method='weighted',
                                         weights = 'one_minus_fdr',
@@ -167,7 +167,7 @@ enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
 
 ## Enrichment analysis from Directional mapping
 enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
-                                        genesets = Reactome$genesets,
+                                        genesets = reactome,
                                         genesets_name = "REACTOME",
                                         method='weighted',
                                         weights = 'one_minus_fdr',
