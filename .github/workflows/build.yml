@@ -57,7 +57,7 @@ jobs:
 
       - name: DevTest
         run: |
-           PATH=$PATH:$HOME/bin/ Rscript -e 'pkgdown::build_site(".",verbose = TRUE)'
+           PATH=$PATH:$HOME/bin/ Rscript -e 'pkgdown::build_site(".")'
       - name: Install deploy dependencies
         run: |
           apt-get update
