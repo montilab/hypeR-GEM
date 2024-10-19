@@ -19,6 +19,7 @@
   }
   return(string)
 }
+
 #' @keywords internal
 .check_hypeR_GEM_obj <- function(hypGEM_obj) {
   return(

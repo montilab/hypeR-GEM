@@ -42,7 +42,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   }
   return(p)
 }
-#' Title Create a dot plot
+#' Create a dot plot
 #'
 #' @param hyp_enrichment_data data in hypeR_GEM_enrichments
 #' @param top Limit number of genesets shown
@@ -132,7 +132,8 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   }
   return(p)
 }
-#' Title Create a multi dots plot
+
+#' Create a multi dots plot
 #'
 #' @param multihyp_data data in hypeR_GEM_enrichments
 #' @param top Limit number of genesets shown
@@ -168,9 +169,9 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   # Count significant genesets across signatures
   multihyp_dfs <- lapply(multihyp_data, function(hyp_obj) {
     hyp_obj$data %>%
-      dplyr::filter(.data$pval <= pval_cutoff) %>%
-      dplyr::filter(.data$fdr <= fdr_cutoff) %>%
-      dplyr::select(.data$label)
+      dplyr::filter(pval <= pval_cutoff) %>%
+      dplyr::filter(fdr <= fdr_cutoff) %>%
+      dplyr::select(label)
   })
   # Take top genesets
   labels <- names(sort(table(unlist(multihyp_dfs)), decreasing = TRUE))
@@ -219,7 +220,7 @@ enrichment_plot <- function(hypeR_GEM_enrichments,
   ## separate "geneset" column
   geneset_size <- df %>%
     tibble::rownames_to_column(var = "label") %>%
-    dplyr::select(.data$label, .data$geneset)
+    dplyr::select(label, geneset)
 
   df.melted <- reshape2::melt(as.matrix(df %>% select(-c("geneset"))))
   colnames(df.melted) <- c("label", "signature", "significance")

@@ -43,10 +43,10 @@ enrichment <- function(hypeR_GEM_obj,
     ## single or multiple signatures
     if(length(hypeR_GEM_obj$gene_tables)==1){
       hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
-                                              genesets = genesets,
-                                              genesets_name = genesets_name,
-                                              min_metabolite =  min_metabolite,
-                                              background = background)
+                                                genesets = genesets,
+                                                genesets_name = genesets_name,
+                                                min_metabolite =  min_metabolite,
+                                                background = background)
     }else{
       hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
                                    .hyper_enrichment,
@@ -277,5 +277,5 @@ enrichment <- function(hypeR_GEM_obj,
                         Signature_size = length(signature),
                         Genesets = genesets_name,
                         Background = background),
-              data = data))
+             data = data))
 }

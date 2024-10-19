@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichment_plot.R
 \name{.multi_dots_plot}
 \alias{.multi_dots_plot}
-\title{Title Create a multi dots plot}
+\title{Create a multi dots plot}
 \usage{
 .multi_dots_plot(
   multihyp_data,
@@ -33,6 +33,6 @@
 \item{title}{title Plot title}
 }
 \description{
-Title Create a multi dots plot
+Create a multi dots plot
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichment_plot.R
 \name{.dots_plot}
 \alias{.dots_plot}
-\title{Title Create a dot plot}
+\title{Create a dot plot}
 \usage{
 .dots_plot(
   hyp_enrichment_data,
@@ -36,6 +36,6 @@
 A ggplot object
 }
 \description{
-Title Create a dot plot
+Create a dot plot
 }
 \keyword{internal}
