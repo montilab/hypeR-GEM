@@ -54,9 +54,10 @@ jobs:
       #    tag_with_sha: true
       #    tags: latest
 
+
       - name: DevTest
         run: |
-           PATH=$PATH:$HOME/bin/ Rscript -e 'pkgdown::build_site("."); file.copy("README_files", "docs", recursive=TRUE)'
+           PATH=$PATH:$HOME/bin/ Rscript -e 'pkgdown::build_site(".",verbose = TRUE)'
       - name: Install deploy dependencies
         run: |
           apt-get update
