@@ -96,7 +96,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_count
-#' @importFrom dplyr filter mutate
+#' @importFrom dplyr filter mutate arrange
 #' @importFrom rlang .data
 
 #' @return a list
@@ -167,6 +167,11 @@ enrichment <- function(hypeR_GEM_obj,
       dplyr::filter(num_met_hits >= min_metabolite)
   }
 
+  ## sorted
+  data <- data %>%
+      dplyr::arrange(pval)
+
+
   return(list(info=list(Test = "Hypergeometric test",
                         Signature_size = length(signature),
                         Genesets = genesets_name,
@@ -187,7 +192,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_count
-#' @importFrom dplyr filter mutate
+#' @importFrom dplyr filter mutate arrange
 #' @importFrom rlang .data
 
 #' @return a list
@@ -260,7 +265,7 @@ enrichment <- function(hypeR_GEM_obj,
                      metabolite_hits = metabolite_hits,
                      stringsAsFactors=FALSE) %>%
     dplyr::mutate(num_met_hits = stringr::str_count(metabolite_hits, ";") + 1,
-                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3))
+                  ratio_met_hits = round(num_met_hits/metabolite_signature_size, 3)) %>%
 
   ## soft filter
   if(0 < min_metabolite & min_metabolite < 1){
@@ -273,9 +278,14 @@ enrichment <- function(hypeR_GEM_obj,
       dplyr::filter(num_met_hits >= min_metabolite)
   }
 
+  ## sorted
+  data <- data %>%
+      dplyr::arrange(pval)
+
+
   return(list(info=list(Test = "Weighted hypergeometric test",
                         Signature_size = length(signature),
                         Genesets = genesets_name,
                         Background = background),
-             data = data))
+                        data = data))
 }
