@@ -25,7 +25,7 @@ enrichment(
 
 \item{weights}{the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene}
 
-\item{min_metabolite}{minimum number/ratio of metabolite that drives the enrichment of a pathway, if 0 < threshold < 1, we filter by ratio, if threhold >= 1, we filter by number. If threshold = 0, no filter}
+\item{min_metabolite}{minimum number of metabolite that drives the enrichment of a pathway}
 
 \item{background}{background parameter of hypergeometric test}
 }
