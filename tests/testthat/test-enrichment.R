@@ -34,8 +34,7 @@ test_that("Enrichment returns expected output",{
 
   testthat::expect_named(result$up$data,
                          c("label","pval", "fdr", "signature",
-                           "geneset", "overlap", "weighted_overlap",
-                           "background", "gene_hits", "metabolite_hits",
+                           "geneset", "overlap", "background", "gene_hits", "metabolite_hits",
                            "num_met_hits", "ratio_met_hits" ))
 
 
