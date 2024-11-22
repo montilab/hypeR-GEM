@@ -1,6 +1,6 @@
 #' Reactable table for hypeR_GEM_enrichment object
 #'
-#' @param hypeR_GEM_obj A list of enrichment results from single/multiple signatures, output of "hypeR.GEM::enrichment()"
+#' @param hypeR_GEM_enrichment_obj A list of enrichment results from single/multiple signatures, output of "hypeR.GEM::enrichment()"
 #' @param fdr_cutoff fdr threshold for geneset enrichment
 
 #' @import methods utils
@@ -11,32 +11,32 @@
 #' @return a nested reactable
 #' @export
 rctbls <- function(
-    hypeR_GEM_obj,
+    hypeR_GEM_enrichment_obj,
     fdr_cutoff = 0.05
 ) {
   ## input checks
-  stopifnot( .check_hypeR_GEM_obj(hypeR_GEM_obj) )
+  stopifnot( .check_hypeR_GEM_obj(hypeR_GEM_enrichment_obj) )
 
   ## filter out non-enriched geneset
-  hypeR_GEM_obj <- hypeR_GEM_obj |>
+  hypeR_GEM_enrichment_obj <- hypeR_GEM_enrichment_obj |>
     purrr::map(\(ls) {
       ls$data <- ls$data |> dplyr::filter(.data$fdr < fdr_cutoff)
       return(ls)
     })
   ## create outer reactable
   outer_df <- data.frame(
-    signature = names(hypeR_GEM_obj),
+    signature = names(hypeR_GEM_enrichment_obj),
     size = purrr::map_vec(
-      hypeR_GEM_obj, \(x) x$info$Signature_size, .ptype = integer(1)
+      hypeR_GEM_enrichment_obj, \(x) x$info$Signature_size, .ptype = integer(1)
     ),
     enriched = purrr::map_vec(
-      hypeR_GEM_obj, \(x) nrow(x$data), .ptype = integer(1)
+      hypeR_GEM_enrichment_obj, \(x) nrow(x$data), .ptype = integer(1)
     ),
     gsets = purrr::map_vec(
-      hypeR_GEM_obj, \(x) x$info$Genesets, .ptype = character(1)
+      hypeR_GEM_enrichment_obj, \(x) x$info$Genesets, .ptype = character(1)
     ),
     bg = purrr::map_vec(
-      hypeR_GEM_obj, \(x) x$info$Background, .ptype = integer(1)
+      hypeR_GEM_enrichment_obj, \(x) x$info$Background, .ptype = integer(1)
     )
   )
   ## inner reactable
@@ -54,7 +54,7 @@ rctbls <- function(
       bg = colDef(name = "Background")
     ),
     details = function(index) {
-      df <- .rctbl(hypeR_GEM_obj[[index]], type = "inner", fdr_cutoff = fdr_cutoff)
+      df <- .rctbl(hypeR_GEM_enrichment_obj[[index]], type = "inner", fdr_cutoff = fdr_cutoff)
     },
     wrap = FALSE,
     class = "rctbl-outer-tbl",
@@ -86,9 +86,16 @@ rctbls <- function(
   class.tbl <- .format_str("rctbl-{1}-tbl", type)
   class.header <- .format_str("rctbl-{1}-header", type)
 
-  df <- hypeR_GEM_enrichment$data |>
-    dplyr::select(c("label", "pval", "fdr", "geneset", "overlap",
-                    "weighted_overlap", "gene_hits", "metabolite_hits"))
+  if(hypeR_GEM_enrichment$info$Test == "Hypergeometric test"){
+    df <- hypeR_GEM_enrichment$data |>
+      dplyr::select(c("label", "pval", "fdr","signature", "geneset", "overlap", "gene_hits", "metabolite_hits"))
+  }
+
+  if(hypeR_GEM_enrichment$info$Test == "Weighted hypergeometric test"){
+    df <- hypeR_GEM_enrichment$data |>
+      dplyr::select(c("label", "pval", "fdr", "signature", "geneset", "weighted_overlap", "gene_hits", "metabolite_hits"))
+  }
+
 
   tbl <- reactable(df,
     rownames = FALSE,
