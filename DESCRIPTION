@@ -38,7 +38,9 @@ Imports:
     reactable,
     igraph,
     visNetwork,
-    curl
+    curl,
+    networkD3,
+    tidyr
 Suggests: 
     tidyverse,
     devtools,

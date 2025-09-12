@@ -35,6 +35,7 @@ reference:
   - '`rctbls`'
   - '`visNet`'
   - '`ggempty`'
+  - '`sankey_plot`'
 
 - title: Data Objects
   desc: ~
