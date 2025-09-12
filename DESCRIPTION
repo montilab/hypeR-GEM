@@ -28,7 +28,6 @@ Imports:
     tibble,
     magrittr,
     dplyr,
-    tidyr,
     openxlsx,
     purrr,
     stats,
@@ -39,8 +38,7 @@ Imports:
     reactable,
     igraph,
     visNetwork,
-    curl,
-    networkD3
+    curl
 Suggests: 
     tidyverse,
     devtools,
