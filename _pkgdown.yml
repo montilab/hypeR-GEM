@@ -26,6 +26,7 @@ reference:
   - '`enrichment`'
   - '`hypGEM_to_excel`'
   - '`hypGEM_filter`'
+  - '`refmet_convert`'
 
 - title: Plot Methods
   desc: ~
