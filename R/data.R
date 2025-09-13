@@ -260,3 +260,58 @@
 #' Bioinformatics 36.4 (2020): 1307-1308.
 #'
 "reactome"
+
+#' hypeR-GEM object of age-associated metabolites obtained from New England Centenarian Study (NECS)
+#'
+#' A a list object
+#'
+#' @docType data
+#'
+#' @usage data(hypeR_object_NECS)
+#'
+#' @format a list object
+#'
+#' @return a list object
+#'
+#' @references TBD
+#'
+#'
+#'
+"hypeR_object_NECS"
+
+
+#' A list of enriched Metabolon-based metabolite sets (MSets) obtained from age-associated metabolites in NECS
+#'
+#' A a list object
+#'
+#' @docType data
+#'
+#' @usage data(metabolon_msets_list)
+#'
+#' @format a list object
+#'
+#' @return a list object
+#'
+#' @references Evans, A. M., DeHaven, C. D., Barrett, T., Mitchell, M. & Milgram, E.
+#' Integrated, Nontargeted Ultrahigh Performance Liquid Chromatography/Electrospray Ionization
+#' Tandem Mass Spectrometry Platform for the Identification and Relative Quantification of
+#' the Small-Molecule Complement of Biological Systems. Anal. Chem. 81, 6656–6667 (2009).
+"metabolon_msets_list"
+
+#' A list of enriched gene-sets in HALLMARK,KEGG, and REACTOME derived from "hypeR_object_NECS"
+#'
+#' A a list object
+#'
+#' @docType data
+#'
+#' @usage data(gsets_list)
+#'
+#' @format a list object
+#'
+#' @return a list object
+#'
+#' @references Federico, Anthony, and Stefano Monti.
+#' "hypeR: an R package for geneset enrichment workflows."
+#' Bioinformatics 36.4 (2020): 1307-1308.
+#'
+"gsets_list"

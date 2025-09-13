@@ -220,13 +220,13 @@ rctbls(enrichment_obj_wt)
 The `sankey_plot` function generates a three-layer Sankey diagrams connecting metabolites, the metabolite sets (MSets), and the gene sets (GSets) derived from hypeR-GEM. Edge weights between the metabolite and Msets layers reflect the number of shared metabolites, while edges between the MSets and GSets layers reflect the overlap between hypeR-GEM–mapped genes and genes in each GSets. Here we use a toy dataset to illustrate its utility.
 
 ```{r}
-metabolite_signatures <- paste0("m", 1:10)
+data("hypeR_object_NECS")
+data("metabolon_msets_list")
+data("gsets_list")
 
-Msets <- list(Mset1 = c("m1", "m2", "m3"),
-              Mset2 = c("m4","m5", "m6"),
-              Mset3 = c("m7", "m8", "m9", "m10"))
+p <- sankey_plot(hypeR_object_NECS, list(metabolon_msets_list$metabolonSupPthwy), list(gsets_list$hallmark), key = "refmet_name",font_size=16,node_width=20)
 
-
+p
 ```
 
 
