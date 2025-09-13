@@ -3,23 +3,21 @@
 \docType{data}
 \name{metabolon_msets_list}
 \alias{metabolon_msets_list}
-\title{A list of enriched Metabolon-based metabolite sets (MSets) obtained from age-associated metabolites in NECS}
+\title{Metabolon-based metabolite set list (NECS-derived)}
 \format{
-a list object
+A named list of character vectors; each vector contains RefMet (or study) IDs.
 }
 \usage{
 data(metabolon_msets_list)
 }
-\value{
-a list object
-}
 \description{
-A a list object
+A curated list of enriched Metabolon metabolite sets (MSets) obtained from
+age-associated metabolites in NECS.
 }
 \references{
-Evans, A. M., DeHaven, C. D., Barrett, T., Mitchell, M. & Milgram, E.
+Evans AM, DeHaven CD, Barrett T, Mitchell M, Milgram E.
 Integrated, Nontargeted Ultrahigh Performance Liquid Chromatography/Electrospray Ionization
 Tandem Mass Spectrometry Platform for the Identification and Relative Quantification of
-the Small-Molecule Complement of Biological Systems. Anal. Chem. 81, 6656–6667 (2009).
+the Small-Molecule Complement of Biological Systems. \emph{Anal Chem}. 2009;81:6656–6667.
 }
 \keyword{datasets}

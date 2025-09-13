@@ -3,18 +3,16 @@
 \docType{data}
 \name{hypeR_object_NECS}
 \alias{hypeR_object_NECS}
-\title{hypeR-GEM object of age-associated metabolites obtained from New England Centenarian Study (NECS)}
+\title{Example hypeR-GEM object (NECS)}
 \format{
-a list object
+A list with components required by hypeR-GEM downstream functions.
 }
 \usage{
 data(hypeR_object_NECS)
 }
-\value{
-a list object
-}
 \description{
-A a list object
+A small precomputed hypeR-GEM result derived from age-associated metabolites
+in the New England Centenarian Study (NECS), used for examples and tests.
 }
 \references{
 TBD

@@ -54,6 +54,9 @@ reference:
   - '`COVID_urine`'
   - '`reactome`'
   - '`Human_ig`'
+  - '`hypeR_object_NECS`'
+  - '`metabolon_msets_list`'
+  - '`gsets_list`'
 
 navbar:
   title: "hypeR-GEM"

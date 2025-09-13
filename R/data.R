@@ -261,57 +261,42 @@
 #'
 "reactome"
 
-#' hypeR-GEM object of age-associated metabolites obtained from New England Centenarian Study (NECS)
+#' Example hypeR-GEM object (NECS)
 #'
-#' A a list object
+#' A small precomputed hypeR-GEM result derived from age-associated metabolites
+#' in the New England Centenarian Study (NECS), used for examples and tests.
 #'
 #' @docType data
-#'
 #' @usage data(hypeR_object_NECS)
-#'
-#' @format a list object
-#'
-#' @return a list object
-#'
+#' @format A list with components required by hypeR-GEM downstream functions.
+#' @keywords datasets
 #' @references TBD
-#'
-#'
-#'
 "hypeR_object_NECS"
 
-
-#' A list of enriched Metabolon-based metabolite sets (MSets) obtained from age-associated metabolites in NECS
+#' Metabolon-based metabolite set list (NECS-derived)
 #'
-#' A a list object
+#' A curated list of enriched Metabolon metabolite sets (MSets) obtained from
+#' age-associated metabolites in NECS.
 #'
 #' @docType data
-#'
 #' @usage data(metabolon_msets_list)
-#'
-#' @format a list object
-#'
-#' @return a list object
-#'
-#' @references Evans, A. M., DeHaven, C. D., Barrett, T., Mitchell, M. & Milgram, E.
+#' @format A named list of character vectors; each vector contains RefMet (or study) IDs.
+#' @keywords datasets
+#' @references Evans AM, DeHaven CD, Barrett T, Mitchell M, Milgram E.
 #' Integrated, Nontargeted Ultrahigh Performance Liquid Chromatography/Electrospray Ionization
 #' Tandem Mass Spectrometry Platform for the Identification and Relative Quantification of
-#' the Small-Molecule Complement of Biological Systems. Anal. Chem. 81, 6656–6667 (2009).
+#' the Small-Molecule Complement of Biological Systems. \emph{Anal Chem}. 2009;81:6656–6667.
 "metabolon_msets_list"
 
-#' A list of enriched gene-sets in HALLMARK,KEGG, and REACTOME derived from "hypeR_object_NECS"
+#' Enriched gene set list (Hallmark, KEGG, Reactome)
 #'
-#' A a list object
+#' Gene sets enriched from \code{hypeR_object_NECS}, aggregated across Hallmark, KEGG,
+#' and Reactome collections.
 #'
 #' @docType data
-#'
 #' @usage data(gsets_list)
-#'
-#' @format a list object
-#'
-#' @return a list object
-#'
-#' @references Federico, Anthony, and Stefano Monti.
-#' "hypeR: an R package for geneset enrichment workflows."
-#' Bioinformatics 36.4 (2020): 1307-1308.
-#'
+#' @format A named list of character vectors; each vector is a gene set (Ensembl gene IDs).
+#' @keywords datasets
+#' @references Federico A, Monti S. hypeR: an R package for geneset enrichment workflows.
+#' \emph{Bioinformatics}. 2020;36(4):1307–1308.
 "gsets_list"

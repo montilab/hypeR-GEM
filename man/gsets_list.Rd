@@ -3,22 +3,19 @@
 \docType{data}
 \name{gsets_list}
 \alias{gsets_list}
-\title{A list of enriched gene-sets in HALLMARK,KEGG, and REACTOME derived from "hypeR_object_NECS"}
+\title{Enriched gene set list (Hallmark, KEGG, Reactome)}
 \format{
-a list object
+A named list of character vectors; each vector is a gene set (Ensembl gene IDs).
 }
 \usage{
 data(gsets_list)
 }
-\value{
-a list object
-}
 \description{
-A a list object
+Gene sets enriched from \code{hypeR_object_NECS}, aggregated across Hallmark, KEGG,
+and Reactome collections.
 }
 \references{
-Federico, Anthony, and Stefano Monti.
-"hypeR: an R package for geneset enrichment workflows."
-Bioinformatics 36.4 (2020): 1307-1308.
+Federico A, Monti S. hypeR: an R package for geneset enrichment workflows.
+\emph{Bioinformatics}. 2020;36(4):1307–1308.
 }
 \keyword{datasets}
