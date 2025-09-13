@@ -60,12 +60,8 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "Documentation"
-      menu:
-      - text: "GEM-based Mapping"
-        href: articles/GEMBasedMapping.html
-      - text: "Enrichment Analysis"
-        href: articles/EnrichmentAnalysis.html
+    - text: "Workflow"
+      href: articles/Workflow.html
     - text: "Reference"
       href: reference/index.html
   right:

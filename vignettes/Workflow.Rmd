@@ -1,0 +1,244 @@
+---
+title: "HypeR-GEM Workflow Illustration"
+output: rmarkdown::html_vignette
+author: "Ziwei Huang"
+date: "03/10/2024"
+vignette: >
+  %\VignetteIndexEntry{Reaction-based mapping using Genome-scale Metabolic Models(GEMs)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<font color = "#000000">
+
+```{r}
+devtools::load_all(".")
+```
+
+# What are genome-scale metabolic models(GEMs)?
+
+Genome-scale metabolic models(GEMs) are curated metabolic models collect all known metabolic information of a biological system(e.g. human cell). There are three essential components in a GEM:
+
+  -**metabolites**: all known metabolites of a biological system.
+  -**reactions**: all known reactions of a biological system.
+  -**protein(-coding) genes**
+
+including the , **protein(-coding) genes**, **reactions**, and **metabolites**.
+
+See [here](https://www.pnas.org/doi/abs/10.1073/pnas.2102344118) for more details.  
+
+Here is a schematic diagram of a GEM:
+
+The capital letters represent metabolites, and $r_i$ represents $i^{th}$ reaction. A prototypical reactions includes three parts:
+
+  - **reactants(substrates)**: one or more metabolites that are consumed (left-hand side)
+  - **products**:  one or more metabolites that are produced (right-hand side)
+  - **catalyst**： protein(-coding) genes that catalyze the reaction
+  
+
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/intro_GEM.png")
+```
+
+# Mapping workflow
+
+To map a metabolite to its associated protein(-coding) genes, we define three types of associations:
+
+  - **metabolite-reaction association**: A metabolite is associated with a reaction if:
+    - The metabolite is either the reactant or the product of the reaction (**undirectional**)
+    - The metabolite is is the product of the reaction (**directional**)
+  
+  - **reaction-protein(-coding) gene association**: A reaction is associated with protein(-coding) genes if these genes catalyze the reaction.
+  
+  - **metabolite-protein(-coding) gene association**: A metaboblite is associated with all protein(-coding) genes that catalyze the reactions associated with the metabolite.
+  
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/mapping.png")
+```
+
+# Accounting for Gene “Promiscuity”
+
+Some genes in a GEM can be highly "promiscuous" (catalyzed too many reactions, and thus, associated with too many metabolites).  To take this into account, we compute gene-specific p-values that indicate the mapping specificity.
+
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/gene_promiscuity.png")
+```
+
+
+# Workflow Illustration
+
+Here, we illustrate the workflow using metabolite signatures associated with coronavirus disease 2019 (COVID-19), derived from human urine samples(See [reference](https://www.sciencedirect.com/science/article/pii/S2211124721017836#da0010)). This study profiled the urinary metabolome of 71 patients with COVID-19 and 27 healthy controls. The publicly available COVID-19–associated metabolites were classified into two signatures: up-regulated and down-regulated.
+
+
+## Load metabolite signature
+```{r}
+data(COVID_urine)
+```
+
+## HypeR-GEM mapping
+```{r}
+## Undirectional mapping
+hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+                                           directional = FALSE,
+                                           species = "Human",
+                                           merge = TRUE,
+                                           promiscuous_threshold = 100,
+                                           ensemble_id = TRUE,
+                                           reference_key = 'refmet_name',
+                                           background = NULL)
+
+##Directional mapping
+hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+                                            directional = TRUE,
+                                            species = "Human",
+                                            merge = TRUE,
+                                            promiscuous_threshold = 100,
+                                            ensemble_id = TRUE,
+                                            reference_key = 'refmet_name',
+                                            background = NULL)
+```
+
+## HypeR-GEM output {.tabset}
+
+Here, we illustrate the output of **hypeR-GEM** using the results from non-directional mapping. The output of `hypeR.GEM::signature2gene()` is a structured list comprising three major components:
+
+1. `promiscuous_met`: A data frame listing metabolites considered promiscuous, i.e., those associated with an excessively large number of genes. The filtering threshold is defined by the `promiscuous_threshold` parameter in `signature2gene()`.
+
+2. `mapped_metabolite_signatures`: A list in which each element corresponds to a metabolite signature. Each element is a data frame that provides the identifier of the metabolite in the GEM (`name`), its full name (`fullname`), the corresponding RefMet annotation (`refmet_name`), and the number of genes associated with that metabolite (`gene_association`).
+
+3. `gene_table`: The core output of the mapping procedure. This is a list where each element corresponds to a metabolite signature and contains a data frame of the mapped enzyme-coding genes. For each gene, the data frame reports:
+  - the number of catalyzed reactions (`associated_reactions`)
+  - the total number of associated metabolites in the GEM (`total_association`)
+  - the number of associated metabolites within the given signature (`signature_association`)
+  - the p-value quantifying the mapping specificity (`p_value`)
+
+### promiscuous_met
+```{r}
+head(hypeR_GEM_obj$promiscuous_met)
+```
+
+### mapped_metabolite_signatures
+
+Given that we have two metabolite signatures, namely up-regulated and down-regulated, the `mapped_metabolite_signatures` object is a list of length two. For illustration, we focus here on the up-regulated signature as an example.
+```{r}
+hypeR_GEM_obj$mapped_metabolite_signatures$up %>% 
+  head(.)
+```
+
+### gene_table
+
+Similarly, the `gene_table` is also a list object of length two. For illustration, we focus here on the mapped enzyme-coding genes derived from the up-regulated metabolite signature as an example.
+
+```{r}
+hypeR_GEM_obj$gene_tables$up %>% 
+  head(.) 
+```
+
+
+## Enrichment analysis {.tabset}
+
+Here, we use the REACTOME gene sets as an example to illustrate the downstream enrichment analysis of enzyme-coding genes mapped by hypeR-GEM.
+
+```{r}
+data(reactome)
+```
+
+In this example, the background is defined as all protein-coding genes represented in the Human GEM model. The `enrichment()` function supports both standard and weighted hypergeometric tests, specified via the `method` parameter, and takes as input the object generated by `signature2gene()`. 
+
+Gene-level weights are specified through the `weights` argument. By default, weights are set to "one_minus_fdr", which is proportional to the mapping specificity of each gene; users may also provide customized weights by adding additional columns to the `gene_table` object. 
+
+To account for metabolite promiscuity, an additional filtering criterion is provided through the `min_metabolite` parameter, which specifies the minimum number of metabolites required for enrichment. Downstream visualization is provided by the `enrichment_plot()` and "rctbls" functions.
+
+For illustration, we used results obtained with the non-directional mapping rule. For example, the *Sialic acid metabolism* pathway was enriched only under the unweighted (standard) hypergeometric test, suggesting that the signal was primarily driven by a subset of promiscuous genes.
+
+### Unweighted (standard) hypergeometric test
+```{r}
+max_fdr <- 0.05
+
+## Enrichment analysis from undirectional mapping
+enrichment_obj <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                        genesets = reactome,
+                                        genesets_name = "REACTOME",
+                                        method='unweighted',
+                                        min_metabolite = 2,
+                                        background=3068)
+
+p <- hypeR.GEM::enrichment_plot(enrichment_obj,
+                                 top=40,
+                                 abrv=50,
+                                 size_by="significance",
+                                 fdr_cutoff= max_fdr,
+                                 val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+
+p
+```
+
+### Reactable table
+```{r}
+rctbls(enrichment_obj)
+```
+
+
+### Weighted hypergeometric test
+```{r}
+max_fdr <- 0.05
+
+## Enrichment analysis from undirectional mapping
+enrichment_obj_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                        genesets = reactome,
+                                        genesets_name = "REACTOME",
+                                        method='weighted',
+                                        weights = 'one_minus_fdr',
+                                        min_metabolite = 2,
+                                        background=3068)
+
+p <- hypeR.GEM::enrichment_plot(enrichment_obj_wt,
+                                 top=40,
+                                 abrv=50,
+                                 size_by="significance",
+                                 fdr_cutoff= max_fdr,
+                                 val='fdr')+
+  ggplot2::ggtitle(paste("FDR ≤", max_fdr)) +
+  ggplot2::theme(axis.text.y = element_text(size = 7))
+
+p
+```
+
+### Reactable table
+```{r}
+rctbls(enrichment_obj_wt)
+```
+
+## Sankey diagram
+
+The `sankey_plot` function generates a three-layer Sankey diagrams connecting metabolites, the metabolite sets (MSets), and the gene sets (GSets) derived from hypeR-GEM. Edge weights between the metabolite and Msets layers reflect the number of shared metabolites, while edges between the MSets and GSets layers reflect the overlap between hypeR-GEM–mapped genes and genes in each GSets. Here we use a toy dataset to illustrate its utility.
+
+```{r}
+metabolite_signatures <- paste0("m", 1:10)
+
+Msets <- list(Mset1 = c("m1", "m2", "m3"),
+              Mset2 = c("m4","m5", "m6"),
+              Mset3 = c("m7", "m8", "m9", "m10"))
+
+
+```
+
+
+
+## Export to Excel files
+
+Users can export the mapping results to Excel files using the `hypGEM_to_excel()` function.
+```{r, eval = FALSE}
+hypGEM_to_excel(hypeR_GEM_obj, file = "hypeR_GEM_non_directional.xlsx")
+hypGEM_to_excel(hypeR_GEM_obj_di, file = "hypeR_GEM_directional.xlsx")
+```
+
+
+</font>
+--
