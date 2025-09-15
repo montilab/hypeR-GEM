@@ -426,8 +426,14 @@ diagrams connecting metabolites, the metabolite sets (MSets), and the
 gene sets (GSets) derived from hypeR-GEM. Edge weights between the
 metabolite and Msets layers reflect the number of shared metabolites,
 while edges between the MSets and GSets layers reflect the overlap
-between hypeR-GEM–mapped genes and genes in each GSets. Here we use a
-toy dataset to illustrate its utility.</p>
+between hypeR-GEM–mapped genes and genes in each GSets.</p>
+<p>As an illustrative example, we applied this function to the
+<code>hypeR-GEM_obj</code> constructed from age-associated metabolites
+identified in the New England Centenarian Study (NECS) (See reference).
+A curated subset of enriched MSets from these metabolites, together with
+a curated subset of enriched GSets derived from hypeR-GEM–mapped
+enzyme-coding genes, were visualized in an integrative, multi-omics
+context.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"hypeR_object_NECS"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"metabolon_msets_list"</span><span class="op">)</span></span>
