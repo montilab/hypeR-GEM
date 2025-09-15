@@ -217,7 +217,9 @@ rctbls(enrichment_obj_wt)
 
 ## Sankey diagram
 
-The `sankey_plot` function generates a three-layer Sankey diagrams connecting metabolites, the metabolite sets (MSets), and the gene sets (GSets) derived from hypeR-GEM. Edge weights between the metabolite and Msets layers reflect the number of shared metabolites, while edges between the MSets and GSets layers reflect the overlap between hypeR-GEM–mapped genes and genes in each GSets. Here we use a toy dataset to illustrate its utility.
+The `sankey_plot` function generates a three-layer Sankey diagrams connecting metabolites, the metabolite sets (MSets), and the gene sets (GSets) derived from hypeR-GEM. Edge weights between the metabolite and Msets layers reflect the number of shared metabolites, while edges between the MSets and GSets layers reflect the overlap between hypeR-GEM–mapped genes and genes in each GSets. 
+
+As an illustrative example, we applied this function to the `hypeR-GEM_obj` constructed from age-associated metabolites identified in the New England Centenarian Study (NECS) (See reference). A curated subset of enriched MSets from these metabolites, together with a curated subset of enriched GSets derived from hypeR-GEM–mapped enzyme-coding genes, were visualized in an integrative, multi-omics context.
 
 ```{r}
 data("hypeR_object_NECS")
