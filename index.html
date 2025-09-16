@@ -152,29 +152,30 @@
 <span>                                           directional <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                           species <span class="op">=</span> <span class="st">"Human"</span>,</span>
 <span>                                           merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>                                           ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                           reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
 <span>                                           background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
+<span></span>
 <span><span class="co">##Directional mapping</span></span>
 <span><span class="va">hypeR_GEM_obj_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>,</span>
-<span>                                           directional <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                           species <span class="op">=</span> <span class="st">"Human"</span>,</span>
-<span>                                           merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                                           ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                           reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
-<span>                                           background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span>                                            directional <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                            species <span class="op">=</span> <span class="st">"Human"</span>,</span>
+<span>                                            merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                            promiscuous_threshold <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>                                            ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                            reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
+<span>                                            background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="iv-enrichment-analysis-in-the-gene-space">(iv) Enrichment analysis in the gene space<a class="anchor" aria-label="anchor" href="#iv-enrichment-analysis-in-the-gene-space"></a>
 </h2>
 <p>Here we use REACTOME genesets as an example</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Reactome</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">reactome</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="unweightedregular-hypergeometric-test">Unweighted(regular) Hypergeometric test<a class="anchor" aria-label="anchor" href="#unweightedregular-hypergeometric-test"></a>
+<h3 id="unweighted-standard-hypergeometric-test">Unweighted (standard) Hypergeometric test<a class="anchor" aria-label="anchor" href="#unweighted-standard-hypergeometric-test"></a>
 </h3>
 <p>The background we use in this analysis equals to all protein(-coding) genes in the Human GEM model</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -182,21 +183,22 @@
 <span></span>
 <span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
 <span><span class="va">enrichment</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
-<span>                                    genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                    genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
 <span>                                    genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
 <span>                                    method<span class="op">=</span><span class="st">'unweighted'</span>,</span>
 <span>                                    min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                                    background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
 <span></span>
+<span></span>
 <span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
 <span><span class="va">enrichment_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj_di</span>,</span>
-<span>                                       genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                       genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
 <span>                                       genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
 <span>                                       method<span class="op">=</span><span class="st">'unweighted'</span>,</span>
 <span>                                       min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                                       background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4 tabset">
-<h4 class="tabset" id="visualization-of-enrichment-analysis">Visualization of enrichment analysis<a class="anchor" aria-label="anchor" href="#visualization-of-enrichment-analysis"></a>
+<div class="section level4">
+<h4 id="visualization-of-enrichment-analysis">Visualization of enrichment analysis<a class="anchor" aria-label="anchor" href="#visualization-of-enrichment-analysis"></a>
 </h4>
 <div class="section level5">
 <h5 id="undirectional">Undirectional<a class="anchor" aria-label="anchor" href="#undirectional"></a>
@@ -210,9 +212,7 @@
 <span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="./reference/figures/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"><div class="figcaption">plot of chunk unnamed-chunk-7</div>
-</div>
+<p><img src="./reference/figures/unnamed-chunk-7-1.png"><!-- --></p>
 </div>
 <div class="section level5">
 <h5 id="directional">Directional<a class="anchor" aria-label="anchor" href="#directional"></a>
@@ -226,21 +226,19 @@
 <span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="./reference/figures/unnamed-chunk-8-1.png" alt="plot of chunk unnamed-chunk-8"><div class="figcaption">plot of chunk unnamed-chunk-8</div>
+<p><img src="./reference/figures/unnamed-chunk-8-1.png"><!-- --></p>
 </div>
 </div>
 </div>
-</div>
-<div class="section level3 tabset">
-<h3 class="tabset" id="weighted-hypergeometric-test">Weighted Hypergeometric test<a class="anchor" aria-label="anchor" href="#weighted-hypergeometric-test"></a>
+<div class="section level3">
+<h3 id="weighted-hypergeometric-test">Weighted Hypergeometric test<a class="anchor" aria-label="anchor" href="#weighted-hypergeometric-test"></a>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">max_fdr</span> <span class="op">&lt;-</span> <span class="fl">0.05</span></span>
 <span></span>
 <span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
 <span><span class="va">enrichment_wt</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
-<span>                                        genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                        genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
 <span>                                        genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
 <span>                                        method<span class="op">=</span><span class="st">'weighted'</span>,</span>
 <span>                                        weights <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
@@ -249,14 +247,14 @@
 <span></span>
 <span><span class="co">## Enrichment analysis from Directional mapping</span></span>
 <span><span class="va">enrichment_wt_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj_di</span>,</span>
-<span>                                        genesets <span class="op">=</span> <span class="va">Reactome</span><span class="op">$</span><span class="va">genesets</span>,</span>
+<span>                                        genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
 <span>                                        genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
 <span>                                        method<span class="op">=</span><span class="st">'weighted'</span>,</span>
 <span>                                        weights <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
 <span>                                        min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                                        background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4 tabset">
-<h4 class="tabset" id="visualization-of-enrichment-analysis-1">Visualization of enrichment analysis<a class="anchor" aria-label="anchor" href="#visualization-of-enrichment-analysis-1"></a>
+<div class="section level4">
+<h4 id="visualization-of-enrichment-analysis-1">Visualization of enrichment analysis<a class="anchor" aria-label="anchor" href="#visualization-of-enrichment-analysis-1"></a>
 </h4>
 <div class="section level5">
 <h5 id="undirectional-1">Undirectional<a class="anchor" aria-label="anchor" href="#undirectional-1"></a>
@@ -270,9 +268,7 @@
 <span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="./reference/figures/unnamed-chunk-10-1.png" alt="plot of chunk unnamed-chunk-10"><div class="figcaption">plot of chunk unnamed-chunk-10</div>
-</div>
+<p><img src="./reference/figures/unnamed-chunk-10-1.png"><!-- --></p>
 </div>
 <div class="section level5">
 <h5 id="directional-1">Directional<a class="anchor" aria-label="anchor" href="#directional-1"></a>
@@ -286,9 +282,7 @@
 <span>                           val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="./reference/figures/unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"><div class="figcaption">plot of chunk unnamed-chunk-11</div>
-</div>
+<p><img src="./reference/figures/unnamed-chunk-11-1.png"><!-- --></p>
 </div>
 </div>
 </div>
