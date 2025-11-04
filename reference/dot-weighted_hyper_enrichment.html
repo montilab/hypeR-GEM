@@ -67,7 +67,10 @@
 <span>  <span class="va">genesets</span>,</span>
 <span>  genesets_name <span class="op">=</span> <span class="st">"unknown"</span>,</span>
 <span>  <span class="va">min_metabolite</span>,</span>
-<span>  weights <span class="op">=</span> <span class="st">"one_minus_fdr"</span>,</span>
+<span>  weighted_by <span class="op">=</span> <span class="st">"fdr"</span>,</span>
+<span>  a <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  b <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  sigmoid_transformation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  background <span class="op">=</span> <span class="fl">1234567</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -90,6 +93,22 @@
 
 <dt id="arg-min-metabolite">min_metabolite<a class="anchor" aria-label="anchor" href="#arg-min-metabolite"></a></dt>
 <dd><p>minimum number/ratio of metabolite that drives the enrichment</p></dd>
+
+
+<dt id="arg-weighted-by">weighted_by<a class="anchor" aria-label="anchor" href="#arg-weighted-by"></a></dt>
+<dd><p>the value used for (optional) sigmoid transformation</p></dd>
+
+
+<dt id="arg-a">a<a class="anchor" aria-label="anchor" href="#arg-a"></a></dt>
+<dd><p>proportional to the smoothness of the sigmoid function, default a = -1</p></dd>
+
+
+<dt id="arg-b">b<a class="anchor" aria-label="anchor" href="#arg-b"></a></dt>
+<dd><p>the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)</p></dd>
+
+
+<dt id="arg-sigmoid-transformation">sigmoid_transformation<a class="anchor" aria-label="anchor" href="#arg-sigmoid-transformation"></a></dt>
+<dd><p>logical; if TRUE apply .sigmoid_transformation to `weighted_by`, else use raw values</p></dd>
 
 
 <dt id="arg-background">background<a class="anchor" aria-label="anchor" href="#arg-background"></a></dt>

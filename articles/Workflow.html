@@ -388,12 +388,15 @@ promiscuous genes.</p>
 <span></span>
 <span><span class="co">## Enrichment analysis from undirectional mapping</span></span>
 <span><span class="va">enrichment_obj_wt</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/enrichment.html">enrichment</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>,</span>
-<span>                                        genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
-<span>                                        genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
-<span>                                        method<span class="op">=</span><span class="st">'weighted'</span>,</span>
-<span>                                        weights <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
-<span>                                        min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                                        background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
+<span>                                          genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
+<span>                                          genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
+<span>                                          method<span class="op">=</span><span class="st">'weighted'</span>,</span>
+<span>                                          weighted_by <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
+<span>                                          sigmoid_transformation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                                          min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                                          background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
+<span></span>
+<span></span>
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment_obj_wt</span>,</span>
 <span>                                 top<span class="op">=</span><span class="fl">40</span>,</span>
