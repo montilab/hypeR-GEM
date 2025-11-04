@@ -171,7 +171,7 @@ enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                         genesets = reactome,
                                         genesets_name = "REACTOME",
                                         method='weighted',
-                                        weights = 'one_minus_fdr',
+                                        weighted_by = 'one_minus_fdr',
                                         min_metabolite = 2,
                                         background=3068)
 
@@ -180,7 +180,7 @@ enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
                                         genesets = reactome,
                                         genesets_name = "REACTOME",
                                         method='weighted',
-                                        weights = 'one_minus_fdr',
+                                        weighted_by = 'one_minus_fdr',
                                         min_metabolite = 2,
                                         background=3068)
 ```

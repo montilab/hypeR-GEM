@@ -9,7 +9,10 @@ enrichment(
   genesets,
   genesets_name = "unknown",
   method = c("unweighted", "weighted"),
-  weights = "one_minus_fdr",
+  weighted_by = "one_minus_fdr",
+  a = -1,
+  b = -1,
+  sigmoid_transformation = TRUE,
   min_metabolite = 0,
   background = 1234567
 )
@@ -23,7 +26,13 @@ enrichment(
 
 \item{method}{enrichment method}
 
-\item{weights}{the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene}
+\item{weighted_by}{the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene}
+
+\item{a}{proportional to the smoothness of the sigmoid function, default a = -1}
+
+\item{b}{the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)}
+
+\item{sigmoid_transformation}{logical; when method == "weighted", if TRUE apply .sigmoid_transformation() to `weighted_by`; if FALSE use the raw values}
 
 \item{min_metabolite}{minimum number of metabolite that drives the enrichment of a pathway}
 

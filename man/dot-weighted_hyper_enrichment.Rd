@@ -9,7 +9,10 @@
   genesets,
   genesets_name = "unknown",
   min_metabolite,
-  weights = "one_minus_fdr",
+  weighted_by = "fdr",
+  a = -1,
+  b = -1,
+  sigmoid_transformation = TRUE,
   background = 1234567
 )
 }
@@ -21,6 +24,14 @@
 \item{genesets_name}{name of the geneset,e.g "KEGG"}
 
 \item{min_metabolite}{minimum number/ratio of metabolite that drives the enrichment}
+
+\item{weighted_by}{the value used for (optional) sigmoid transformation}
+
+\item{a}{proportional to the smoothness of the sigmoid function, default a = -1}
+
+\item{b}{the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)}
+
+\item{sigmoid_transformation}{logical; if TRUE apply .sigmoid_transformation to `weighted_by`, else use raw values}
 
 \item{background}{background parameter of hypergeometric test}
 }

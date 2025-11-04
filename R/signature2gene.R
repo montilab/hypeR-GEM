@@ -221,8 +221,8 @@ signature2gene <- function(signatures,
 #' @return a updated 'mapped_metabolite_signature' with "gene_association" column
 #' @keywords internal
 .gene_association <- function(mapped_metabolite_signature,
-                             m2g,
-                             reference_key = "refmet_name"){
+                              m2g,
+                              reference_key = "refmet_name"){
 
   mapped_metabolite_signature <- mapped_metabolite_signature %>%
     dplyr::mutate(gene_association  = lengths(m2g[mapped_metabolite_signature$name])) %>%

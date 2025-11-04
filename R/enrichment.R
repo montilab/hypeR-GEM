@@ -4,80 +4,90 @@
 #' @param genesets a list of genesets
 #' @param genesets_name name of the geneset,e.g "KEGG"
 #' @param method enrichment method
-#' @param weights the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
+#' @param weighted_by the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
+#' @param a proportional to the smoothness of the sigmoid function, default a = -1
+#' @param b the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)
+#' @param sigmoid_transformation logical; when method == "weighted", if TRUE apply .sigmoid_transformation() to `weighted_by`; if FALSE use the raw values
 #' @param min_metabolite minimum number of metabolite that drives the enrichment of a pathway
 #' @param background background parameter of hypergeometric test
-
-
+#'
 #' @return a list of type of statistical test and data
-
 #' @importFrom rlang .data
 #' @import methods utils
 #' @export
 enrichment <- function(hypeR_GEM_obj,
                        genesets,
                        genesets_name = 'unknown',
-                       method=c('unweighted','weighted'),
-                       weights = 'one_minus_fdr',
+                       method = c('unweighted','weighted'),
+                       weighted_by = 'one_minus_fdr',
+                       a = -1,
+                       b = -1,
+                       sigmoid_transformation = TRUE,
                        min_metabolite = 0,
-                       background=1234567){
+                       background = 1234567){
 
   ## check
   if(!is.list(hypeR_GEM_obj)) stop("hypeR_GEM_obj must be a list object!\n")
   if(!is.list(genesets)) stop("genesets must be a list object!\n")
-  if(!(any(names(hypeR_GEM_obj) %in% c("mapped_metabolite_signatures", "gene_tables")))) stop("element names in 'hypeR_GEM_obj' must be contain 'mapped_metabolite_signatures' and 'gene_tables'")
+  if(!all(c("mapped_metabolite_signatures","gene_tables") %in% names(hypeR_GEM_obj)))
+    stop("element names in 'hypeR_GEM_obj' must contain 'mapped_metabolite_signatures' and 'gene_tables'")
   if(min_metabolite < 0) stop("'min_metabolite' must be non-negative integer")
-
-  weights_in_mapped_gene_tables <- all(lapply(hypeR_GEM_obj$gene_tables,colnames) %>%
-        lapply(., function(x){return(weights %in% x)}) %>%
-        unlist())
-
-  if(!all(weights_in_mapped_gene_tables)) stop("'weights' must be one of the column in all element of hypeR_GEM_obj$gene_tables")
 
   # Default arguments
   method <- match.arg(method)
   min_metabolite <- floor(min_metabolite)
 
-
-  ## unweighted hypergeometric
-  if(method == "unweighted"){
-    ## single or multiple signatures
-    if(length(hypeR_GEM_obj$gene_tables)==1){
-      hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
-                                                genesets = genesets,
-                                                genesets_name = genesets_name,
-                                                min_metabolite =  min_metabolite,
-                                                background = background)
-    }else{
-      hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
-                                   .hyper_enrichment,
-                                   genesets = genesets,
-                                   genesets_name = genesets_name,
-                                   min_metabolite =  min_metabolite,
-                                   background = background)
+  ## only validate weight column if weighted method is chosen
+  if (method == "weighted") {
+    col_ok <- vapply(hypeR_GEM_obj$gene_tables,
+                     function(tbl) weighted_by %in% colnames(tbl),
+                     logical(1))
+    if (!all(col_ok)) {
+      stop(sprintf("'%s' must be a column in every element of hypeR_GEM_obj$gene_tables", weighted_by))
     }
   }
 
-
+  ## unweighted hypergeometric
+  if(method == "unweighted"){
+    if(length(hypeR_GEM_obj$gene_tables)==1){
+      hypeR_GEM_enrichments <- .hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
+                                                 genesets = genesets,
+                                                 genesets_name = genesets_name,
+                                                 min_metabolite =  min_metabolite,
+                                                 background = background)
+    } else {
+      hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
+                                      .hyper_enrichment,
+                                      genesets = genesets,
+                                      genesets_name = genesets_name,
+                                      min_metabolite =  min_metabolite,
+                                      background = background)
+    }
+  }
 
   ## weighted hypergeometric
   if(method == "weighted"){
-    ## single or multiple signatures
     if(length(hypeR_GEM_obj$gene_tables)==1){
       hypeR_GEM_enrichments <- .weighted_hyper_enrichment(hypeR_GEM_obj$gene_tables[[1]],
-                                                       genesets = genesets,
-                                                       genesets_name = genesets_name,
-                                                       min_metabolite= min_metabolite,
-                                                       weights = weights,
-                                                       background = background)
-    }else{
+                                                          genesets = genesets,
+                                                          genesets_name = genesets_name,
+                                                          min_metabolite = min_metabolite,
+                                                          weighted_by = weighted_by,
+                                                          a = a,
+                                                          b = b,
+                                                          sigmoid_transformation = sigmoid_transformation,
+                                                          background = background)
+    } else {
       hypeR_GEM_enrichments <- lapply(hypeR_GEM_obj$gene_tables,
-                                   .weighted_hyper_enrichment,
-                                   genesets = genesets,
-                                   genesets_name = genesets_name,
-                                   min_metabolite = min_metabolite,
-                                   weights = weights,
-                                   background = background)
+                                      .weighted_hyper_enrichment,
+                                      genesets = genesets,
+                                      genesets_name = genesets_name,
+                                      min_metabolite = min_metabolite,
+                                      weighted_by = weighted_by,
+                                      a = a,
+                                      b = b,
+                                      sigmoid_transformation = sigmoid_transformation,
+                                      background = background)
     }
   }
 
@@ -85,7 +95,8 @@ enrichment <- function(hypeR_GEM_obj,
 }
 
 
-#' Title Hypergeometric test
+
+#' Hypergeometric test
 #'
 #' @param gene_table the gene table from hypeR-GEM object
 #' @param genesets a list of genesets
@@ -96,6 +107,7 @@ enrichment <- function(hypeR_GEM_obj,
 #' @import methods utils
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
+#' @importFrom tibble deframe
 #' @importFrom stringr str_count
 #' @importFrom dplyr filter mutate arrange
 #' @importFrom rlang .data
@@ -173,30 +185,51 @@ enrichment <- function(hypeR_GEM_obj,
 #' @param genesets a list of genesets
 #' @param genesets_name name of the geneset,e.g "KEGG"
 #' @param min_metabolite minimum number/ratio of metabolite that drives the enrichment
+#' @param weighted_by the value used for (optional) sigmoid transformation
+#' @param a proportional to the smoothness of the sigmoid function, default a = -1
+#' @param b the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)
+#' @param sigmoid_transformation logical; if TRUE apply .sigmoid_transformation to `weighted_by`, else use raw values
 #' @param background background parameter of hypergeometric test
-
+#'
 #' @import methods utils
 #' @importFrom stats phyper p.adjust
 #' @importFrom magrittr %>%
+#' @importFrom tibble deframe
 #' @importFrom stringr str_count
 #' @importFrom dplyr filter mutate arrange
 #' @importFrom rlang .data
-
 #' @return a list
 #' @keywords internal
 .weighted_hyper_enrichment <- function(gene_table,
                                        genesets,
                                        genesets_name='unknown',
                                        min_metabolite,
-                                       weights = 'one_minus_fdr',
+                                       weighted_by = 'fdr',
+                                       a = -1,
+                                       b = -1,
+                                       sigmoid_transformation = TRUE,
                                        background=1234567){
 
-
   if (!is(genesets, "list")) stop("Expected genesets to be a list of genesets\n")
-  if(!(weights %in% colnames(gene_table))) stop("Gene weights must be specified in a colnmae of gene_table\n")
+  if(!(weighted_by %in% colnames(gene_table))) stop("Gene weights must be specified in a column of gene_table\n")
+
+  ## decide weights
+  if (isTRUE(sigmoid_transformation)) {
+    gene_table$weights <- .sigmoid_transformation(
+      p = gene_table[[weighted_by]],
+      a = a,
+      b = b
+    )
+  } else {
+    gene_table$weights <- as.numeric(gene_table[[weighted_by]])
+  }
+
+  if (anyNA(gene_table$weights)) {
+    stop(sprintf("'%s' contains NA values after transformation; please clean or impute.", weighted_by))
+  }
 
   weighted_signature <- gene_table %>%
-    dplyr::select(symbol,!!as.name(weights)) %>%
+    dplyr::select(symbol, weights) %>%
     tibble::deframe()
 
   if(max(weighted_signature) > 1 | min(weighted_signature) < 0) stop("All weights should be between 0 and 1\n")
@@ -261,4 +294,18 @@ enrichment <- function(hypeR_GEM_obj,
                         Genesets = genesets_name,
                         Background = background),
                         data = data))
+}
+
+
+#' @keywords internal
+.sigmoid_transformation <- function(p,
+                                    a = 1, ## smoothness
+                                    b = -1,   # p = 0.1 as half-point
+                                    eps = 1e-12) {
+
+  # clip to avoid log10(0)
+  p <- pmax(pmin(p, 1 - eps), eps)
+
+  w <- 1 / (1 + exp(a * (log10(p) - b)))
+  return(w)
 }

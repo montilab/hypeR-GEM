@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichment.R
 \name{.hyper_enrichment}
 \alias{.hyper_enrichment}
-\title{Title Hypergeometric test}
+\title{Hypergeometric test}
 \usage{
 .hyper_enrichment(
   gene_table,
@@ -27,6 +27,6 @@
 a list
 }
 \description{
-Title Hypergeometric test
+Hypergeometric test
 }
 \keyword{internal}

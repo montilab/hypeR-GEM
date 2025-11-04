@@ -184,19 +184,21 @@ p
 rctbls(enrichment_obj)
 ```
 
-
 ### Weighted hypergeometric test
 ```{r}
 max_fdr <- 0.05
 
 ## Enrichment analysis from undirectional mapping
 enrichment_obj_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                        genesets = reactome,
-                                        genesets_name = "REACTOME",
-                                        method='weighted',
-                                        weights = 'one_minus_fdr',
-                                        min_metabolite = 2,
-                                        background=3068)
+                                          genesets = reactome,
+                                          genesets_name = "REACTOME",
+                                          method='weighted',
+                                          weighted_by = 'one_minus_fdr',
+                                          sigmoid_transformation = FALSE,
+                                          min_metabolite = 2,
+                                          background=3068)
+
+
 
 p <- hypeR.GEM::enrichment_plot(enrichment_obj_wt,
                                  top=40,
