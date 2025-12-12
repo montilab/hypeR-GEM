@@ -39,7 +39,7 @@ The dataset is a list object containing two data frames:
 
 ``` r
 data(COVID_urine)
-str(COVID_urine)
+print(str(COVID_urine))
 List of 2
  $ up:'data.frame': 161 obs. of  5 variables:
   ..$ metabolite    : chr [1:161] "(S)-a-amino-omega-caprolactam" "1,5-anhydroglucitol (1,5-AG)" "1-methyladenine" "1-methylguanine" ...
@@ -53,51 +53,55 @@ List of 2
   ..$ estimate      : chr [1:206] "-2.9115951029999998" "-3.7085696989999999" "-3.6453960510000001" "-1.2098657509999999" ...
   ..$ P_value_adjust: num [1:206] 0.0258 0.049 0.0387 0.0483 0.0369 ...
   ..$ gene_type     : chr [1:206] "dn" "dn" "dn" "dn" ...
+NULL
 ```
 
 ## (iii) hypeR-GEM mapping
 
-- `signature`: Must be a named list, each element is a data frame which
-  has to contain a column with the same name as “reference_key”
-- `species`: c(“Human”, “Mouse”, “Rat”, “Zebrafish”, “Worm”, “Other”)
-- `directional` logical parameter, if TRUE, map metabolites to reactions
-  where these metabolites are product only
-- `merge`: Merge metabolites from different department
-- `promiscuous_threshold`: Gene association threshold of promiscuous
-  metabolites
-- `ensemble_id`: for current version, if `species != 'Human`, use
-  `ensemble_id = FALSE`
-- `reference_key = 'refmet_name` by default
-- `background` is used to compute gene-specific p-values, if
-  `background = NULL`, then background = \# of metabolites associated
-  with non-exchange reactions
+- `signature`: A list of metabolic signatures. Each element must be a
+  data frame containing a column whose name matches the `reference_key`
+  argument, , which specifies the **RefMet** annotation for each
+  metabolite.
+
+- `directional`: Logical argument specifying the metabolite–reaction
+  mapping rule.
+
+  - If `TRUE`, metabolites are mapped only to reactions in which they
+    appear as products (directional mapping).
+  - If `FALSE`, metabolites are mapped to reactions in which they appear
+    as either reactants or products (non-directional mapping).
+
+- `promiscuous_threshold`: Maximum allowable number of metabolites
+  associated with a gene. Genes exceeding this threshold are classified
+  as promiscuous and excluded from downstream analysis.
+
+- `background`: Background used in the gene-specific hypergeometric
+  test. By default, this is set to the total number of metabolites
+  represented in the GEM.
+
+- `reference_key`: A character string indicating the column name in each
+  signature data frame that contains **RefMet** metabolite identifiers.
 
 ``` r
 ## Undirectional mapping
 hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
                                            directional = FALSE,
-                                           species = "Human",
-                                           merge = TRUE,
                                            promiscuous_threshold = 500,
-                                           ensemble_id = TRUE,
                                            reference_key = 'refmet_name',
                                            background = NULL)
 
 
 ##Directional mapping
 hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
-                                            directional = TRUE,
-                                            species = "Human",
-                                            merge = TRUE,
-                                            promiscuous_threshold = 500,
-                                            ensemble_id = TRUE,
-                                            reference_key = 'refmet_name',
-                                            background = NULL)
+                                              directional = TRUE,
+                                              promiscuous_threshold = 500,
+                                              reference_key = 'refmet_name',
+                                              background = NULL)
 ```
 
 ## (iv) Enrichment analysis in the gene space
 
-Here we use REACTOME genesets as an example
+Here we use REACTOME genesets as an example.
 
 ``` r
 data(reactome)
@@ -105,8 +109,9 @@ data(reactome)
 
 ### Unweighted (standard) Hypergeometric test
 
-The background we use in this analysis equals to all protein(-coding)
-genes in the Human GEM model
+The background we use in this analysis equals to all enzyme-coding genes
+in the Human GEM model (for more details, see
+[here](https://www.pnas.org/doi/abs/10.1073/pnas.2102344118)).
 
 ``` r
 max_fdr <- 0.05
@@ -168,21 +173,23 @@ max_fdr <- 0.05
 
 ## Enrichment analysis from undirectional mapping
 enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                        genesets = reactome,
-                                        genesets_name = "REACTOME",
-                                        method='weighted',
-                                        weighted_by = 'one_minus_fdr',
-                                        min_metabolite = 2,
-                                        background=3068)
+                                       genesets = reactome,
+                                       genesets_name = "REACTOME",
+                                       method='weighted',
+                                       weighted_by = 'fdr',
+                                       sigmoid_transformation = TRUE,
+                                       min_metabolite = 2,
+                                       background=3068)
 
 ## Enrichment analysis from Directional mapping
 enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
-                                        genesets = reactome,
-                                        genesets_name = "REACTOME",
-                                        method='weighted',
-                                        weighted_by = 'one_minus_fdr',
-                                        min_metabolite = 2,
-                                        background=3068)
+                                          genesets = reactome,
+                                          genesets_name = "REACTOME",
+                                          method='weighted',
+                                          weighted_by = 'fdr',
+                                          sigmoid_transformation = TRUE,
+                                          min_metabolite = 2,
+                                          background=3068)
 ```
 
 #### Visualization of enrichment analysis

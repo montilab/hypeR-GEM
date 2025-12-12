@@ -49,7 +49,7 @@ The dataset is a list object containing two data frames:
 
 ```{r}
 data(COVID_urine)
-str(COVID_urine)
+print(str(COVID_urine))
 ```
 
 ## (iii) hypeR-GEM mapping
@@ -77,15 +77,15 @@ hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
 
 ##Directional mapping
 hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
-                                            directional = TRUE,
-                                            promiscuous_threshold = 500,
-                                            reference_key = 'refmet_name',
-                                            background = NULL)
+                                              directional = TRUE,
+                                              promiscuous_threshold = 500,
+                                              reference_key = 'refmet_name',
+                                              background = NULL)
 ```
 
 ## (iv) Enrichment analysis in the gene space
 
-Here we use REACTOME genesets as an example
+Here we use REACTOME genesets as an example.
 
 ```{r}
 data(reactome)
@@ -94,7 +94,7 @@ data(reactome)
 
 ### Unweighted (standard) Hypergeometric test
 
-The background we use in this analysis equals to all protein(-coding) genes in the Human GEM model
+The background we use in this analysis equals to all enzyme-coding genes in the Human GEM model (for more details, see [here](https://www.pnas.org/doi/abs/10.1073/pnas.2102344118)).
 
 ```{r}
 max_fdr <- 0.05
@@ -155,15 +155,16 @@ max_fdr <- 0.05
 
 ## Enrichment analysis from undirectional mapping
 enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
-                                        genesets = reactome,
-                                        genesets_name = "REACTOME",
-                                        method='weighted',
-                                        weighted_by = 'one_minus_fdr',
-                                        min_metabolite = 2,
-                                        background=3068)
+                                       genesets = reactome,
+                                       genesets_name = "REACTOME",
+                                       method='weighted',
+                                       weighted_by = 'fdr',
+                                       sigmoid_transformation = TRUE,
+                                       min_metabolite = 2,
+                                       background=3068)
 
 ## Enrichment analysis from Directional mapping
-enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
                                           genesets = reactome,
                                           genesets_name = "REACTOME",
                                           method='weighted',
