@@ -2,7 +2,7 @@
 title: "HypeR-GEM Workflow Illustration"
 output: rmarkdown::html_vignette
 author: "Ziwei Huang"
-date: "03/10/2024"
+date: "12/12/2025"
 vignette: >
   %\VignetteIndexEntry{Reaction-based mapping using Genome-scale Metabolic Models(GEMs)}
   %\VignetteEngine{knitr::rmarkdown}
@@ -60,7 +60,7 @@ To map a metabolite to its associated enzyme-coding genes, **hypeR-GEM** defines
 
 The overall workflow is illustrated in the following diagram: 
 ```{r echo=FALSE, out.height="80%", out.width="80%"}
-knitr::include_graphics("figs/mapping.png")
+knitr::include_graphics("figs/mapping.pdf")
 ```
 
 Given an input metabolic signature, a set of metabolites annotated using the **RefMet** nomenclature, **hypeR-GEM** identifies all metabolic reactions in which each metabolite participates as either reactant or product. For reversible reactions, metabolites are treated as both reactants and products. For each reaction (excluding exchange reactions and a subset of transport reactions), the associated enzyme-coding genes are then mapped to the metabolites according to two configurable rules: a non-directional mapping that considers all reactions involving the metabolite, and a directional mapping that restricts associations to reactions producing the metabolite based on the stoichiometry encoded in the model. 
@@ -71,7 +71,7 @@ Given an input metabolic signature, a set of metabolites annotated using the **R
 Enzyme-coding genes differ substantially in their reaction specificity. Non-specific (promiscuous) enzymes can catalyze a broad range of reactions, giving rise to dense gene–reaction–metabolite connections and consequently weaker, less specific associations with a given metabolic signature. To quantify gene-level association specificity and mitigate the influence of such "promiscuous" genes, we compute a **gene-specificity score** based on the hypergeometric distribution.
 
 ```{r echo=FALSE, out.height="80%", out.width="80%"}
-knitr::include_graphics("figs/gene_promiscuity.png")
+knitr::include_graphics("figs/gene_specificity.pdf")
 ```
 
 For each gene $g_{i}$, let $M$ denote he total number of metabolites represented in the GEM, $S$ the number of metabolites in the metabolic signature, $A_{i}$ the number of metabolites associated with $g_{i}$ and $a_{i}$ the number of those metabolites that overlap with the signature. The significance score $s_{i}$ is defined as the upper-tail hypergeometric probability of observing at least $a_{i}$ overlapping metabolites by chance:
