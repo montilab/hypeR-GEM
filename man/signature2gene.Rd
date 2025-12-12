@@ -29,7 +29,7 @@ signature2gene(
 
 \item{reference_key}{the column name in the reference table which represents the standardized names (e.g. "refmet_name")}
 
-\item{promiscuous_threshold}{gene association threshold of promiscuous metabolite}
+\item{promiscuous_threshold}{maximum allowable number of associated metabolites per gene; genes exceeding this threshold are excluded.}
 
 \item{ensemble_id}{if the genes in GEM_tables$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE}
 

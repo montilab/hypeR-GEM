@@ -5,7 +5,7 @@
 #' @param genesets_name name of the geneset,e.g "KEGG"
 #' @param method enrichment method
 #' @param weighted_by the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene
-#' @param a proportional to the smoothness of the sigmoid function, default a = -1
+#' @param a proportional to the smoothness of the sigmoid function, default a = 1
 #' @param b the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)
 #' @param sigmoid_transformation logical; when method == "weighted", if TRUE apply .sigmoid_transformation() to `weighted_by`; if FALSE use the raw values
 #' @param min_metabolite minimum number of metabolite that drives the enrichment of a pathway

@@ -10,7 +10,7 @@ enrichment(
   genesets_name = "unknown",
   method = c("unweighted", "weighted"),
   weighted_by = "one_minus_fdr",
-  a = -1,
+  a = 1,
   b = -1,
   sigmoid_transformation = TRUE,
   min_metabolite = 0,
@@ -28,7 +28,7 @@ enrichment(
 
 \item{weighted_by}{the column name in the gene_table of hypeR_GEM_obj that represents the weight of each gene}
 
-\item{a}{proportional to the smoothness of the sigmoid function, default a = -1}
+\item{a}{proportional to the smoothness of the sigmoid function, default a = 1}
 
 \item{b}{the half-point threshold of the sigmoid function, default b = -1 (p-value = 0.1 as half-point)}
 
