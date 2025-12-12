@@ -71,9 +71,9 @@
 
 
 
-      </header><script src="Workflow_files/core-js-2.5.3/shim.min.js"></script><script src="Workflow_files/react-18.2.0/react.min.js"></script><script src="Workflow_files/react-18.2.0/react-dom.min.js"></script><script src="Workflow_files/reactwidget-2.0.0/react-tools.js"></script><link href="Workflow_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="Workflow_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="Workflow_files/reactable-0.4.4/reactable.css" rel="stylesheet">
-<script src="Workflow_files/reactable-binding-0.4.4/reactable.js"></script><script src="Workflow_files/d3-4.9.1/d3.min.js"></script><script src="Workflow_files/sankey-1/sankey.js"></script><script src="Workflow_files/sankeyNetwork-binding-0.4.1/sankeyNetwork.js"></script><div class="row">
+      </header><script src="Workflow_files/core-js-2.5.3/shim.min.js"></script><script src="Workflow_files/react-18.2.0/react.min.js"></script><script src="Workflow_files/react-18.2.0/react-dom.min.js"></script><script src="Workflow_files/reactwidget-2.0.0/react-tools.js"></script><link href="Workflow_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="Workflow_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="Workflow_files/reactable-0.4.5/reactable.css" rel="stylesheet">
+<script src="Workflow_files/reactable-binding-0.4.5/reactable.js"></script><script src="Workflow_files/d3-4.9.1/d3.min.js"></script><script src="Workflow_files/sankey-1/sankey.js"></script><script src="Workflow_files/sankeyNetwork-binding-0.4.1/sankeyNetwork.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>HypeR-GEM Workflow Illustration</h1>
@@ -98,39 +98,54 @@ Huang</h4>
 </h2>
 <p>Genome-scale metabolic models(GEMs) are curated metabolic models
 collect all known metabolic information of a biological
-system(e.g. human cell). There are three essential components in a
-GEM:</p>
+system(e.g. bacteria, human cell, etc.). There are three essential
+components in a GEM:</p>
 <p>-<strong>metabolites</strong>: all known metabolites of a biological
 system. -<strong>reactions</strong>: all known reactions of a biological
-system. -<strong>protein(-coding) genes</strong></p>
-<p>including the , <strong>protein(-coding) genes</strong>,
-<strong>reactions</strong>, and <strong>metabolites</strong>.</p>
-<p>See <a href="https://www.pnas.org/doi/abs/10.1073/pnas.2102344118" class="external-link">here</a> for
-more details.</p>
-<p>Here is a schematic diagram of a GEM:</p>
-<p>The capital letters represent metabolites, and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>
-represents
+system. -<strong>enzyme-coding genes</strong>: enzymes that catalyze the
+biological reactions.</p>
+<p>Within a GEM, each metabolite is associated with one or more
+reactions, in which it participates as either a reactant or a product.
+Each reaction, in turn, is catalyzed by one or more enzyme-coding genes,
+with exceptions such as exchange reactions and certain transport
+reactions that are not catalyzed by enzymes. <strong>HypeR-GEM</strong>
+leverages this metabolite–reaction–gene triad to establish a framework
+for mapping metabolites to genes.</p>
+<p>For more details, see <a href="https://www.pnas.org/doi/abs/10.1073/pnas.2102344118" class="external-link">here</a>.</p>
+<p>A schematic representation of a GEM is shown below:</p>
+<p><img src="figs/intro_GEM.png" class="r-plt" width="80%" height="80%"></p>
+<p>In the diagram, capital letters denote metabolites, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_{i}</annotation></semantics></math>
+denotes the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>i</mi><mrow><mi>t</mi><mi>h</mi></mrow></msup><annotation encoding="application/x-tex">i^{th}</annotation></semantics></math>
-reaction. A prototypical reactions includes three parts:</p>
+reaction. A prototypical metabolic reaction consists of three
+components:</p>
 <ul>
 <li>
-<strong>reactants(substrates)</strong>: one or more metabolites that
-are consumed (left-hand side)</li>
+<strong>reactants(substrates)</strong>: one or more metabolites
+consumed by the reaction (left-hand side).</li>
 <li>
-<strong>products</strong>: one or more metabolites that are produced
-(right-hand side)</li>
+<strong>products</strong>: one or more metabolites produced by the
+reaction (right-hand side).</li>
 <li>
-<strong>catalyst</strong>： protein(-coding) genes that catalyze the
-reaction</li>
+<strong>catalyst</strong>： enzyme-coding genes whose protein
+products catalyze the reaction.</li>
 </ul>
-<p><img src="figs/intro_GEM.png" width="80%" height="80%"></p>
+<p>For example, reaction
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mn>1</mn></msub><annotation encoding="application/x-tex">r_{1}</annotation></semantics></math>
+consumes metabolites
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+and produces metabolite
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+and it may be catalyzed by one or more enzyme-coding genes</p>
 </div>
 <div class="section level2">
 <h2 id="mapping-workflow">Mapping workflow<a class="anchor" aria-label="anchor" href="#mapping-workflow"></a>
 </h2>
-<p>To map a metabolite to its associated protein(-coding) genes, we
-define three types of associations:</p>
+<p>To map a metabolite to its associated enzyme(-coding) genes,
+<strong>hypeR-GEM</strong> defines three types of associations:</p>
 <ul>
 <li>
 <p><strong>metabolite-reaction association</strong>: A metabolite is
@@ -142,23 +157,179 @@ associated with a reaction if:</p>
 (<strong>directional</strong>)</li>
 </ul>
 </li>
-<li><p><strong>reaction-protein(-coding) gene association</strong>: A
-reaction is associated with protein(-coding) genes if these genes
-catalyze the reaction.</p></li>
-<li><p><strong>metabolite-protein(-coding) gene association</strong>: A
-metaboblite is associated with all protein(-coding) genes that catalyze
-the reactions associated with the metabolite.</p></li>
+<li><p><strong>reaction-enzyme(-coding) gene association</strong>: A
+reaction is associated with the enzyme-coding genes that encode enzymes
+catalyzing that reaction,</p></li>
+<li><p><strong>metabolite-enzyme(-coding) gene association</strong>: A
+metabolite is associated with all enzyme-coding genes that catalyze the
+reactions in which the metabolite participates.</p></li>
 </ul>
-<p><img src="figs/mapping.png" width="80%" height="80%"></p>
+<p>The overall workflow is illustrated in the following diagram:
+<embed src="figs/mapping.pdf" width="80%" height="80%" type="application/pdf"></embed></p>
+<p>Given an input metabolic signature, a set of metabolites annotated
+using the <strong>RefMet</strong> nomenclature,
+<strong>hypeR-GEM</strong> identifies all metabolic reactions in which
+each metabolite participates as either reactant or product. For
+reversible reactions, metabolites are treated as both reactants and
+products. For each reaction (excluding exchange reactions and a subset
+of transport reactions), the associated enzyme-coding genes are then
+mapped to the metabolites according to two configurable rules: a
+non-directional mapping that considers all reactions involving the
+metabolite, and a directional mapping that restricts associations to
+reactions producing the metabolite based on the stoichiometry encoded in
+the model.</p>
 </div>
 <div class="section level2">
-<h2 id="accounting-for-gene-promiscuity">Accounting for Gene “Promiscuity”<a class="anchor" aria-label="anchor" href="#accounting-for-gene-promiscuity"></a>
+<h2 id="accounting-for-gene-specificity">Accounting for Gene Specificity<a class="anchor" aria-label="anchor" href="#accounting-for-gene-specificity"></a>
 </h2>
-<p>Some genes in a GEM can be highly “promiscuous” (catalyzed too many
-reactions, and thus, associated with too many metabolites). To take this
-into account, we compute gene-specific p-values that indicate the
-mapping specificity.</p>
-<p><img src="figs/gene_promiscuity.png" width="80%" height="80%"></p>
+<p>Enzyme-coding genes differ substantially in their reaction
+specificity. Non-specific (promiscuous) enzymes can catalyze a broad
+range of reactions, giving rise to dense gene–reaction–metabolite
+connections and consequently weaker, less specific associations with a
+given metabolic signature. To quantify gene-level association
+specificity and mitigate the influence of such “promiscuous” genes, we
+compute a <strong>gene-specificity score</strong> based on the
+hypergeometric distribution.</p>
+<embed src="figs/gene_promiscuity.pdf" width="80%" height="80%" type="application/pdf"></embed><p>For each gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_{i}</annotation></semantics></math>,
+let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+denote he total number of metabolites represented in the GEM,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>
+the number of metabolites in the metabolic signature,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>A</mi><mi>i</mi></msub><annotation encoding="application/x-tex">A_{i}</annotation></semantics></math>
+the number of metabolites associated with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_{i}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mi>i</mi></msub><annotation encoding="application/x-tex">a_{i}</annotation></semantics></math>
+the number of those metabolites that overlap with the signature. The
+significance score
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>
+is defined as the upper-tail hypergeometric probability of observing at
+least
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mi>i</mi></msub><annotation encoding="application/x-tex">a_{i}</annotation></semantics></math>
+overlapping metabolites by chance:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>≥</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>x</mi><mo>=</mo><msub><mi>a</mi><mi>i</mi></msub></mrow><mrow><mrow><mi mathvariant="normal">min</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>,</mo><mi>S</mi><mo stretchy="false" form="postfix">)</mo></mrow></munderover><mfrac><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><msub><mi>A</mi><mi>i</mi></msub><mi>x</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mrow><mi>M</mi><mo>−</mo><msub><mi>A</mi><mi>i</mi></msub></mrow><mrow><mi>S</mi><mo>−</mo><mi>x</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>M</mi><mi>S</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+s_i = P(X \ge a_i)
+= \sum_{x = a_i}^{\min(A_i, S)}
+\frac{\binom{A_i}{x}\binom{M - A_i}{S - x}}{\binom{M}{S}}
+</annotation></semantics></math></p>
+<p>Smaller values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>
+a more specific association between gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_{i}</annotation></semantics></math>
+and the metabolic signature.</p>
+</div>
+<div class="section level2">
+<h2 id="sigmoid-based-weighting-of-gene-specificity">Sigmoid-based weighting of gene specificity<a class="anchor" aria-label="anchor" href="#sigmoid-based-weighting-of-gene-specificity"></a>
+</h2>
+<p>To incorporate gene-specificity information into downstream
+enrichment analyses, each gene is assigned a continuous weight
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">w_{i} \in [0, 1]</annotation></semantics></math>
+via a sigmoid transformation of its significance score:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+w_i = \frac{1}{1 + e^{a\left(\log_{10}(s_i) - b\right)}}
+</annotation></semantics></math> This transformation is
+<strong>monotonic and bounded</strong>, ensuring that genes with
+stronger specificity (smaller
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>)
+receive larger weights, while genes with weak or nonspecific
+associations are smoothly down-weighted.</p>
+<p>The parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+determines the <strong>inflection point</strong> of the curve (the
+half-point, where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">w_{i}=0.5</annotation></semantics></math>),
+with default value
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">b=-1</annotation></semantics></math>
+allowing users to control the weight threshold. By default,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">b=-1</annotation></semantics></math>,
+corresponding to a half-point at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>i</mi></msub><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">s_{i} = 0.1</annotation></semantics></math>.</p>
+<p>The parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a&gt;0</annotation></semantics></math>
+regulates the <strong>steepness</strong> of the curve. Larger values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+produce a sharper transition, whereas smaller values yield a smoother
+weighting scheme. The default value
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a=1</annotation></semantics></math>
+provides a balanced compromise between sensitivity and smoothness.</p>
+</div>
+<div class="section level2">
+<h2 id="alternative-weighting-scheme">Alternative weighting scheme<a class="anchor" aria-label="anchor" href="#alternative-weighting-scheme"></a>
+</h2>
+<p>For additional flexibility,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mo>−</mo><mi>G</mi><mi>E</mi><mi>M</mi></mrow><annotation encoding="application/x-tex">hypeR-GEM</annotation></semantics></math>
+also supports a linear weighting scheme based directly on the
+significance score:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn><mo>−</mo><msub><mi>s</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">
+w_i = 1 - s_{i}
+</annotation></semantics></math> which assigns weights proportional to
+the complement of the gene-specificity p-value (adjusted p-value).</p>
+</div>
+<div class="section level2">
+<h2 id="weighted-hypergeometric-test">Weighted hypergeometric test<a class="anchor" aria-label="anchor" href="#weighted-hypergeometric-test"></a>
+</h2>
+<p>The standard hypergeometric test used in over-representation analysis
+(ORA) evaluates whether a gene set contains more genes associated with a
+given category (e.g., pathway or ontology term) than expected by chance,
+implicitly assuming that all genes contribute equally to the enrichment.
+However, as described in the <em>Gene Specificity</em> section,
+enzyme-coding genes mapped through genome-scale metabolic models (GEMs)
+can differ substantially in their association specificity with a given
+metabolic signature. To incorporate this heterogeneity, hypeR-GEM
+extends the standard hypergeometric test to a weighted formulation that
+accounts for gene-specific association strengths.</p>
+<p>Formally, the probability of observing at least
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+overlapping genes between a gene set and the input signature under the
+standard hypergeometric model is given by:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>≥</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mi>k</mi></mrow><mi>n</mi></munderover><mfrac><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>K</mi><mi>j</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mrow><mi>N</mi><mo>−</mo><mi>K</mi></mrow><mrow><mi>n</mi><mo>−</mo><mi>j</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>N</mi><mi>n</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">
+P(X \ge k)
+= \sum_{j = k}^{n}
+\frac{\binom{K}{j}\binom{N - K}{n - j}}{\binom{N}{n}},
+</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+denotes the background size,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+is the number of GEM-mapped enzyme-coding genes in the signature,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+is the size of the gene set, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+is the number of overlapping genes.</p>
+<p>In the weighted formulation, each gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+is assigned a weight
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">w_i \in [0,1]</annotation></semantics></math>
+reflecting its association specificity. The effective signature size and
+overlap are then defined as continuous, weight-adjusted counts:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mi>w</mi></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>n</mi></mrow></munder><msub><mi>w</mi><mi>i</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>k</mi><mi>w</mi></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>k</mi></mrow></munder><msub><mi>w</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+n_w = \sum_{i \in n} w_i,
+\qquad
+k_w = \sum_{i \in k} w_i.
+</annotation></semantics></math></p>
+<p>Because the hypergeometric distribution is defined for integer-valued
+inputs, these quantities are rounded to the nearest integer using
+standard rounding:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mi>w</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">⌊</mo><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo>+</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>n</mi></mrow></munder><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">⌋</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>k</mi><mi>w</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">⌊</mo><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo>+</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>k</mi></mrow></munder><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">⌋</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+n_w = \left\lfloor \tfrac{1}{2} + \sum_{i \in n} w_i \right\rfloor,
+\qquad
+k_w = \left\lfloor \tfrac{1}{2} + \sum_{i \in k} w_i \right\rfloor,
+</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⌊</mo><mi>⋅</mi><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">\lfloor \cdot \rfloor</annotation></semantics></math>
+denotes the floor operator.</p>
+<p>Substituting
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>w</mi></msub><annotation encoding="application/x-tex">n_w</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mi>w</mi></msub><annotation encoding="application/x-tex">k_w</annotation></semantics></math>
+into the hypergeometric test yields a weighted enrichment score that
+down-weights highly promiscuous genes with low specificity, thereby
+reducing noise and limiting spurious enrichments. This weighting
+strategy improves the robustness, biological relevance, and
+interpretability of enrichment results derived from GEM-based
+metabolite-to-gene mappings.</p>
 </div>
 <div class="section level2">
 <h2 id="workflow-illustration">Workflow Illustration<a class="anchor" aria-label="anchor" href="#workflow-illustration"></a>
@@ -179,22 +350,48 @@ down-regulated.</p>
 <div class="section level3">
 <h3 id="hyper-gem-mapping">HypeR-GEM mapping<a class="anchor" aria-label="anchor" href="#hyper-gem-mapping"></a>
 </h3>
+<p>The core function in <strong>hypeR-GEM</strong> is
+<code><a href="../reference/signature2gene.html">signature2gene()</a></code>, which maps metabolite signatures to
+enzyme-coding genes using GEMs. The function takes the following key
+arguments:</p>
+<ul>
+<li><p><code>signature</code>: A list of metabolic signatures. Each
+element must be a data frame containing a column whose name matches the
+<code>reference_key</code> argument, , which specifies the
+<strong>RefMet</strong> annotation for each metabolite.</p></li>
+<li>
+<p><code>directional</code>: Logical argument specifying the
+metabolite–reaction mapping rule.</p>
+<ul>
+<li>If <code>TRUE</code>, metabolites are mapped only to reactions in
+which they appear as products (directional mapping).</li>
+<li>If <code>FALSE</code>, metabolites are mapped to reactions in which
+they appear as either reactants or products (non-directional
+mapping).</li>
+</ul>
+</li>
+<li><p><code>promiscuous_threshold</code>: Maximum allowable number of
+metabolites associated with a gene. Genes exceeding this threshold are
+classified as promiscuous and excluded from downstream
+analysis.</p></li>
+<li><p><code>background</code>: Background used in the gene-specific
+hypergeometric test. By default, this is set to the total number of
+metabolites represented in the GEM.</p></li>
+<li><p><code>reference_key</code>: A character string indicating the
+column name in each signature data frame that contains
+<strong>RefMet</strong> metabolite identifiers.</p></li>
+</ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Undirectional mapping</span></span>
-<span><span class="va">hypeR_GEM_obj</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>,</span>
+<span><span class="va">hypeR_GEM_obj</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>, </span>
 <span>                                           directional <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                                           species <span class="op">=</span> <span class="st">"Human"</span>,</span>
-<span>                                           merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                                           ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                           promiscuous_threshold <span class="op">=</span> <span class="fl">100</span>, </span>
 <span>                                           reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
 <span>                                           background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">##Directional mapping</span></span>
 <span><span class="va">hypeR_GEM_obj_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>,</span>
 <span>                                            directional <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                            species <span class="op">=</span> <span class="st">"Human"</span>,</span>
-<span>                                            merge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                            promiscuous_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>                                            ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                            reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
@@ -324,8 +521,8 @@ downstream enrichment analysis of enzyme-coding genes mapped by
 hypeR-GEM.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">reactome</span><span class="op">)</span></span></code></pre></div>
-<p>In this example, the background is defined as all protein-coding
-genes represented in the Human GEM model. The <code><a href="../reference/enrichment.html">enrichment()</a></code>
+<p>In this example, the background is defined as all enzyme-coding genes
+represented in the Human GEM model. The <code><a href="../reference/enrichment.html">enrichment()</a></code>
 function supports both standard and weighted hypergeometric tests,
 specified via the <code>method</code> parameter, and takes as input the
 object generated by <code><a href="../reference/signature2gene.html">signature2gene()</a></code>.</p>
@@ -340,10 +537,11 @@ which specifies the minimum number of metabolites required for
 enrichment. Downstream visualization is provided by the
 <code><a href="../reference/enrichment_plot.html">enrichment_plot()</a></code> and “rctbls” functions.</p>
 <p>For illustration, we used results obtained with the non-directional
-mapping rule. For example, the <em>Sialic acid metabolism</em> pathway
-was enriched only under the unweighted (standard) hypergeometric test,
-suggesting that the signal was primarily driven by a subset of
-promiscuous genes.</p>
+mapping rule. For example, the <em>Sialic acid metabolism</em>,
+<strong>Trafficking and processing of endosomal TLR</strong>,
+<strong>Choline catabolism</strong> pathways was enriched only under the
+unweighted (standard) hypergeometric test, suggesting that the signal
+was primarily driven by a subset of promiscuous genes.</p>
 <div class="section level4">
 <h4 id="unweighted-standard-hypergeometric-test">Unweighted (standard) hypergeometric test<a class="anchor" aria-label="anchor" href="#unweighted-standard-hypergeometric-test"></a>
 </h4>
@@ -368,7 +566,7 @@ promiscuous genes.</p>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="Workflow_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="Workflow_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="reactable-table">Reactable table<a class="anchor" aria-label="anchor" href="#reactable-table"></a>
@@ -381,7 +579,7 @@ promiscuous genes.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="weighted-hypergeometric-test">Weighted hypergeometric test<a class="anchor" aria-label="anchor" href="#weighted-hypergeometric-test"></a>
+<h4 id="weighted-hypergeometric-test-1">Weighted hypergeometric test<a class="anchor" aria-label="anchor" href="#weighted-hypergeometric-test-1"></a>
 </h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">max_fdr</span> <span class="op">&lt;-</span> <span class="fl">0.05</span></span>
@@ -391,8 +589,8 @@ promiscuous genes.</p>
 <span>                                          genesets <span class="op">=</span> <span class="va">reactome</span>,</span>
 <span>                                          genesets_name <span class="op">=</span> <span class="st">"REACTOME"</span>,</span>
 <span>                                          method<span class="op">=</span><span class="st">'weighted'</span>,</span>
-<span>                                          weighted_by <span class="op">=</span> <span class="st">'one_minus_fdr'</span>,</span>
-<span>                                          sigmoid_transformation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                                          weighted_by <span class="op">=</span> <span class="st">'fdr'</span>,</span>
+<span>                                          sigmoid_transformation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                          min_metabolite <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                                          background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
 <span></span>
@@ -408,7 +606,7 @@ promiscuous genes.</p>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="Workflow_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="Workflow_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="reactable-table-1">Reactable table<a class="anchor" aria-label="anchor" href="#reactable-table-1"></a>
@@ -417,7 +615,7 @@ promiscuous genes.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rctbls.html">rctbls</a></span><span class="op">(</span><span class="va">enrichment_obj_wt</span><span class="op">)</span></span></code></pre></div>
 <div class="rctbl-outer-obj">
 <div class="reactable html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"signature":["up","dn"],"size":[245,200],"enriched":[9,3],"gsets":["REACTOME","REACTOME"],"bg":[3068,3068]},"columns":[{"id":".details","name":"","type":null,"headerClassName":"rctbl-outer-header","sortable":false,"resizable":false,"filterable":false,"searchable":false,"width":45,"align":"center","details":[{"name":"div","attribs":{"className":"rctbl-inner-obj"},"children":[{"name":"Reactable","attribs":{"data":{"label":["Amino acid transport across the plasma membrane","Tryptophan catabolism","Aspartate and asparagine metabolism","Recycling of bile acids and salts","Urea cycle","Phenylalanine metabolism","Pyrimidine catabolism","Serotonin and melatonin biosynthesis","Trafficking and processing of endosomal TLR"],"pval":[9.6e-24,5e-09,4.4e-07,6.2e-07,1.5e-06,1.5e-05,0.00013,0.00017,0.00022],"fdr":[1.5e-20,3.9e-06,0.00023,0.00024,0.00048,0.004,0.028,0.033,0.038],"signature":[245,245,245,245,245,245,245,245,245],"geneset":[33,14,12,16,10,6,12,5,13],"weighted_overlap":[26,10,8,9,7,5,6,4,6],"gene_hits":["SLC16A10;SLC1A4;SLC36A1;SLC36A2;SLC36A4;SLC38A1;SLC38A2;SLC38A4;SLC3A1;SLC3A2;SLC43A1;SLC43A2;SLC6A14;SLC6A15;SLC6A18;SLC6A19;SLC6A20;SLC7A1;SLC7A11;SLC7A2;SLC7A3;SLC7A5;SLC7A6;SLC7A7;SLC7A8;SLC7A9","AADAT;AFMID;HAAO;KMO;KYAT1;KYAT3;KYNU;SLC36A4;SLC3A2;SLC7A5","ASNS;ASPA;ASPG;GOT1;GOT2;NAT8L;SLC25A12;SLC25A13","ABCB11;ABCC3;ALB;BAAT;SLC10A1;SLC10A2;SLCO1A2;SLCO1B1;SLCO1B3","ARG1;ARG2;ASS1;NAGS;OTC;SLC25A15;SLC25A2","ASRGL1;KYAT1;PAH;PCBD1;QDPR","NT5C;NT5C1A;NT5C3A;NT5E;NT5M;TYMP","ASMT;DDC;TPH1;TPH2","CTSB;CTSK;CTSL;CTSS;CTSV;LGMN"],"metabolite_hits":["Hydroxykynurenine;Ornithine;Phenylalanine;Proline;Aspartic acid;Cystine;Glycocholic acid;Kynurenine","2-Keto-glutaramic acid;Hydroxykynurenine;Kynurenic acid;Kynurenine;3-Hydroxyanthranilic acid;Ornithine;Phenylalanine;Proline;Cystine","Aspartic acid;Phenylalanine","Aspartic acid;Phenylalanine;Proline;Glycochenodeoxycholic acid;Glycocholic acid;Glycoursodeoxycholic acid;Glycochenodeoxycholic acid 3-sulfate;Glycodeoxycholic acid 3-sulfate;Taurochenodeoxycholic acid 3-sulfate;Taurodeoxycholic acid 3-sulfate","Aspartic acid;N-Acetylmethionine;Ornithine","2-Keto-glutaramic acid;Hydroxykynurenine;Kynurenic acid;Kynurenine;Aspartic acid;4a-Carbinolamine tetrahydrobiopterin;Phenylalanine","Deoxyguanosine;Guanosine;Deoxyinosine","Hydroxykynurenine;Phenylalanine;5-Hydroxyindoleacetic acid;4a-Carbinolamine tetrahydrobiopterin","Aspartic acid;Phenylalanine;Proline"]},"columns":[{"id":"label","name":"Label","type":"character","headerClassName":"rctbl-inner-header","minWidth":300},{"id":"pval","name":"P-Value","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"fdr","name":"FDR","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"signature","name":"signature","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"geneset","name":"Geneset Size","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"weighted_overlap","name":"Weighted overlap","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"gene_hits","name":"Gene Hits","type":"character","headerClassName":"rctbl-inner-header"},{"id":"metabolite_hits","name":"metabolite_hits","type":"character","headerClassName":"rctbl-inner-header"}],"resizable":true,"searchable":true,"showPageSizeOptions":false,"compact":true,"className":"rctbl-inner-tbl","dataKey":"7f6f0d797e6c6a1b984a008b97f1a1d5","static":false,"nested":true},"children":[]}]},{"name":"div","attribs":{"className":"rctbl-inner-obj"},"children":[{"name":"Reactable","attribs":{"data":{"label":["Pyrimidine catabolism","Transport of nucleosides and free purine and pyrimidine bases across the plasma membrane","Choline catabolism"],"pval":[2.4e-06,2.4e-06,0.00022],"fdr":[0.00064,0.00064,0.044],"signature":[200,200,200],"geneset":[12,12,6],"weighted_overlap":[7,7,4],"gene_hits":["DPYD;NT5C;NT5C1A;NT5C3A;NT5E;NT5M;TYMP","SLC28A1;SLC28A2;SLC28A3;SLC29A1;SLC29A2;SLC29A3;SLC29A4","ALDH7A1;BHMT;DMGDH;SARDH"],"metabolite_hits":["Adenosine;D-Ribosylnicotinate;Thymine","Adenosine;Serotonin;Tryptamine;Tyramine;Thymine","Dimethylglycine;Methylmalonic acid"]},"columns":[{"id":"label","name":"Label","type":"character","headerClassName":"rctbl-inner-header","minWidth":300},{"id":"pval","name":"P-Value","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"fdr","name":"FDR","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"signature","name":"signature","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"geneset","name":"Geneset Size","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"weighted_overlap","name":"Weighted overlap","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"gene_hits","name":"Gene Hits","type":"character","headerClassName":"rctbl-inner-header"},{"id":"metabolite_hits","name":"metabolite_hits","type":"character","headerClassName":"rctbl-inner-header"}],"resizable":true,"searchable":true,"showPageSizeOptions":false,"compact":true,"className":"rctbl-inner-tbl","dataKey":"91ee8219021d0a13dfe523fe8c8e1a28","static":false,"nested":true},"children":[]}]}]},{"id":"signature","name":"Signature","type":"character","headerClassName":"rctbl-outer-header","minWidth":300},{"id":"size","name":"Signature Size","type":"numeric","headerClassName":"rctbl-outer-header"},{"id":"enriched","name":"Enriched Genesets","type":"numeric","headerClassName":"rctbl-outer-header"},{"id":"gsets","name":"Genesets","type":"character","headerClassName":"rctbl-outer-header"},{"id":"bg","name":"Background","type":"numeric","headerClassName":"rctbl-outer-header"}],"resizable":true,"showPageSizeOptions":false,"onClick":"expand","nowrap":true,"className":"rctbl-outer-tbl","rowStyle":{"cursor":"pointer"},"dataKey":"347de8a6f54d37a80c3f32f1f0ca515a"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"signature":["up","dn"],"size":[245,200],"enriched":[6,2],"gsets":["REACTOME","REACTOME"],"bg":[3068,3068]},"columns":[{"id":".details","name":"","type":null,"headerClassName":"rctbl-outer-header","sortable":false,"resizable":false,"filterable":false,"searchable":false,"width":45,"align":"center","details":[{"name":"div","attribs":{"className":"rctbl-inner-obj"},"children":[{"name":"Reactable","attribs":{"data":{"label":["Amino acid transport across the plasma membrane","Tryptophan catabolism","Urea cycle","Recycling of bile acids and salts","Aspartate and asparagine metabolism","Phenylalanine metabolism"],"pval":[6.7e-20,1.6e-08,8.4e-06,2.1e-05,3.3e-05,0.00019],"fdr":[1.1e-16,1.2e-05,0.0044,0.0081,0.01,0.049],"signature":[245,245,245,245,245,245],"geneset":[33,14,10,16,12,6],"weighted_overlap":[22,9,6,7,6,4],"gene_hits":["SLC16A10;SLC1A4;SLC36A1;SLC36A2;SLC36A4;SLC38A1;SLC38A2;SLC38A4;SLC3A1;SLC3A2;SLC43A1;SLC43A2;SLC6A14;SLC6A15;SLC6A18;SLC6A19;SLC6A20;SLC7A1;SLC7A11;SLC7A2;SLC7A3;SLC7A5;SLC7A6;SLC7A7;SLC7A8;SLC7A9","AADAT;AFMID;HAAO;KMO;KYAT1;KYAT3;KYNU;SLC36A4;SLC3A2;SLC7A5","ARG1;ARG2;ASS1;NAGS;OTC;SLC25A15;SLC25A2","ABCB11;ABCC3;ALB;BAAT;SLC10A1;SLC10A2;SLCO1A2;SLCO1B1;SLCO1B3","ASNS;ASPA;ASPG;GOT1;GOT2;NAT8L;SLC25A12;SLC25A13","ASRGL1;KYAT1;PAH;PCBD1;QDPR"],"metabolite_hits":["Hydroxykynurenine;Ornithine;Phenylalanine;Proline;Aspartic acid;Cystine;Glycocholic acid;Kynurenine","2-Keto-glutaramic acid;Hydroxykynurenine;Kynurenic acid;Kynurenine;3-Hydroxyanthranilic acid;Ornithine;Phenylalanine;Proline;Cystine","Aspartic acid;N-Acetylmethionine;Ornithine","Aspartic acid;Phenylalanine;Proline;Glycochenodeoxycholic acid;Glycocholic acid;Glycoursodeoxycholic acid;Glycochenodeoxycholic acid 3-sulfate;Glycodeoxycholic acid 3-sulfate;Taurochenodeoxycholic acid 3-sulfate;Taurodeoxycholic acid 3-sulfate","Aspartic acid;Phenylalanine","2-Keto-glutaramic acid;Hydroxykynurenine;Kynurenic acid;Kynurenine;Aspartic acid;4a-Carbinolamine tetrahydrobiopterin;Phenylalanine"]},"columns":[{"id":"label","name":"Label","type":"character","headerClassName":"rctbl-inner-header","minWidth":300},{"id":"pval","name":"P-Value","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"fdr","name":"FDR","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"signature","name":"signature","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"geneset","name":"Geneset Size","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"weighted_overlap","name":"Weighted overlap","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"gene_hits","name":"Gene Hits","type":"character","headerClassName":"rctbl-inner-header"},{"id":"metabolite_hits","name":"metabolite_hits","type":"character","headerClassName":"rctbl-inner-header"}],"resizable":true,"searchable":true,"showPageSizeOptions":false,"compact":true,"className":"rctbl-inner-tbl","dataKey":"3e1994c35736a03741108dab0ccc22d7","static":false,"nested":true},"children":[]}]},{"name":"div","attribs":{"className":"rctbl-inner-obj"},"children":[{"name":"Reactable","attribs":{"data":{"label":["Pyrimidine catabolism","Transport of nucleosides and free purine and pyrimidine bases across the plasma membrane"],"pval":[1.2e-05,1.2e-05],"fdr":[0.0031,0.0031],"signature":[200,200],"geneset":[12,12],"weighted_overlap":[6,6],"gene_hits":["DPYD;NT5C;NT5C1A;NT5C3A;NT5E;NT5M;TYMP","SLC28A1;SLC28A2;SLC28A3;SLC29A1;SLC29A2;SLC29A3;SLC29A4"],"metabolite_hits":["Adenosine;D-Ribosylnicotinate;Thymine","Adenosine;Serotonin;Tryptamine;Tyramine;Thymine"]},"columns":[{"id":"label","name":"Label","type":"character","headerClassName":"rctbl-inner-header","minWidth":300},{"id":"pval","name":"P-Value","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"fdr","name":"FDR","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"signature","name":"signature","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"geneset","name":"Geneset Size","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"weighted_overlap","name":"Weighted overlap","type":"numeric","headerClassName":"rctbl-inner-header"},{"id":"gene_hits","name":"Gene Hits","type":"character","headerClassName":"rctbl-inner-header"},{"id":"metabolite_hits","name":"metabolite_hits","type":"character","headerClassName":"rctbl-inner-header"}],"resizable":true,"searchable":true,"showPageSizeOptions":false,"compact":true,"className":"rctbl-inner-tbl","dataKey":"a6aa1378e710389afd8053afce9209c0","static":false,"nested":true},"children":[]}]}]},{"id":"signature","name":"Signature","type":"character","headerClassName":"rctbl-outer-header","minWidth":300},{"id":"size","name":"Signature Size","type":"numeric","headerClassName":"rctbl-outer-header"},{"id":"enriched","name":"Enriched Genesets","type":"numeric","headerClassName":"rctbl-outer-header"},{"id":"gsets","name":"Genesets","type":"character","headerClassName":"rctbl-outer-header"},{"id":"bg","name":"Background","type":"numeric","headerClassName":"rctbl-outer-header"}],"resizable":true,"showPageSizeOptions":false,"onClick":"expand","nowrap":true,"className":"rctbl-outer-tbl","rowStyle":{"cursor":"pointer"},"dataKey":"c347758545cc70e53de289f50dd68f85"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -478,7 +676,7 @@ context.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
