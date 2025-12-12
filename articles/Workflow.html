@@ -100,10 +100,17 @@ Huang</h4>
 collect all known metabolic information of a biological
 system(e.g. bacteria, human cell, etc.). There are three essential
 components in a GEM:</p>
-<p>-<strong>metabolites</strong>: all known metabolites of a biological
-system. -<strong>reactions</strong>: all known reactions of a biological
-system. -<strong>enzyme-coding genes</strong>: enzymes that catalyze the
-biological reactions.</p>
+<ul>
+<li>
+<strong>metabolites</strong>: all known metabolites of a biological
+system.</li>
+<li>
+<strong>reactions</strong>: all known reactions of a biological
+system.</li>
+<li>
+<strong>enzyme-coding genes</strong>: enzymes that catalyze the
+biological reactions.</li>
+</ul>
 <p>Within a GEM, each metabolite is associated with one or more
 reactions, in which it participates as either a reactant or a product.
 Each reaction, in turn, is catalyzed by one or more enzyme-coding genes,
@@ -128,7 +135,7 @@ consumed by the reaction (left-hand side).</li>
 <strong>products</strong>: one or more metabolites produced by the
 reaction (right-hand side).</li>
 <li>
-<strong>catalyst</strong>： enzyme-coding genes whose protein
+<strong>catalyst</strong>: enzyme-coding genes whose protein
 products catalyze the reaction.</li>
 </ul>
 <p>For example, reaction
@@ -139,12 +146,12 @@ and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
 and produces metabolite
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
-and it may be catalyzed by one or more enzyme-coding genes</p>
+and it may be catalyzed by one or more enzyme-coding genes.</p>
 </div>
 <div class="section level2">
 <h2 id="mapping-workflow">Mapping workflow<a class="anchor" aria-label="anchor" href="#mapping-workflow"></a>
 </h2>
-<p>To map a metabolite to its associated enzyme(-coding) genes,
+<p>To map a metabolite to its associated enzyme-coding genes,
 <strong>hypeR-GEM</strong> defines three types of associations:</p>
 <ul>
 <li>
@@ -165,7 +172,7 @@ metabolite is associated with all enzyme-coding genes that catalyze the
 reactions in which the metabolite participates.</p></li>
 </ul>
 <p>The overall workflow is illustrated in the following diagram:
-<embed src="figs/mapping.pdf" width="80%" height="80%" type="application/pdf"></embed></p>
+<img src="figs/mapping.png" class="r-plt" width="80%" height="80%"></p>
 <p>Given an input metabolic signature, a set of metabolites annotated
 using the <strong>RefMet</strong> nomenclature,
 <strong>hypeR-GEM</strong> identifies all metabolic reactions in which
@@ -190,7 +197,8 @@ given metabolic signature. To quantify gene-level association
 specificity and mitigate the influence of such “promiscuous” genes, we
 compute a <strong>gene-specificity score</strong> based on the
 hypergeometric distribution.</p>
-<embed src="figs/gene_promiscuity.pdf" width="80%" height="80%" type="application/pdf"></embed><p>For each gene
+<p><img src="figs/gene_promiscuity.png" class="r-plt" width="80%" height="80%"></p>
+<p>For each gene
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_{i}</annotation></semantics></math>,
 let
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
@@ -258,10 +266,8 @@ provides a balanced compromise between sensitivity and smoothness.</p>
 <div class="section level2">
 <h2 id="alternative-weighting-scheme">Alternative weighting scheme<a class="anchor" aria-label="anchor" href="#alternative-weighting-scheme"></a>
 </h2>
-<p>For additional flexibility,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mo>−</mo><mi>G</mi><mi>E</mi><mi>M</mi></mrow><annotation encoding="application/x-tex">hypeR-GEM</annotation></semantics></math>
-also supports a linear weighting scheme based directly on the
-significance score:</p>
+<p>For additional flexibility, <strong>hypeR-GEM</strong> also supports
+a linear weighting scheme based directly on the significance score:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn><mo>−</mo><msub><mi>s</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">
 w_i = 1 - s_{i}
 </annotation></semantics></math> which assigns weights proportional to
@@ -391,11 +397,10 @@ column name in each signature data frame that contains
 <span></span>
 <span><span class="co">##Directional mapping</span></span>
 <span><span class="va">hypeR_GEM_obj_di</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/signature2gene.html">signature2gene</a></span><span class="op">(</span>signatures <span class="op">=</span> <span class="va">COVID_urine</span>,</span>
-<span>                                            directional <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                            promiscuous_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                                            ensemble_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                            reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
-<span>                                            background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span>                                              directional <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                              promiscuous_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>                                              reference_key <span class="op">=</span> <span class="st">'refmet_name'</span>,</span>
+<span>                                              background <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 class="tabset" id="hyper-gem-output">HypeR-GEM output<a class="anchor" aria-label="anchor" href="#hyper-gem-output"></a>
@@ -404,7 +409,7 @@ column name in each signature data frame that contains
 the results from non-directional mapping. The output of
 <code><a href="../reference/signature2gene.html">hypeR.GEM::signature2gene()</a></code> is a structured list comprising
 three major components:</p>
-<ol style="list-style-type: decimal">
+<ul>
 <li><p><code>promiscuous_met</code>: A data frame listing metabolites
 considered promiscuous, i.e., those associated with an excessively large
 number of genes. The filtering threshold is defined by the
@@ -417,11 +422,11 @@ frame that provides the identifier of the metabolite in the GEM
 corresponding RefMet annotation (<code>refmet_name</code>), and the
 number of genes associated with that metabolite
 (<code>gene_association</code>).</p></li>
-<li><p><code>gene_table</code>: The core output of the mapping
+<li>
+<p><code>gene_table</code>: The core output of the mapping
 procedure. This is a list where each element corresponds to a metabolite
 signature and contains a data frame of the mapped enzyme-coding genes.
-For each gene, the data frame reports:</p></li>
-</ol>
+For each gene, the data frame reports:</p>
 <ul>
 <li>the number of catalyzed reactions
 (<code>associated_reactions</code>)</li>
@@ -431,6 +436,8 @@ For each gene, the data frame reports:</p></li>
 (<code>signature_association</code>)</li>
 <li>the p-value quantifying the mapping specificity
 (<code>p_value</code>)</li>
+</ul>
+</li>
 </ul>
 <div class="section level4">
 <h4 id="promiscuous_met">promiscuous_met<a class="anchor" aria-label="anchor" href="#promiscuous_met"></a>
@@ -522,26 +529,40 @@ hypeR-GEM.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">reactome</span><span class="op">)</span></span></code></pre></div>
 <p>In this example, the background is defined as all enzyme-coding genes
-represented in the Human GEM model. The <code><a href="../reference/enrichment.html">enrichment()</a></code>
-function supports both standard and weighted hypergeometric tests,
-specified via the <code>method</code> parameter, and takes as input the
-object generated by <code><a href="../reference/signature2gene.html">signature2gene()</a></code>.</p>
-<p>Gene-level weights are specified through the <code>weights</code>
-argument. By default, weights are set to “one_minus_fdr”, which is
-proportional to the mapping specificity of each gene; users may also
-provide customized weights by adding additional columns to the
-<code>gene_table</code> object.</p>
-<p>To account for metabolite promiscuity, an additional filtering
-criterion is provided through the <code>min_metabolite</code> parameter,
-which specifies the minimum number of metabolites required for
-enrichment. Downstream visualization is provided by the
-<code><a href="../reference/enrichment_plot.html">enrichment_plot()</a></code> and “rctbls” functions.</p>
-<p>For illustration, we used results obtained with the non-directional
-mapping rule. For example, the <em>Sialic acid metabolism</em>,
-<strong>Trafficking and processing of endosomal TLR</strong>,
-<strong>Choline catabolism</strong> pathways was enriched only under the
-unweighted (standard) hypergeometric test, suggesting that the signal
-was primarily driven by a subset of promiscuous genes.</p>
+represented in the Human GEM model (see <a href="https://www.pnas.org/doi/abs/10.1073/pnas.2102344118" class="external-link">reference</a>).
+The <code><a href="../reference/enrichment.html">enrichment()</a></code> function performs gene-set enrichment
+analysis and accepts the following key arguments:</p>
+<ul>
+<li><p><code>hypeR_GEM_obj</code>: The object returned by
+<code><a href="../reference/signature2gene.html">signature2gene()</a></code> function.</p></li>
+<li><p><code>genesets</code>: A list of gene-sets</p></li>
+<li><p><code>genesets_name</code>: A descriptive name for the gene-set
+compendium (e.g., “REACTOME”).</p></li>
+<li><p><code>method</code>: Enrichment method. “unweighted” applies the
+standard Fisher/hypergeometric test, while “weighted” applies the
+weighted hypergeometric test.</p></li>
+<li><p><code>weighted_by</code>: Used only when
+<code>method = "weighted"</code>. Specifies the column in
+<code>hyper_GEM_obj[["gene_table"]]</code> containing the gene-specific
+significance score
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>.</p></li>
+<li><p><code>sigmoid_transformation</code>: Logical. If
+<code>TRUE</code>, applies the sigmoid transformation to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>,
+if <code>FALSE</code>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><msub><mi>s</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">1-s_{i}</annotation></semantics></math>
+is used.</p></li>
+<li><p><code>min_metabolite</code>: Additional filtering criterion that
+specifies the minimum number of metabolites required for enrichment for
+account for metabolite specificity.</p></li>
+</ul>
+<p>Downstream visualization is supported by the
+<code><a href="../reference/enrichment_plot.html">enrichment_plot()</a></code> and <code><a href="../reference/rctbls.html">rctbls()</a></code> functions.</p>
+<p>In our example, results obtained using the non-directional mapping
+rule show that pathways such as <em>Sialic acid metabolism</em>,
+<em>Trafficking and processing of endosomal TLR</em>, and <em>Choline
+catabolism</em> are enriched only under the unweighted test, suggesting
+that these signals are primarily driven by non-specific genes.</p>
 <div class="section level4">
 <h4 id="unweighted-standard-hypergeometric-test">Unweighted (standard) hypergeometric test<a class="anchor" aria-label="anchor" href="#unweighted-standard-hypergeometric-test"></a>
 </h4>
@@ -557,11 +578,11 @@ was primarily driven by a subset of promiscuous genes.</p>
 <span>                                        background<span class="op">=</span><span class="fl">3068</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment_obj</span>,</span>
-<span>                                 top<span class="op">=</span><span class="fl">40</span>,</span>
-<span>                                 abrv<span class="op">=</span><span class="fl">50</span>,</span>
-<span>                                 size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
-<span>                                 fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
-<span>                                 val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
+<span>                                top<span class="op">=</span><span class="fl">40</span>,</span>
+<span>                                abrv<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                                size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
+<span>                                fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
+<span>                                val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -597,11 +618,11 @@ was primarily driven by a subset of promiscuous genes.</p>
 <span></span>
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">hypeR.GEM</span><span class="fu">::</span><span class="fu"><a href="../reference/enrichment_plot.html">enrichment_plot</a></span><span class="op">(</span><span class="va">enrichment_obj_wt</span>,</span>
-<span>                                 top<span class="op">=</span><span class="fl">40</span>,</span>
-<span>                                 abrv<span class="op">=</span><span class="fl">50</span>,</span>
-<span>                                 size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
-<span>                                 fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
-<span>                                 val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
+<span>                                top<span class="op">=</span><span class="fl">40</span>,</span>
+<span>                                abrv<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                                size_by<span class="op">=</span><span class="st">"significance"</span>,</span>
+<span>                                fdr_cutoff<span class="op">=</span> <span class="va">max_fdr</span>,</span>
+<span>                                val<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"FDR ≤"</span>, <span class="va">max_fdr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -622,25 +643,45 @@ was primarily driven by a subset of promiscuous genes.</p>
 <div class="section level3">
 <h3 id="sankey-diagram">Sankey diagram<a class="anchor" aria-label="anchor" href="#sankey-diagram"></a>
 </h3>
-<p>The <code>sankey_plot</code> function generates a three-layer Sankey
-diagrams connecting metabolites, the metabolite sets (MSets), and the
-gene sets (GSets) derived from hypeR-GEM. Edge weights between the
+<p>The <code><a href="../reference/sankey_plot.html">sankey_plot()</a></code> function generates a three-layer
+Sankey diagrams connecting metabolites, the metabolite sets (MSets), and
+the gene sets (GSets) derived from hypeR-GEM. Edge weights between the
 metabolite and Msets layers reflect the number of shared metabolites,
 while edges between the MSets and GSets layers reflect the overlap
-between hypeR-GEM–mapped genes and genes in each GSets.</p>
+between hypeR-GEM–mapped genes and genes in each GSets. The functions
+takes the following key arguments:</p>
+<ul>
+<li><p><code>hypeR_GEM_obj</code>: The object returned by
+<code><a href="../reference/signature2gene.html">signature2gene()</a></code> function.</p></li>
+<li><p><code>msets_list</code>: A list of metabolite-sets. Each element
+should be a named list where names are set names and values are
+character vectors of metabolite identifiers matching the
+<code>key</code> argument.</p></li>
+<li><p><code>gsets_list</code>: A list of gene-sets. Each element should
+be a named list where names are set names and values are character
+vectors of metabolite identifiers matching the <code>key</code>
+argument.</p></li>
+<li><p><code>key</code>: Column name in
+<code>hypeR_GEM_obj[["mapped_metabolite_signatures"]]</code> used as the
+metabolite identifier.</p></li>
+</ul>
 <p>As an illustrative example, we applied this function to the
 <code>hypeR-GEM_obj</code> constructed from age-associated metabolites
-identified in the New England Centenarian Study (NECS) (See reference).
-A curated subset of enriched MSets from these metabolites, together with
-a curated subset of enriched GSets derived from hypeR-GEM–mapped
-enzyme-coding genes, were visualized in an integrative, multi-omics
-context.</p>
+identified in the New England Centenarian Study (NECS) (See <a href="https://www.bumc.bu.edu/centenarian/" class="external-link">reference</a>). A curated
+subset of enriched MSets from these metabolites, together with a curated
+subset of enriched GSets derived from hypeR-GEM–mapped enzyme-coding
+genes, were visualized in an integrative, multi-omics context.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"hypeR_object_NECS"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"metabolon_msets_list"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"gsets_list"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sankey_plot.html">sankey_plot</a></span><span class="op">(</span><span class="va">hypeR_object_NECS</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">metabolon_msets_list</span><span class="op">$</span><span class="va">metabolonSupPthwy</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">gsets_list</span><span class="op">$</span><span class="va">hallmark</span><span class="op">)</span>, key <span class="op">=</span> <span class="st">"refmet_name"</span>,font_size<span class="op">=</span><span class="fl">16</span>,node_width<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sankey_plot.html">sankey_plot</a></span><span class="op">(</span><span class="va">hypeR_object_NECS</span>, </span>
+<span>                 msets_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">metabolon_msets_list</span><span class="op">$</span><span class="va">metabolonSupPthwy</span><span class="op">)</span>, </span>
+<span>                 gsets_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">gsets_list</span><span class="op">$</span><span class="va">hallmark</span><span class="op">)</span>, </span>
+<span>                 key <span class="op">=</span> <span class="st">"refmet_name"</span>,</span>
+<span>                 font_size<span class="op">=</span><span class="fl">16</span>,</span>
+<span>                 node_width<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p</span></span></code></pre></div>
 <div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:700px;height:432.632880098888px;"></div>
@@ -649,8 +690,8 @@ context.</p>
 <div class="section level3">
 <h3 id="export-to-excel-files">Export to Excel files<a class="anchor" aria-label="anchor" href="#export-to-excel-files"></a>
 </h3>
-<p>Users can export the mapping results to Excel files using the
-<code><a href="../reference/hypGEM_to_excel.html">hypGEM_to_excel()</a></code> function.</p>
+<p>Mapping results can be exported to Excel files using the
+<code><a href="../reference/hypGEM_to_excel.html">hypGEM_to_excel()</a></code> function:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hypGEM_to_excel.html">hypGEM_to_excel</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj</span>, file <span class="op">=</span> <span class="st">"hypeR_GEM_non_directional.xlsx"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hypGEM_to_excel.html">hypGEM_to_excel</a></span><span class="op">(</span><span class="va">hypeR_GEM_obj_di</span>, file <span class="op">=</span> <span class="st">"hypeR_GEM_directional.xlsx"</span><span class="op">)</span></span></code></pre></div>
