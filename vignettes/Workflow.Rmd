@@ -21,52 +21,126 @@ devtools::load_all(".")
 
 # What are genome-scale metabolic models(GEMs)?
 
-Genome-scale metabolic models(GEMs) are curated metabolic models collect all known metabolic information of a biological system(e.g. human cell). There are three essential components in a GEM:
+Genome-scale metabolic models(GEMs) are curated metabolic models collect all known metabolic information of a biological system(e.g. bacteria, human cell, etc.). There are three essential components in a GEM:
 
   -**metabolites**: all known metabolites of a biological system.
   -**reactions**: all known reactions of a biological system.
-  -**protein(-coding) genes**
-
-including the , **protein(-coding) genes**, **reactions**, and **metabolites**.
-
-See [here](https://www.pnas.org/doi/abs/10.1073/pnas.2102344118) for more details.  
-
-Here is a schematic diagram of a GEM:
-
-The capital letters represent metabolites, and $r_i$ represents $i^{th}$ reaction. A prototypical reactions includes three parts:
-
-  - **reactants(substrates)**: one or more metabolites that are consumed (left-hand side)
-  - **products**:  one or more metabolites that are produced (right-hand side)
-  - **catalyst**： protein(-coding) genes that catalyze the reaction
+  -**enzyme-coding genes**: enzymes that catalyze the biological reactions. 
   
+Within a GEM, each metabolite is associated with one or more reactions, in which it participates as either a reactant or a product. Each reaction, in turn, is catalyzed by one or more enzyme-coding genes, with exceptions such as exchange reactions and certain transport reactions that are not catalyzed by enzymes. **HypeR-GEM** leverages this metabolite–reaction–gene triad to establish a framework for mapping metabolites to genes. 
+  
+For more details, see [here](https://www.pnas.org/doi/abs/10.1073/pnas.2102344118).
+
+A schematic representation of a GEM is shown below:
 
 ```{r echo=FALSE, out.height="80%", out.width="80%"}
 knitr::include_graphics("figs/intro_GEM.png")
 ```
 
+In the diagram, capital letters denote metabolites, and $r_{i}$ denotes the $i^{th}$ reaction. A prototypical metabolic reaction consists of three components:
+
+  - **reactants(substrates)**: one or more metabolites consumed by the reaction (left-hand side).
+  - **products**:  one or more metabolites produced by the reaction (right-hand side).
+  - **catalyst**： enzyme-coding genes whose protein products catalyze the reaction.
+
+For example, reaction $r_{1}$ consumes metabolites $A$ and $D$ and produces metabolite $B$, and it may be catalyzed by one or more enzyme-coding genes
+  
 # Mapping workflow
 
-To map a metabolite to its associated protein(-coding) genes, we define three types of associations:
+To map a metabolite to its associated enzyme(-coding) genes, **hypeR-GEM** defines three types of associations:
 
   - **metabolite-reaction association**: A metabolite is associated with a reaction if:
     - The metabolite is either the reactant or the product of the reaction (**undirectional**)
     - The metabolite is is the product of the reaction (**directional**)
   
-  - **reaction-protein(-coding) gene association**: A reaction is associated with protein(-coding) genes if these genes catalyze the reaction.
+  - **reaction-enzyme(-coding) gene association**: A reaction is associated with the enzyme-coding genes that encode enzymes catalyzing that reaction,
   
-  - **metabolite-protein(-coding) gene association**: A metaboblite is associated with all protein(-coding) genes that catalyze the reactions associated with the metabolite.
+  - **metabolite-enzyme(-coding) gene association**: A metabolite is associated with all enzyme-coding genes that catalyze the reactions in which the metabolite participates.
   
+
+The overall workflow is illustrated in the following diagram: 
 ```{r echo=FALSE, out.height="80%", out.width="80%"}
-knitr::include_graphics("figs/mapping.png")
+knitr::include_graphics("figs/mapping.pdf")
 ```
 
-# Accounting for Gene “Promiscuity”
+Given an input metabolic signature, a set of metabolites annotated using the **RefMet** nomenclature, **hypeR-GEM** identifies all metabolic reactions in which each metabolite participates as either reactant or product. For reversible reactions, metabolites are treated as both reactants and products. For each reaction (excluding exchange reactions and a subset of transport reactions), the associated enzyme-coding genes are then mapped to the metabolites according to two configurable rules: a non-directional mapping that considers all reactions involving the metabolite, and a directional mapping that restricts associations to reactions producing the metabolite based on the stoichiometry encoded in the model. 
 
-Some genes in a GEM can be highly "promiscuous" (catalyzed too many reactions, and thus, associated with too many metabolites).  To take this into account, we compute gene-specific p-values that indicate the mapping specificity.
+
+# Accounting for Gene Specificity
+
+Enzyme-coding genes differ substantially in their reaction specificity. Non-specific (promiscuous) enzymes can catalyze a broad range of reactions, giving rise to dense gene–reaction–metabolite connections and consequently weaker, less specific associations with a given metabolic signature. To quantify gene-level association specificity and mitigate the influence of such "promiscuous" genes, we compute a **gene-specificity score** based on the hypergeometric distribution.
 
 ```{r echo=FALSE, out.height="80%", out.width="80%"}
-knitr::include_graphics("figs/gene_promiscuity.png")
+knitr::include_graphics("figs/gene_promiscuity.pdf")
 ```
+
+For each gene $g_{i}$, let $M$ denote he total number of metabolites represented in the GEM, $S$ the number of metabolites in the metabolic signature, $A_{i}$ the number of metabolites associated with $g_{i}$ and $a_{i}$ the number of those metabolites that overlap with the signature. The significance score $s_{i}$ is defined as the upper-tail hypergeometric probability of observing at least $a_{i}$ overlapping metabolites by chance:
+
+$$
+s_i = P(X \ge a_i)
+= \sum_{x = a_i}^{\min(A_i, S)}
+\frac{\binom{A_i}{x}\binom{M - A_i}{S - x}}{\binom{M}{S}}
+$$
+
+Smaller values of $s_{i}$ a more specific association between gene $g_{i}$ and the metabolic signature.
+
+
+# Sigmoid-based weighting of gene specificity
+
+To incorporate gene-specificity information into downstream enrichment analyses, each gene is assigned a continuous weight $w_{i} \in [0, 1]$ via a sigmoid transformation of its significance score:
+
+$$
+w_i = \frac{1}{1 + e^{a\left(\log_{10}(s_i) - b\right)}}
+$$
+This transformation is **monotonic and bounded**, ensuring that genes with stronger specificity (smaller $s_{i}$) receive larger weights, while genes with weak or nonspecific associations are smoothly down-weighted.
+
+The parameter $b$ determines the **inflection point** of the curve (the half-point, where $w_{i}=0.5$), with default value $b=-1$ allowing users to control the weight threshold. By default, $b=-1$, corresponding to a half-point at $s_{i} = 0.1$. 
+
+The parameter $a>0$ regulates the **steepness** of the curve. Larger values of $a$ produce a sharper transition, whereas smaller values yield a smoother weighting scheme. The default value $a=1$ provides a balanced compromise between sensitivity and smoothness.
+
+# Alternative weighting scheme
+
+For additional flexibility, $hypeR-GEM$ also supports a linear weighting scheme based directly on the significance score:
+
+$$
+w_i = 1 - s_{i}
+$$
+which assigns weights proportional to the complement of the gene-specificity p-value (adjusted p-value).
+
+# Weighted hypergeometric test
+
+The standard hypergeometric test used in over-representation analysis (ORA) evaluates whether a gene set contains more genes associated with a given category (e.g., pathway or ontology term) than expected by chance, implicitly assuming that all genes contribute equally to the enrichment. However, as described in the *Gene Specificity* section, enzyme-coding genes mapped through genome-scale metabolic models (GEMs) can differ substantially in their association specificity with a given metabolic signature. To incorporate this heterogeneity, hypeR-GEM extends the standard hypergeometric test to a weighted formulation that accounts for gene-specific association strengths.
+
+Formally, the probability of observing at least \(k\) overlapping genes between a gene set and the input signature under the standard hypergeometric model is given by:
+
+$$
+P(X \ge k)
+= \sum_{j = k}^{n}
+\frac{\binom{K}{j}\binom{N - K}{n - j}}{\binom{N}{n}},
+$$
+
+where \(N\) denotes the background size, \(n\) is the number of GEM-mapped enzyme-coding genes in the signature, \(K\) is the size of the gene set, and \(k\) is the number of overlapping genes.
+
+In the weighted formulation, each gene \(i\) is assigned a weight \(w_i \in [0,1]\) reflecting its association specificity. The effective signature size and overlap are then defined as continuous, weight-adjusted counts:
+
+$$
+n_w = \sum_{i \in n} w_i,
+\qquad
+k_w = \sum_{i \in k} w_i.
+$$
+
+Because the hypergeometric distribution is defined for integer-valued inputs, these quantities are rounded to the nearest integer using standard rounding:
+
+$$
+n_w = \left\lfloor \tfrac{1}{2} + \sum_{i \in n} w_i \right\rfloor,
+\qquad
+k_w = \left\lfloor \tfrac{1}{2} + \sum_{i \in k} w_i \right\rfloor,
+$$
+
+where \(\lfloor \cdot \rfloor\) denotes the floor operator.
+
+Substituting \(n_w\) and \(k_w\) into the hypergeometric test yields a weighted enrichment score that down-weights highly promiscuous genes with low specificity, thereby reducing noise and limiting spurious enrichments. This weighting strategy improves the robustness, biological relevance, and interpretability of enrichment results derived from GEM-based metabolite-to-gene mappings.
+
 
 
 # Workflow Illustration
@@ -80,22 +154,32 @@ data(COVID_urine)
 ```
 
 ## HypeR-GEM mapping
+
+The core function in **hypeR-GEM** is `signature2gene()`, which maps metabolite signatures to enzyme-coding genes using GEMs. The function takes the following key arguments:
+
+- `signature`: A list of metabolic signatures. Each element must be a data frame containing a column whose name matches the `reference_key` argument, , which specifies the **RefMet** annotation for each metabolite.
+
+- `directional`: Logical argument specifying the metabolite–reaction mapping rule.
+  - If `TRUE`, metabolites are mapped only to reactions in which they appear as products (directional mapping).
+  - If `FALSE`, metabolites are mapped to reactions in which they appear as either reactants or products (non-directional mapping).
+
+- `promiscuous_threshold`: Maximum allowable number of metabolites associated with a gene. Genes exceeding this threshold are classified as promiscuous and excluded from downstream analysis.
+
+- `background`: Background used in the gene-specific hypergeometric test. By default, this is set to the total number of metabolites represented in the GEM.
+
+- `reference_key`: A character string indicating the column name in each signature data frame that contains **RefMet** metabolite identifiers.
+
 ```{r}
 ## Undirectional mapping
-hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
+hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine, 
                                            directional = FALSE,
-                                           species = "Human",
-                                           merge = TRUE,
-                                           promiscuous_threshold = 100,
-                                           ensemble_id = TRUE,
+                                           promiscuous_threshold = 100, 
                                            reference_key = 'refmet_name',
                                            background = NULL)
 
 ##Directional mapping
 hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
                                             directional = TRUE,
-                                            species = "Human",
-                                            merge = TRUE,
                                             promiscuous_threshold = 100,
                                             ensemble_id = TRUE,
                                             reference_key = 'refmet_name',
@@ -147,13 +231,13 @@ Here, we use the REACTOME gene sets as an example to illustrate the downstream e
 data(reactome)
 ```
 
-In this example, the background is defined as all protein-coding genes represented in the Human GEM model. The `enrichment()` function supports both standard and weighted hypergeometric tests, specified via the `method` parameter, and takes as input the object generated by `signature2gene()`. 
+In this example, the background is defined as all enzyme-coding genes represented in the Human GEM model. The `enrichment()` function supports both standard and weighted hypergeometric tests, specified via the `method` parameter, and takes as input the object generated by `signature2gene()`. 
 
 Gene-level weights are specified through the `weights` argument. By default, weights are set to "one_minus_fdr", which is proportional to the mapping specificity of each gene; users may also provide customized weights by adding additional columns to the `gene_table` object. 
 
 To account for metabolite promiscuity, an additional filtering criterion is provided through the `min_metabolite` parameter, which specifies the minimum number of metabolites required for enrichment. Downstream visualization is provided by the `enrichment_plot()` and "rctbls" functions.
 
-For illustration, we used results obtained with the non-directional mapping rule. For example, the *Sialic acid metabolism* pathway was enriched only under the unweighted (standard) hypergeometric test, suggesting that the signal was primarily driven by a subset of promiscuous genes.
+For illustration, we used results obtained with the non-directional mapping rule. For example, the *Sialic acid metabolism*, **Trafficking and processing of endosomal TLR**, **Choline catabolism** pathways was enriched only under the unweighted (standard) hypergeometric test, suggesting that the signal was primarily driven by a subset of promiscuous genes.
 
 ### Unweighted (standard) hypergeometric test
 ```{r}
@@ -193,8 +277,8 @@ enrichment_obj_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                           genesets = reactome,
                                           genesets_name = "REACTOME",
                                           method='weighted',
-                                          weighted_by = 'one_minus_fdr',
-                                          sigmoid_transformation = FALSE,
+                                          weighted_by = 'fdr',
+                                          sigmoid_transformation = TRUE,
                                           min_metabolite = 2,
                                           background=3068)
 

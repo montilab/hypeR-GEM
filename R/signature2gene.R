@@ -7,7 +7,7 @@
 #' @param merge merged metabolites in different compartment, for example, MAM001_c, MAM001_e, ... -> MAM001
 #' @param reference_key the column name in the reference table which represents the standardized names (e.g. "refmet_name")
 #' @param ensemble_id if the genes in GEM_tables$gene_df is given by Ensemble, then ensemble_id = TRUE, otherwise, ensemble_id = FALSE
-#' @param promiscuous_threshold gene association threshold of promiscuous metabolite
+#' @param promiscuous_threshold maximum allowable number of associated metabolites per gene; genes exceeding this threshold are excluded.
 #' @param background the background of the gene-specific hypergeometric test, default = NULL = number of merged metabolites
 #' @return a list containing two element: "mapped_metabolite_signatures" and "gene_tables" for each signature
 

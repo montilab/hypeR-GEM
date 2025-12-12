@@ -54,23 +54,23 @@ str(COVID_urine)
 
 ## (iii) hypeR-GEM mapping
 
-- `signature`: Must be a named list, each element is a data frame which has to contain a column with the same name as "reference_key"
-- `species`: c("Human", "Mouse", "Rat", "Zebrafish", "Worm", "Other")
-- `directional` logical parameter, if TRUE, map metabolites to reactions where these metabolites are product only
--  `merge`: Merge metabolites from different department
-- `promiscuous_threshold`: Gene association threshold of promiscuous metabolites
-- `ensemble_id`: for current version, if `species != 'Human`, use `ensemble_id = FALSE`
-- `reference_key = 'refmet_name` by default
-- `background` is used to compute gene-specific p-values, if `background = NULL`, then background = # of metabolites associated with non-exchange reactions
+- `signature`: A list of metabolic signatures. Each element must be a data frame containing a column whose name matches the `reference_key` argument, , which specifies the **RefMet** annotation for each metabolite.
+
+- `directional`: Logical argument specifying the metabolite–reaction mapping rule.
+  - If `TRUE`, metabolites are mapped only to reactions in which they appear as products (directional mapping).
+  - If `FALSE`, metabolites are mapped to reactions in which they appear as either reactants or products (non-directional mapping).
+
+- `promiscuous_threshold`: Maximum allowable number of metabolites associated with a gene. Genes exceeding this threshold are classified as promiscuous and excluded from downstream analysis.
+
+- `background`: Background used in the gene-specific hypergeometric test. By default, this is set to the total number of metabolites represented in the GEM.
+
+- `reference_key`: A character string indicating the column name in each signature data frame that contains **RefMet** metabolite identifiers.
 
 ```{r}
 ## Undirectional mapping
 hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
                                            directional = FALSE,
-                                           species = "Human",
-                                           merge = TRUE,
                                            promiscuous_threshold = 500,
-                                           ensemble_id = TRUE,
                                            reference_key = 'refmet_name',
                                            background = NULL)
 
@@ -78,10 +78,7 @@ hypeR_GEM_obj <- hypeR.GEM::signature2gene(signatures = COVID_urine,
 ##Directional mapping
 hypeR_GEM_obj_di <- hypeR.GEM::signature2gene(signatures = COVID_urine,
                                             directional = TRUE,
-                                            species = "Human",
-                                            merge = TRUE,
                                             promiscuous_threshold = 500,
-                                            ensemble_id = TRUE,
                                             reference_key = 'refmet_name',
                                             background = NULL)
 ```
@@ -166,13 +163,14 @@ enrichment_wt <- hypeR.GEM::enrichment(hypeR_GEM_obj,
                                         background=3068)
 
 ## Enrichment analysis from Directional mapping
-enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj_di,
-                                        genesets = reactome,
-                                        genesets_name = "REACTOME",
-                                        method='weighted',
-                                        weighted_by = 'one_minus_fdr',
-                                        min_metabolite = 2,
-                                        background=3068)
+enrichment_wt_di <- hypeR.GEM::enrichment(hypeR_GEM_obj,
+                                          genesets = reactome,
+                                          genesets_name = "REACTOME",
+                                          method='weighted',
+                                          weighted_by = 'fdr',
+                                          sigmoid_transformation = TRUE,
+                                          min_metabolite = 2,
+                                          background=3068)
 ```
 
 
