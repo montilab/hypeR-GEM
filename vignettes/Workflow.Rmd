@@ -82,7 +82,7 @@ s_i = P(X \ge a_i)
 \frac{\binom{A_i}{x}\binom{M - A_i}{S - x}}{\binom{M}{S}}
 $$
 
-Smaller values of $s_{i}$ a more specific association between gene $g_{i}$ and the metabolic signature.
+Smaller values of $s_{i}$ indicate a more specific association between gene $g_{i}$ and the metabolic signature.
 
 
 # Sigmoid-based weighting of gene specificity
@@ -109,7 +109,7 @@ which assigns weights proportional to the complement of the gene-specificity p-v
 
 # Weighted hypergeometric test
 
-The standard hypergeometric test used in over-representation analysis (ORA) evaluates whether a gene set contains more genes associated with a given category (e.g., pathway or ontology term) than expected by chance, implicitly assuming that all genes contribute equally to the enrichment. However, as described in the *Gene Specificity* section, enzyme-coding genes mapped through genome-scale metabolic models (GEMs) can differ substantially in their association specificity with a given metabolic signature. To incorporate this heterogeneity, hypeR-GEM extends the standard hypergeometric test to a weighted formulation that accounts for gene-specific association strengths.
+The standard hypergeometric test used in over-representation analysis (ORA) evaluates whether a gene set contains more genes associated with a given category (e.g., pathway or ontology term) than expected by chance, implicitly assuming that all genes contribute equally to the enrichment. However, as described in the "Accounting for Gene Specificity" section, enzyme-coding genes mapped through genome-scale metabolic models (GEMs) can differ substantially in their association specificity with a given metabolic signature. To incorporate this heterogeneity, **hypeR-GEM** extends the standard hypergeometric test to a weighted formulation that accounts for gene-specific association strengths.
 
 Formally, the probability of observing at least \(k\) overlapping genes between a gene set and the input signature under the standard hypergeometric model is given by:
 
@@ -139,8 +139,7 @@ $$
 
 where \(\lfloor \cdot \rfloor\) denotes the floor operator.
 
-Substituting \(n_w\) and \(k_w\) into the hypergeometric test yields a weighted enrichment score that down-weights highly promiscuous genes with low specificity, thereby reducing noise and limiting spurious enrichments. This weighting strategy improves the robustness, biological relevance, and interpretability of enrichment results derived from GEM-based metabolite-to-gene mappings.
-
+Substituting \(n_w\) and \(k_w\) into the hypergeometric test yields a weighted enrichment score that down-weights non-specific genes, thereby reducing noise and limiting spurious enrichments. 
 
 
 # Workflow Illustration
@@ -240,7 +239,7 @@ In this example, the background is defined as all enzyme-coding genes represente
 
 - `method`: Enrichment method. "unweighted" applies the standard Fisher/hypergeometric test, while "weighted" applies the weighted hypergeometric test.
 
-- `weighted_by`: Used only when `method = "weighted"`. Specifies the column in `hyper_GEM_obj[["gene_table"]]` containing the gene-specific significance score $s_{i}$. 
+- `weighted_by`: Used only when `method = "weighted"`. Specifies the column in `hyper_GEM_obj[["gene_table"]]` containing the significance score $s_{i}$ for each gene $g_{i}$. 
 
 - `sigmoid_transformation`: Logical. If `TRUE`, applies the sigmoid transformation to $s_{i}$, if `FALSE`, $1-s_{i}$ is used. 
 
