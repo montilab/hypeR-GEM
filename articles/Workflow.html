@@ -224,7 +224,7 @@ s_i = P(X \ge a_i)
 </annotation></semantics></math></p>
 <p>Smaller values of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>
-a more specific association between gene
+indicate a more specific association between gene
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_{i}</annotation></semantics></math>
 and the metabolic signature.</p>
 </div>
@@ -280,12 +280,13 @@ the complement of the gene-specificity p-value (adjusted p-value).</p>
 (ORA) evaluates whether a gene set contains more genes associated with a
 given category (e.g., pathway or ontology term) than expected by chance,
 implicitly assuming that all genes contribute equally to the enrichment.
-However, as described in the <em>Gene Specificity</em> section,
+However, as described in the “Accounting for Gene Specificity” section,
 enzyme-coding genes mapped through genome-scale metabolic models (GEMs)
 can differ substantially in their association specificity with a given
-metabolic signature. To incorporate this heterogeneity, hypeR-GEM
-extends the standard hypergeometric test to a weighted formulation that
-accounts for gene-specific association strengths.</p>
+metabolic signature. To incorporate this heterogeneity,
+<strong>hypeR-GEM</strong> extends the standard hypergeometric test to a
+weighted formulation that accounts for gene-specific association
+strengths.</p>
 <p>Formally, the probability of observing at least
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
 overlapping genes between a gene set and the input signature under the
@@ -331,11 +332,8 @@ denotes the floor operator.</p>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mi>w</mi></msub><annotation encoding="application/x-tex">k_w</annotation></semantics></math>
 into the hypergeometric test yields a weighted enrichment score that
-down-weights highly promiscuous genes with low specificity, thereby
-reducing noise and limiting spurious enrichments. This weighting
-strategy improves the robustness, biological relevance, and
-interpretability of enrichment results derived from GEM-based
-metabolite-to-gene mappings.</p>
+down-weights non-specific genes, thereby reducing noise and limiting
+spurious enrichments.</p>
 </div>
 <div class="section level2">
 <h2 id="workflow-illustration">Workflow Illustration<a class="anchor" aria-label="anchor" href="#workflow-illustration"></a>
@@ -543,9 +541,11 @@ standard Fisher/hypergeometric test, while “weighted” applies the
 weighted hypergeometric test.</p></li>
 <li><p><code>weighted_by</code>: Used only when
 <code>method = "weighted"</code>. Specifies the column in
-<code>hyper_GEM_obj[["gene_table"]]</code> containing the gene-specific
-significance score
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>.</p></li>
+<code>hyper_GEM_obj[["gene_table"]]</code> containing the significance
+score
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>
+for each gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_{i}</annotation></semantics></math>.</p></li>
 <li><p><code>sigmoid_transformation</code>: Logical. If
 <code>TRUE</code>, applies the sigmoid transformation to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_{i}</annotation></semantics></math>,
