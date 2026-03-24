@@ -243,7 +243,7 @@ The core function in **hypeR-GEM** is `signature2gene()`, which maps metabolite 
   - If `TRUE`, metabolites are mapped only to reactions in which they appear as products (directional mapping).
   - If `FALSE`, metabolites are mapped to reactions in which they appear as either reactants or products (non-directional mapping).
 
-- `promiscuous_threshold`: Maximum allowable number of metabolites associated with a gene. Genes exceeding this threshold are classified as promiscuous and excluded from downstream analysis.
+- `promiscuous_threshold`: A data frame listing metabolites considered promiscuous, i.e., those associated with an excessively large number of genes. The filtering threshold is defined by the `promiscuous_threshold` parameter in `signature2gene()`.
 
 - `background`: Background used in the gene-specific hypergeometric test. By default, this is set to the total number of metabolites represented in the GEM.
 
@@ -330,8 +330,7 @@ The `enrichment()` function accepts the following key arguments:
 - `sigmoid_transformation`: logical; if `TRUE`, applies the sigmoid
   transformation to the selected score, whereas if `FALSE`, the raw score is
   used directly
-- `min_metabolite`: minimum number of metabolites required to retain an
-  enriched pathway, helping emphasize metabolite specificity
+- `min_metabolite`: Additional filtering criterion that specifies the minimum number of metabolites required for enrichment for account for metabolite specificity.
 
 Downstream visualization is supported by `enrichment_plot()` and `rctbls()`.
 In this example, pathways such as *Sialic acid metabolism*, *Trafficking and
