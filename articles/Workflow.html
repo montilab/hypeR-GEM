@@ -387,10 +387,11 @@ they appear as either reactants or products (non-directional
 mapping).</li>
 </ul>
 </li>
-<li><p><code>promiscuous_threshold</code>: Maximum allowable number of
-metabolites associated with a gene. Genes exceeding this threshold are
-classified as promiscuous and excluded from downstream
-analysis.</p></li>
+<li><p><code>promiscuous_threshold</code>: A data frame listing
+metabolites considered promiscuous, i.e., those associated with an
+excessively large number of genes. The filtering threshold is defined by
+the <code>promiscuous_threshold</code> parameter in
+<code><a href="../reference/signature2gene.html">signature2gene()</a></code>.</p></li>
 <li><p><code>background</code>: Background used in the gene-specific
 hypergeometric test. By default, this is set to the total number of
 metabolites represented in the GEM.</p></li>
@@ -552,9 +553,9 @@ score used for weighting</li>
 applies the sigmoid transformation to the selected score, whereas if
 <code>FALSE</code>, the raw score is used directly</li>
 <li>
-<code>min_metabolite</code>: minimum number of metabolites required
-to retain an enriched pathway, helping emphasize metabolite
-specificity</li>
+<code>min_metabolite</code>: Additional filtering criterion that
+specifies the minimum number of metabolites required for enrichment for
+account for metabolite specificity.</li>
 </ul>
 <p>Downstream visualization is supported by
 <code><a href="../reference/enrichment_plot.html">enrichment_plot()</a></code> and <code><a href="../reference/rctbls.html">rctbls()</a></code>. In this
