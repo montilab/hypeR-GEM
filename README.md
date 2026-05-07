@@ -3,11 +3,13 @@
 
 # hypeR.GEM
 
-![Gitter](https://img.shields.io/gitter/room/montilab/hypeR-GEM)
-![GitHub
-issues](https://img.shields.io/github/issues/montilab/hypeR-GEM)
-![GitHub last
-commit](https://img.shields.io/github/last-commit/montilab/hypeR-GEM)
+<span>
+<img src="https://img.shields.io/gitter/room/montilab/hypeR-GEM" alt="Gitter" style="margin-right:6px; vertical-align:middle;" /> 
+<img src="https://img.shields.io/github/issues/montilab/hypeR-GEM" alt="GitHub issues" style="margin-right:6px; vertical-align:middle;" /> 
+<img src="https://img.shields.io/github/last-commit/montilab/hypeR-GEM" alt="last commit" style="margin-right:6px; vertical-align:middle;" /> 
+<a href="https://doi.org/10.5281/zenodo.17108624"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.17108624.svg" alt="DOI" style="vertical-align:middle;" /></a>
+</span>
+
 
 `hypeR.GEM` maps metabolite signatures to enzyme-coding genes using
 genome-scale metabolic models (GEMs), then performs gene set enrichment
