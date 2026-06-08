@@ -4,11 +4,15 @@
 # hypeR.GEM
 
 [![R-CMD-check](https://github.com/montilab/hypeR-GEM/actions/workflows/build.yml/badge.svg)](https://github.com/montilab/hypeR-GEM/actions/workflows/build.yml)
-[![pkgdown site](https://img.shields.io/badge/docs-pkgdown-blue)](https://montilab.github.io/hypeR-GEM/)
+[![pkgdown
+site](https://img.shields.io/badge/docs-pkgdown-blue)](https://montilab.github.io/hypeR-GEM/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17108624.svg)](https://doi.org/10.5281/zenodo.17108624)
-[![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg)](LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/montilab/hypeR-GEM)](https://github.com/montilab/hypeR-GEM/issues)
-[![GitHub last commit](https://img.shields.io/github/last-commit/montilab/hypeR-GEM)](https://github.com/montilab/hypeR-GEM/commits/main)
+[![License: GPL
+v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg)](LICENSE)
+[![GitHub
+issues](https://img.shields.io/github/issues/montilab/hypeR-GEM)](https://github.com/montilab/hypeR-GEM/issues)
+[![GitHub last
+commit](https://img.shields.io/github/last-commit/montilab/hypeR-GEM)](https://github.com/montilab/hypeR-GEM/commits/main)
 
 `hypeR.GEM` maps metabolite signatures to enzyme-coding genes using
 genome-scale metabolic models (GEMs), then performs gene set enrichment

@@ -3,6 +3,10 @@ url: https://montilab.github.io/hypeR-GEM
 development:
   mode: auto
 
+home:
+  sidebar:
+    html: pkgdown/home-sidebar.html
+
 template:
   params:
     bootswatch: cosmo
