@@ -343,3 +343,9 @@ Related publication:
 
 - [Huang et
   al.](https://www.biorxiv.org/content/10.64898/2025.12.08.692998v1)
+
+For detailed information on the study data, downstream analyses, and
+method-evaluation scripts, please refer to the "Data and Code
+Availability" section of the manuscript. That section describes where
+the supporting resources and reproducibility materials can be
+accessed.
