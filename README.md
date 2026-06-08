@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/montilab/hypeR-GEM/actions/workflows/build.yml/badge.svg)](https://github.com/montilab/hypeR-GEM/actions/workflows/build.yml)
 [![pkgdown
 site](https://img.shields.io/badge/docs-pkgdown-blue)](https://montilab.github.io/hypeR-GEM/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17108624.svg)](https://doi.org/10.5281/zenodo.17108624)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20586748.svg)](https://doi.org/10.5281/zenodo.20586748)
 [![License: GPL
 v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg)](LICENSE)
 [![GitHub
