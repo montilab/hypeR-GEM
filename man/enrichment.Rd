@@ -9,7 +9,7 @@ enrichment(
   genesets,
   genesets_name = "unknown",
   method = c("unweighted", "weighted"),
-  weighted_by = "one_minus_fdr",
+  weighted_by = "fdr",
   a = 1,
   b = -1,
   sigmoid_transformation = TRUE,
