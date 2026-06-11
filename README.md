@@ -105,12 +105,12 @@ Key arguments:
   `"Zebrafish"`, `"Worm"`, or `"Other"`)
 - `directional`: if `TRUE`, only reactions producing the metabolite are
   used; if `FALSE`, both reactant and product relationships are used
-- `promiscuous_threshold`: filters metabolites associated with many
-  genes
+- `promiscuous_threshold`: filters metabolites associated with more than the threshold number
+  of genes
 - `reference_key`: metabolite annotation column used for matching to the
   GEM
-- `background`: background size used in the gene-specific hypergeometric
-  test; by default, this is set to the total number of metabolites
+- `background`: background size used in the hypergeometric test of gene specificity;
+  by default, this is set to the total number of metabolites
   represented in the GEM
 
 ``` r
