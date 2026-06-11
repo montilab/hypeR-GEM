@@ -156,11 +156,11 @@
 <li>
 <code>directional</code>: if <code>TRUE</code>, only reactions producing the metabolite are used; if <code>FALSE</code>, both reactant and product relationships are used</li>
 <li>
-<code>promiscuous_threshold</code>: filters metabolites associated with many genes</li>
+<code>promiscuous_threshold</code>: filters metabolites associated with more than the threshold number of genes</li>
 <li>
 <code>reference_key</code>: metabolite annotation column used for matching to the GEM</li>
 <li>
-<code>background</code>: background size used in the gene-specific hypergeometric test; by default, this is set to the total number of metabolites represented in the GEM</li>
+<code>background</code>: background size used in the hypergeometric test of gene specificity; by default, this is set to the total number of metabolites represented in the GEM</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Non-directional mapping</span></span>
